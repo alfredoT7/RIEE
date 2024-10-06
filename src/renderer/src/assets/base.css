@@ -1,0 +1,39 @@
+:root {
+  --primary-color: #00b09b;
+  --bg-app: #f5f5f5;
+  --bg--component-color-white: #ffffff;
+
+  --color-text-primary: #2D3748;
+  --color-text-secondary: #A0AEC0;
+
+  --color-green-parameter:#48BB78;
+  --color-red-parameter:#E53E3E;
+
+  --font-size-title: 18px;
+}
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  color: var(--color-text-primary);
+  background: var(--bg-app);
+  padding-left: 240px;
+  line-height: 1.6;
+  font-family:
+    Helvetica,Arial,sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 2%;
+}

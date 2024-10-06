@@ -1,0 +1,37 @@
+@import '../../assets/base.css';
+.sidebar-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 240px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.sidebar-container img{
+    width: 100%;
+}
+.sidebar-container div {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    width: 70%;
+    gap: 14px;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    padding-inline: 4%;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  
+  .sidebar-container div.active {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    background-color: var(--bg--component-color-white);
+}
