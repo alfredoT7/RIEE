@@ -17,7 +17,6 @@
     align-items: center;
     padding-right: 20px;
     padding-left: 10px;
-    background-color: lightblue;
 }
 .header-container :first-child{
     display: flex;
