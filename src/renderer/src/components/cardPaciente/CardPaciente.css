@@ -1,0 +1,41 @@
+@import '../../assets/base.css';
+.chard-paciente-main-cont{
+    display: flex;
+    gap: 30px;
+    justify-content: space-between; 
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+    margin-right: 20px;
+    align-items: center;
+    background-color: white;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+.chard-paciente-main-cont p{
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+.chard-paciente-main-cont img{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    object-fit: cover;
+}
+.ci{
+    width: 64px;
+}
+.name{
+    flex: 1;
+}
+.name:hover{
+    cursor: pointer;
+}
+.chard-paciente-main-cont img:hover{
+    cursor: pointer;
+}
+.treatment{
+    flex: 1;
+}
+

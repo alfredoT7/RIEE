@@ -5,9 +5,8 @@
     gap: 20px;
     justify-content: flex-start; 
     flex-wrap: wrap;
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 }
-
 .parent {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -15,16 +14,16 @@
     grid-column-gap: 0px;
     gap: 15px;
     padding-right: 20px;
+    margin-bottom: 6px;
 }
-
 .div1 { grid-area: 1 / 1 / 2 / 2; 
-    height: 200px;
+    height: 140px;
     background-color: #ffffff;
     border-radius: 20px;
 
 }
 .div2 { grid-area: 1 / 2 / 2 / 4; 
-    height: 200px;
+    height: 140px;
     background-color: var(--primary-color);
     border-radius: 20px;
 
@@ -38,4 +37,23 @@
     grid-area: 2 / 3 / 3 / 4; 
     background-color: #Ffffff;
     border-radius: 20px;
+}
+.head-paciente-title{
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--color-text-secondary);
+    margin: 0;
+    display: flex;
+    margin-right: 20px;
+    margin-bottom: 6px;
+    gap: 30px;
+    justify-content: space-between;
+    align-items: center;
+}
+.head-paciente-title div{
+    padding-inline: 20px;
+}
+
+.recent-title:hover{
+    cursor: pointer;
 }
