@@ -31,6 +31,7 @@
 }
 .name:hover{
     cursor: pointer;
+    text-decoration: underline;
 }
 .chard-paciente-main-cont img:hover{
     cursor: pointer;
