@@ -2,6 +2,7 @@ import React from 'react'
 import './Home.css'
 import TopInfoHome from '../../components/topInfoHome/TopInfoHome'
 import CardPaciente from '../../components/cardPaciente/CardPaciente'
+import { Link } from 'react-router-dom';
 const Home = () => {
   return (
     <section className="section-main-container">
@@ -31,6 +32,7 @@ const Home = () => {
           <CardPaciente ci="12345600" nombre="Juan Perez" tratamiento="Ortodoncia" fecha="12/12/2021" />
           <CardPaciente ci="12345600" nombre="Juan Perez" tratamiento="Ortodoncia" fecha="12/12/2021" />
         </div>  
+        <Link to='/patient' className="see-more">Ver mas pacientes</Link>
     </section>
   );
 };

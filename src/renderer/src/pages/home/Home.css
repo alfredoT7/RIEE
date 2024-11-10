@@ -57,3 +57,13 @@
 .recent-title:hover{
     cursor: pointer;
 }
+.see-more{
+    color: var(--primary-color);
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+}

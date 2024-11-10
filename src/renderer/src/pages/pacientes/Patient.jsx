@@ -1,8 +1,10 @@
 import React from 'react'
 import CardPaciente from '../../components/cardPaciente/CardPaciente'
+import SearchBar from '../../components/searchBar/SearchBar'
 const Patient = () => {
   return (
     <>
+    <SearchBar />
     <div className="head-paciente-title">
           <div className="ci"><p>CI</p></div>
           <div className="name"><p>Nombre</p></div>
