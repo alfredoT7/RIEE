@@ -13,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path='/patient' element= {<Patient />}/>
+          <Route path='*' element={<h1>Not Found</h1>} />
         </Routes>
       </div>
     </Router>
