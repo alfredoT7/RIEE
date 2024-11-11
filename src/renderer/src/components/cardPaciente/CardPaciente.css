@@ -23,20 +23,20 @@
     border-radius: 15px;
     object-fit: cover;
 }
-.ci{
+.chard-paciente-main-cont .ci{
     width: 64px;
 }
-.name{
+.chard-paciente-main-cont .name{
     flex: 1;
 }
-.name:hover{
+.chard-paciente-main-cont .name:hover{
     cursor: pointer;
     text-decoration: underline;
 }
 .chard-paciente-main-cont img:hover{
     cursor: pointer;
 }
-.treatment{
+.chard-paciente-main-cont .treatment{
     flex: 1;
 }
 
