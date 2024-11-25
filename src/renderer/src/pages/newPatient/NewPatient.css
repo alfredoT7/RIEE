@@ -6,12 +6,7 @@
     padding: 20px;
     width: 744px;
     height: 569px;
-    background: url("../../assets/img/fondoRegister.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     border-top-left-radius: 10px;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: row;
 }
@@ -41,10 +36,11 @@
     display: flex;
     height: 28px;
     align-items: center;
-    border-radius: 15px;
+    border-radius: 8px;
     border: none;
     padding-inline: 8px;
     gap: 5px;
+    background-color: white;
 }
 .img-card div button:hover{
     cursor: pointer;
@@ -62,7 +58,7 @@
     height: 35px;
     padding: 10px 10px 10px 20px;
     border: 1px solid var(--color-text-secondary);
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 15px;
     margin-bottom: 15px;
 }
@@ -80,22 +76,24 @@
     flex-direction: row;
     gap: 20px;
     align-items: top;
+    justify-content: space-between;
 }
 .input-two input{
     align-items: center;
+    flex: 1;
 }
 .input-two select{
     height: 35px;
     width: 150px;
     padding-left: 10px;
     padding-right: 10px;
-    border-radius: 20px;
+    border-radius: 10px;
 }
 .input-side button{
     background-color: var(--primary-color);
     height: 35px;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     padding-inline: 20px;
     color: white;
     font-weight: bold;

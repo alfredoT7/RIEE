@@ -33,14 +33,19 @@
     border-radius: 15px;
     cursor: pointer;
 }
-h4{
-    color: var(--color-text-primary);
+.sidebar-container h4{
     margin: 0;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    font-size: 13px;
 }
 .sidebar-container div div.active {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     background-color: var(--bg--component-color-white);
-    .icon{
+    .icon {
         color: var(--primary-color);
-    }
+    };
+}
+.sidebar-container h4.active-text {
+    color: #000;
 }
