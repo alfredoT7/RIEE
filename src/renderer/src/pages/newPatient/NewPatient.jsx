@@ -1,100 +1,136 @@
-import React, { useState } from 'react'
-import ImagesApp from '../../assets/ImagesApp'
-import './NewPatient.css'
-import { FaUpload, FaFile } from 'react-icons/fa'
+import React from 'react';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import ImagesApp from '../../assets/ImagesApp';
+import './NewPatient.css';
+import { FaUpload, FaFile } from 'react-icons/fa';
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required('Nombre es obligatorio'),
+  lastname: Yup.string().required('Apellido es obligatorio'),
+  ci: Yup.string().required('Carnet de identidad es obligatorio'),
+  birthDate: Yup.date().required('Fecha de nacimiento es obligatoria'),
+  phone: Yup.string().required('Teléfono es obligatorio'),
+  civilStatus: Yup.string().required('Estado civil es obligatorio'),
+  occupation: Yup.string().required('Ocupación es obligatoria'),
+  email: Yup.string().email('Email no es válido').required('Email es obligatorio'),
+  referencePerson: Yup.string().required('Persona de referencia es obligatoria'),
+  referencePhone: Yup.string().required('Teléfono de referencia es obligatorio')
+});
+
 const NewPatient = () => {
-    const [formValues, setFormValues] = useState({
-        name: '',
-        lastname: '',
-        ci: '',
-        birthDate: '',
-        address: '',
-        phone: '',
-        civilStatus: '',
-        occupation: '',
-        email: '',
-        referencePerson: '',
-        referencePhone: ''
-      });
-    
-      const [errors, setErrors] = useState({});
-    
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({ ...formValues, [name]: value });
-      };
-    
-      const validate = () => {
-        let errors = {};
-    
-        // if (!formValues.name) errors.name = 'Nombre es obligatorio';
-        // if (!formValues.lastname) errors.lastname = 'Apellido es obligatorio';
-        // if (!formValues.ci) errors.ci = 'Carnet de identidad es obligatorio';
-        // if (!formValues.birthDate) errors.birthDate = 'Fecha de nacimiento es obligatoria';
-        // if (!formValues.phone) errors.phone = 'Teléfono es obligatorio';
-        // if (!formValues.civilStatus) errors.civilStatus = 'Estado civil es obligatorio';
-        // if (!formValues.occupation) errors.occupation = 'Ocupación es obligatoria';
-        // if (!formValues.email) errors.email = 'Email es obligatorio';
-        // if (!/\S+@\S+\.\S+/.test(formValues.email)) errors.email = 'Email no es válido';
-        // if (!formValues.referencePerson) errors.referencePerson = 'Persona de referencia es obligatoria';
-        // if (!formValues.referencePhone) errors.referencePhone = 'Teléfono de referencia es obligatorio';
-    
-        setErrors(errors);
-        return Object.keys(errors).length === 0;
-      };
-    
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        if (validate()) {
-          console.log('Datos del paciente:', formValues);
-          alert('Formulario enviado');
-        } else {
-          alert('Por favor corrige los errores');
-        }
-      };
+  const initialValues = {
+    name: '',
+    lastname: '',
+    ci: '',
+    birthDate: '',
+    address: '',
+    phone: '',
+    civilStatus: '',
+    occupation: '',
+    email: '',
+    referencePerson: '',
+    referencePhone: ''
+  };
+
+  const handleSubmit = (values, { setSubmitting, setErrors }) => {
+    const errors = validationSchema.validateSync(values, { abortEarly: false });
+    if (errors.length > 0) {
+      const errorMessages = errors.map(error => error.message).join('\n');
+      alert(`Errores:\n${errorMessages}`);
+      setErrors(errors);
+      setSubmitting(false);
+    } else {
+      console.log('Datos del paciente:', values);
+      alert('Formulario enviado');
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <form className='cont-new-pat' onSubmit={handleSubmit}>
-        <div className='img-card'>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ isSubmitting }) => (
+        <Form className='cont-new-pat'>
+          <div className='img-card'>
             <h3>Imagen del Paciente</h3>
             <img src={ImagesApp.defaultImage} alt="Paciente" />
             <div>
-                <button>
-                    <FaUpload />
-                    <p>Tomar Imagen</p>
-                </button>
-                <button>
-                    <FaFile />
-                    <p>Subir Imagen</p>
-                </button>
+              <button type="button">
+                <FaUpload />
+                <p>Tomar Imagen</p>
+              </button>
+              <button type="button">
+                <FaFile />
+                <p>Subir Imagen</p>
+              </button>
             </div>
-        </div>
-        <div className='input-side'>
-            <input className='input-card' name='name' type="text" placeholder='Nombres'  value={formValues.name} onChange={handleChange}/>
-            <input className='input-card' name='lastname' type="text" placeholder='Apellido' value={formValues.lastname} onChange={handleChange}/>
+          </div>
+          <div className='input-side'>
+            <div className="input-group">
+              <label htmlFor="name">Nombres</label>
+              <Field className="input-card" id="name" name="name" type="text" />
+            </div>
+            <div className="input-group">
+              <label htmlFor="lastname">Apellido</label>
+              <Field className="input-card" id="lastname" name="lastname" type="text" />
+            </div>
             <div className='div-inputs'>
-                <input className='in-two' type="number" name="ci" id="" placeholder='Carnet de identidad' value={formValues.ci} onChange={handleChange} />
-                <input className='in-two' type="date" name="birthDate" id='' placeholder='Fecha de Nacimiento' value={formValues.birthDate} onChange={handleChange}/>
+              <div className="input-group">
+                <label htmlFor="ci">Carnet de identidad</label>
+                <Field className="input-card" id="ci" name="ci" type="number" />
+              </div>
+              <div className="input-group">
+                <label htmlFor="birthDate">Fecha de Nacimiento</label>
+                <Field className="input-card" id="birthDate" name="birthDate" type="date" />
+              </div>
             </div>
-            <input className='input-card' type="text" name='address' placeholder='Dirección' value={formValues.address} onChange={handleChange}/>
+            <div className="input-group">
+              <label htmlFor="address">Dirección</label>
+              <Field className="input-card" id="address" name="address" type="text" />
+            </div>
             <div className='input-two'>
-                <input className='in-two' type="text" name="phone" placeholder='Telefono' value={formValues.phone} onChange={handleChange}/>
-                <select className='select' name="civilStatus" value={formValues.civilStatus} onChange={handleChange}>
-                    <option value="">Estado Civil</option>
-                    <option value="soltero">Soltero</option>
-                    <option value="casado">Casado</option>
-                    <option value="divorciado">Divorciado</option>
-                    <option value="viudo">Viudo</option>
-                    <option value="union libre">Unión Libre</option>
-                </select>
+              <div className="input-group">
+                <label htmlFor="phone">Teléfono</label>
+                <Field className="input-card" id="phone" name="phone" type="text" />
+              </div>
+              <div className="input-group">
+                <label htmlFor="civilStatus">Estado Civil</label>
+                <Field as="select" className="select" id="civilStatus" name="civilStatus">
+                  <option value="">Estado Civil</option>
+                  <option value="soltero">Soltero</option>
+                  <option value="casado">Casado</option>
+                  <option value="divorciado">Divorciado</option>
+                  <option value="viudo">Viudo</option>
+                  <option value="union libre">Unión Libre</option>
+                </Field>
+              </div>
             </div>
-            <input className='input-card' type="text" name="occupation" placeholder='Ocupación'  value={formValues.occupation} onChange={handleChange}/>
-            <input className='input-card' type="email"  name="email" placeholder='Email'  value={formValues.email} onChange={handleChange}/>
-            <input className='input-card' type="text"  name="referencePerson" placeholder='Nombre de persona de Referencia' value={formValues.referencePerson} onChange={handleChange}/>
-            <input cassName='in-two-a' type="number" name="referencePhone" id="" placeholder='Num. de referencia' value={formValues.referencePhone} onChange={handleChange}/>
-            <button type="submit">Añadir nuevo paciente</button>
-        </div>
-    </form>
-  )
-}
+            <div className="input-group">
+              <label htmlFor="occupation">Ocupación</label>
+              <Field className="input-card" id="occupation" name="occupation" type="text" />
+            </div>
+            <div className="input-group">
+              <label htmlFor="email">Email</label>
+              <Field className="input-card" id="email" name="email" type="email" />
+            </div>
+            <div className="input-group">
+              <label htmlFor="referencePerson">Nombre de persona de Referencia</label>
+              <Field className="input-card" id="referencePerson" name="referencePerson" type="text" />
+            </div>
+            <div className="input-group inp-ref">
+              <label htmlFor="referencePhone">Num. de referencia</label>
+              <Field className="input-card" id="referencePhone" name="referencePhone" type="number" />
+            </div>
+            <button type="submit" disabled={isSubmitting}>Añadir nuevo paciente</button>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
-export default NewPatient
+export default NewPatient;

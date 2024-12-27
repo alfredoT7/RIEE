@@ -1,4 +1,3 @@
-import React from 'react'
 import './Home.css'
 import TopInfoHome from '../../components/topInfoHome/TopInfoHome'
 import CardPaciente from '../../components/cardPaciente/CardPaciente'
