@@ -6,15 +6,23 @@ import './NewPatient.css';
 import { FaUpload, FaFile } from 'react-icons/fa';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Nombre es obligatorio'),
-  lastname: Yup.string().required('Apellido es obligatorio'),
+  name: Yup.string()
+    .matches(/^[a-zA-Z\s]+$/, 'Nombre no debe contener números')
+    .required('Nombre es obligatorio'),
+  lastname: Yup.string()
+    .matches(/^[a-zA-Z\s]+$/, 'Apellido no debe contener números')
+    .required('Apellido es obligatorio'),
   ci: Yup.string().required('Carnet de identidad es obligatorio'),
   birthDate: Yup.date().required('Fecha de nacimiento es obligatoria'),
   phone: Yup.string().required('Teléfono es obligatorio'),
   civilStatus: Yup.string().required('Estado civil es obligatorio'),
-  occupation: Yup.string().required('Ocupación es obligatoria'),
+  occupation: Yup.string()
+    .matches(/^[a-zA-Z\s]+$/, 'Ocupación no debe contener números')
+    .required('Ocupación es obligatoria'),
   email: Yup.string().email('Email no es válido').required('Email es obligatorio'),
-  referencePerson: Yup.string().required('Persona de referencia es obligatoria'),
+  referencePerson: Yup.string()
+    .matches(/^[a-zA-Z\s]+$/, 'Nombre de persona de referencia no debe contener números')
+    .required('Persona de referencia es obligatoria'),
   referencePhone: Yup.string().required('Teléfono de referencia es obligatorio')
 });
 
@@ -34,17 +42,21 @@ const NewPatient = () => {
   };
 
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
-    const errors = validationSchema.validateSync(values, { abortEarly: false });
-    if (errors.length > 0) {
-      const errorMessages = errors.map(error => error.message).join('\n');
-      alert(`Errores:\n${errorMessages}`);
-      setErrors(errors);
-      setSubmitting(false);
-    } else {
-      console.log('Datos del paciente:', values);
-      alert('Formulario enviado');
-      setSubmitting(false);
-    }
+    validationSchema.validate(values, { abortEarly: false })
+      .then(() => {
+        console.log('Datos del paciente:', values);
+        alert('Formulario enviado');
+        setSubmitting(false);
+      })
+      .catch((err) => {
+        const errorMessages = err.errors.join('\n');
+        alert(`Errores:\n${errorMessages}`);
+        setErrors(err.inner.reduce((acc, error) => {
+          acc[error.path] = error.message;
+          return acc;
+        }, {}));
+        setSubmitting(false);
+      });
   };
 
   return (
@@ -59,11 +71,11 @@ const NewPatient = () => {
             <h3>Imagen del Paciente</h3>
             <img src={ImagesApp.defaultImage} alt="Paciente" />
             <div>
-              <button type="button">
+              <button type="button" disabled={isSubmitting}>
                 <FaUpload />
                 <p>Tomar Imagen</p>
               </button>
-              <button type="button">
+              <button type="button" disabled={isSubmitting}>
                 <FaFile />
                 <p>Subir Imagen</p>
               </button>
