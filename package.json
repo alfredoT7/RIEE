@@ -20,6 +20,8 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
     "electron-updater": "^6.1.7",
     "formik": "^2.4.6",
     "react-icons": "^5.4.0",

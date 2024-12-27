@@ -5,12 +5,13 @@
     <title>RIEE</title>
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+      content="default-src 'self' https://api.cloudinary.com; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.cloudinary.com"
     />
+    
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"></div> 
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

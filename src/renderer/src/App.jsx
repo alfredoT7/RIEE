@@ -7,7 +7,10 @@ import Patient from './pages/pacientes/Patient';
 import NewPatient from './pages/newPatient/NewPatient';
 import SearchBar from './components/searchBar/SearchBar';
 
+
+
 function App() {
+  
   return (
     <Router>
       <div>

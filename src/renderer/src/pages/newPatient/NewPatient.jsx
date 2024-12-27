@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import ImagesApp from '../../assets/ImagesApp';
+import ImagesApp from '../../assets/ImagesApp'; // Cambia la ruta según corresponda
 import './NewPatient.css';
 import { FaUpload, FaFile } from 'react-icons/fa';
+import axios from 'axios';
 
+// Validación con Yup
 const validationSchema = Yup.object().shape({
   name: Yup.string()
     .matches(/^[a-zA-Z\s]+$/, 'Nombre no debe contener números')
@@ -23,10 +25,15 @@ const validationSchema = Yup.object().shape({
   referencePerson: Yup.string()
     .matches(/^[a-zA-Z\s]+$/, 'Nombre de persona de referencia no debe contener números')
     .required('Persona de referencia es obligatoria'),
-  referencePhone: Yup.string().required('Teléfono de referencia es obligatorio')
+  referencePhone: Yup.string().required('Teléfono de referencia es obligatorio'),
 });
 
+// Componente principal
 const NewPatient = () => {
+  const [imageUrl, setImageUrl] = useState(ImagesApp.defaultImage); // Imagen predeterminada
+  const fileInputRef = useRef(null); // Referencia al input de archivo
+
+  // Valores iniciales del formulario
   const initialValues = {
     name: '',
     lastname: '',
@@ -38,25 +45,57 @@ const NewPatient = () => {
     occupation: '',
     email: '',
     referencePerson: '',
-    referencePhone: ''
+    referencePhone: '',
   };
 
+  // Manejo de subida de imagen
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'riee-consultorio'); // Reemplaza con tu upload_preset
+
+      try {
+        const response = await axios.post(
+          'https://api.cloudinary.com/v1_1/dzizafv5s/image/upload',
+          formData
+        );
+        setImageUrl(response.data.secure_url); // Actualiza la URL de la imagen subida
+        alert('Imagen subida exitosamente');
+      } catch (error) {
+        console.error('Error al subir la imagen:', error.response?.data || error.message);
+        alert('Error al subir la imagen');
+      }
+    }
+  };
+
+  // Envío del formulario
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
-    validationSchema.validate(values, { abortEarly: false })
+    const dataToSubmit = { ...values, imageUrl }; // Incluye la URL de la imagen
+
+    validationSchema
+      .validate(dataToSubmit, { abortEarly: false })
       .then(() => {
-        console.log('Datos del paciente:', values);
-        alert('Formulario enviado');
+        console.log('Datos del paciente:', dataToSubmit);
+        alert('Formulario enviado exitosamente');
         setSubmitting(false);
       })
       .catch((err) => {
         const errorMessages = err.errors.join('\n');
         alert(`Errores:\n${errorMessages}`);
-        setErrors(err.inner.reduce((acc, error) => {
-          acc[error.path] = error.message;
-          return acc;
-        }, {}));
+        setErrors(
+          err.inner.reduce((acc, error) => {
+            acc[error.path] = error.message;
+            return acc;
+          }, {})
+        );
         setSubmitting(false);
       });
+  };
+
+  const handleFileButtonClick = () => {
+    fileInputRef.current.click(); // Abre el explorador de archivos
   };
 
   return (
@@ -69,13 +108,20 @@ const NewPatient = () => {
         <Form className='cont-new-pat'>
           <div className='img-card'>
             <h3>Imagen del Paciente</h3>
-            <img src={ImagesApp.defaultImage} alt="Paciente" />
+            <img src={imageUrl} alt="Paciente" />
             <div>
-              <button type="button" disabled={isSubmitting}>
-                <FaUpload />
-                <p>Tomar Imagen</p>
-              </button>
-              <button type="button" disabled={isSubmitting}>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+              <button
+                type="button"
+                onClick={handleFileButtonClick}
+                disabled={isSubmitting}
+              >
                 <FaFile />
                 <p>Subir Imagen</p>
               </button>
@@ -137,7 +183,9 @@ const NewPatient = () => {
               <label htmlFor="referencePhone">Num. de referencia</label>
               <Field className="input-card" id="referencePhone" name="referencePhone" type="number" />
             </div>
-            <button type="submit" disabled={isSubmitting}>Añadir nuevo paciente</button>
+            <button type="submit" disabled={isSubmitting}>
+              Añadir nuevo paciente
+            </button>
           </div>
         </Form>
       )}
