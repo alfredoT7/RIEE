@@ -11,11 +11,15 @@
     align-items: center;
     ;
 }
-.head-paciente-title1 .name{
-    text-align: center;
-    flex: 0.5;
-}
 .head-paciente-title1 .ci{
     text-align: center;
+    flex: 0.2;
+}
+.head-paciente-title1 .name{
+    text-align: center;
     flex: 0.1;
+}
+.head-paciente-title1 .treatment{
+    text-align: center;
+    flex: 0.5;
 }

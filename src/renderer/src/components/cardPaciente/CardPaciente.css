@@ -13,7 +13,7 @@
 }
 
 .chard-paciente-main-cont p{
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--text-color);
 }
@@ -28,6 +28,9 @@
 }
 .chard-paciente-main-cont .name{
     flex: 1;
+}
+.chard-paciente-main-cont .phone{
+    flex: 0.5;
 }
 .chard-paciente-main-cont .name:hover{
     cursor: pointer;

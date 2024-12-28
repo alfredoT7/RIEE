@@ -25,11 +25,11 @@ const Home = () => {
         </div>
 
         <div className="card-paciente-container">
-          <CardPaciente ci="12345600" nombre="Juan Perez" tratamiento="Ortodoncia" fecha="12/12/2021" />
-          <CardPaciente ci="1231" nombre="Juan Perez" tratamiento="Ortodoncia" fecha="12/12/2021" />
-          <CardPaciente ci="12345600" nombre="Juan Perez" tratamiento="Ortodoncia" fecha="12/12/2021" />
-          <CardPaciente ci="12345600" nombre="Juan Perez" tratamiento="Ortodoncia" fecha="12/12/2021" />
-          <CardPaciente ci="12345600" nombre="Juan Perez" tratamiento="Ortodoncia" fecha="12/12/2021" />
+          <CardPaciente ci="12345600" nombre="Juan Perez" direccion="Ortodoncia" fechaNacimiento="12/12/2021" />
+          <CardPaciente ci="1231" nombre="Juan Perez" direccion="Ortodoncia" fechaNacimiento="12/12/2021" />
+          <CardPaciente ci="12345600" nombre="Juan Perez" direccion="Ortodoncia" fechaNacimiento="12/12/2021" />
+          <CardPaciente ci="12345600" nombre="Juan Perez" direccion="Ortodoncia" fechaNacimiento="12/12/2021" />
+          <CardPaciente ci="12345600" nombre="Juan Perez" direccion="Ortodoncia" fechaNacimiento="12/12/2021" />
         </div>  
         <Link to='/patient' className="see-more">Ver mas pacientes</Link>
     </section>
