@@ -53,7 +53,6 @@ const NewPatient = () => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
-      // Create preview URL
       const reader = new FileReader();
       reader.onload = (e) => {
         setPreviewUrl(e.target.result);
@@ -83,15 +82,13 @@ const NewPatient = () => {
     try {
       let imageUrl = ImagesApp.defaultImage;
       
-      // Only upload image if a file was selected
       if (selectedFile) {
         imageUrl = await uploadImageToCloudinary(selectedFile);
       }
 
-      // Prepare data for API
       const patientData = {
         ciPaciente: parseInt(values.ci),
-        idEstadoCivil: 1,
+        idEstadoCivil: parseInt(values.civilStatus), 
         fechaNacimiento: values.birthDate,
         direccion: values.address,
         ocupacion: values.occupation,
@@ -99,18 +96,15 @@ const NewPatient = () => {
         numeroPersonaRef: parseInt(values.referencePhone),
         imagen: imageUrl,
         nombre: values.name,
-        apellido: values.lastname
+        apellido: values.lastname,
+        numeroTelefono: parseInt(values.phone),
       };
-
-      // Send to backend
       await registerPatient(patientData);
+      console.log('Form submitted:', patientData);
       alert('Paciente registrado exitosamente');
-      
-      // Reset form and image states
       setSelectedFile(null);
       setPreviewUrl(null);
       navigate('/patient');
-      
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Error al registrar el paciente: revisa el formato de las entradas o posiblemente el carnet de identidad ya existe');
@@ -183,17 +177,17 @@ const NewPatient = () => {
            <div className='input-two'>
              <div className="input-group">
                <label htmlFor="phone">Teléfono</label>
-               <Field className="input-card" id="phone" name="phone" type="text" />
+               <Field className="input-card" id="phone" name="phone" type="number" />
              </div>
              <div className="input-group">
                <label htmlFor="civilStatus">Estado Civil</label>
                <Field as="select" className="select" id="civilStatus" name="civilStatus">
-                 <option value="">Estado Civil</option>
-                 <option value="soltero">Soltero</option>
-                 <option value="casado">Casado</option>
-                 <option value="divorciado">Divorciado</option>
-                 <option value="viudo">Viudo</option>
-                 <option value="union libre">Unión Libre</option>
+                <option value="">Estado Civil</option>
+                <option value="1">Soltero</option>
+                <option value="2">Casado</option>
+                <option value="3">Divorciado</option>
+                <option value="4">Viudo</option>
+                <option value="5">Unión Libre</option>
                </Field>
              </div>
            </div>
