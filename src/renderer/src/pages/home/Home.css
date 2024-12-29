@@ -38,21 +38,6 @@
     background-color: #Ffffff;
     border-radius: 20px;
 }
-.head-paciente-title{
-    font-size: 14px;
-    font-weight: bold;
-    color: var(--color-text-secondary);
-    margin: 0;
-    display: flex;
-    margin-right: 20px;
-    margin-bottom: 6px;
-    gap: 30px;
-    justify-content: space-between;
-    align-items: center;
-}
-.head-paciente-title div{
-    padding-inline: 20px;
-}
 
 .recent-title:hover{
     cursor: pointer;

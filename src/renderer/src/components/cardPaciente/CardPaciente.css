@@ -2,7 +2,7 @@
 .chard-paciente-main-cont{
     display: flex;
     gap: 30px;
-    justify-content: space-between; 
+    /* justify-content: space-between;  */
     flex-wrap: wrap;
     margin-bottom: 6px;
     margin-right: 20px;
@@ -16,6 +16,7 @@
     font-size: 13px;
     font-weight: 500;
     color: var(--text-color);
+    white-space: nowrap;
 }
 .chard-paciente-main-cont img{
     width: 30px;
@@ -27,7 +28,7 @@
     width: 64px;
 }
 .chard-paciente-main-cont .name{
-    flex: 1;
+    flex: 0.8;
 }
 .chard-paciente-main-cont .phone{
     flex: 0.5;
