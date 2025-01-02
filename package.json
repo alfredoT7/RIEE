@@ -25,6 +25,7 @@
     "electron-updater": "^6.1.7",
     "formik": "^2.4.6",
     "react-icons": "^5.4.0",
+    "react-paginate": "^8.2.0",
     "react-router-dom": "^6.28.0",
     "yup": "^1.6.1"
   },
