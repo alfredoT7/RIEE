@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from 'react'
-import CardPaciente from '../../components/cardPaciente/CardPaciente'
-import SearchBar from '../../components/searchBar/SearchBar'
-import './Patient.css'
-import PacienteHeader from '../../components/pacienteHeader/PacienteHeader'
-import Pagination from '../../components/pagination/Pagination'
+import React, { useEffect, useState } from 'react';
+import CardPaciente from '../../components/cardPaciente/CardPaciente';
+import SearchBar from '../../components/searchBar/SearchBar';
+import './Patient.css';
+import PacienteHeader from '../../components/pacienteHeader/PacienteHeader';
+import Pagination from '../../components/pagination/Pagination';
+import { getAllPatient } from '../../api/Api';
 
 const Patient = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [patients, setPatients] = useState([]);
+  const [totalPatients, setTotalPatients] = useState(0);
   const itemsPerPage = 15;
-  
-  // Example data - replace this with your actual data
-  const pacientes = Array(45).fill({
-    ci: "12345600",
-    nombre: "Juan Perez",
-    direccion: "Ortodoncia",
-    fechaNacimiento: "12/12/2021",
-    numeroTelefonico: '76424923'
-  });
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentPacientes = pacientes.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await getAllPatient(currentPage);
+        setPatients(response.data.pacientes);
+        setTotalPatients(response.data.totalPacientes);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    };
+
+    fetchPatients();
     window.scrollTo(0, 0);
   }, [currentPage]);
 
@@ -35,19 +36,19 @@ const Patient = () => {
       <SearchBar />
       <PacienteHeader />
       <div className="card-paciente-container">
-        {currentPacientes.map((paciente, index) => (
+        {patients.map((paciente) => (
           <CardPaciente
-            key={index}
-            ci={paciente.ci}
-            nombre={paciente.nombre}
+            key={paciente.ciPaciente}
+            ci={paciente.ciPaciente}
+            nombre={`${paciente.nombre} ${paciente.apellido}`}
             direccion={paciente.direccion}
             fechaNacimiento={paciente.fechaNacimiento}
-            numeroTelefonico={paciente.numeroTelefonico}
+            numeroTelefonico={paciente.numeroTelefono}
           />
         ))}
       </div>
       <Pagination
-        totalItems={pacientes.length}
+        totalItems={totalPatients}
         itemsPerPage={itemsPerPage}
         currentPage={currentPage}
         onPageChange={handlePageChange}

@@ -2,7 +2,7 @@ import React from 'react'
 import './CardPaciente.css'
 import ephey from '../../assets/ephey.jpg'
 
-const CardPaciente = ({ci,nombre,direccion,fechaNacimiento,numeroTelefonico,}) => {
+const CardPaciente = ({ci,imageURL,nombre,direccion,fechaNacimiento,numeroTelefonico,}) => {
   return (
     <div className="chard-paciente-main-cont">
         <div className="ci">

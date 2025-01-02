@@ -27,7 +27,8 @@
     object-fit: cover;
 }
 .chard-paciente-main-cont .ci{
-    width: 64px;
+    width: 80px;
+    max-width: 80px;
 }
 .chard-paciente-main-cont .name{
     width: 170px;
