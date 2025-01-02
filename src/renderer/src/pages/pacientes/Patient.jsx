@@ -16,6 +16,7 @@ const Patient = () => {
     const fetchPatients = async () => {
       try {
         const response = await getAllPatient(currentPage);
+        console.log('API Response:', response.data.pacientes[0]);
         setPatients(response.data.pacientes);
         setTotalPatients(response.data.totalPacientes);
       } catch (error) {
@@ -40,6 +41,7 @@ const Patient = () => {
           <CardPaciente
             key={paciente.ciPaciente}
             ci={paciente.ciPaciente}
+            imagen={paciente.imagen}
             nombre={`${paciente.nombre} ${paciente.apellido}`}
             direccion={paciente.direccion}
             fechaNacimiento={paciente.fechaNacimiento}

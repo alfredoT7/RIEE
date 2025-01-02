@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    margin: 1rem 0;
+    margin: 0.5rem 0;
     padding: 1rem;
   }
   
@@ -19,6 +19,9 @@
   .pagination-button:hover:not(:disabled) {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+  }
+  .pagination-button:hover{
+    cursor: pointer;
   }
   
   .pagination-button:disabled {
