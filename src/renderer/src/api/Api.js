@@ -9,3 +9,4 @@ const api = axios.create({
 
 
 export const registerPatient = (data) => api.post('/api/pacientes/create', data);
+export const getPatients = () => api.get('/api/pacientes/all');
