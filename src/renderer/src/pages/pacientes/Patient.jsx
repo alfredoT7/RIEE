@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import CardPaciente from '../../components/cardPaciente/CardPaciente';
 import SearchBar from '../../components/searchBar/SearchBar';
@@ -5,6 +6,7 @@ import './Patient.css';
 import PacienteHeader from '../../components/pacienteHeader/PacienteHeader';
 import Pagination from '../../components/pagination/Pagination';
 import { getAllPatient } from '../../api/Api';
+import TopInfoHome from '../../components/topInfoHome/TopInfoHome';
 
 const Patient = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,6 +36,12 @@ const Patient = () => {
 
   return (
     <>
+      <div className='chards-container'>
+        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
+        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
+        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
+        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
+      </div>
       <SearchBar />
       <PacienteHeader />
       <div className="card-paciente-container">

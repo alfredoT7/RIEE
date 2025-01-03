@@ -7,8 +7,16 @@ const Home = () => {
   return (
     <section className="section-main-container">
       <div className="chards-container">
-        <TopInfoHome />
-        <TopInfoHome />
+        <TopInfoHome 
+          title='Utilidad hoy'
+          quantity='Bs. 1000'
+          porcentaje=' 10%'
+        />
+        <TopInfoHome 
+          title='Utilidad hoy'
+          quantity='Bs. 1000'
+          porcentaje=' 10%'
+        />
       </div>
       <h3>Novedades</h3>
       <div className="parent">
