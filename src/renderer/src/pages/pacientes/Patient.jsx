@@ -1,37 +1,52 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+  import React, { useEffect, useState } from 'react';
 import CardPaciente from '../../components/cardPaciente/CardPaciente';
 import SearchBar from '../../components/searchBar/SearchBar';
 import './Patient.css';
 import PacienteHeader from '../../components/pacienteHeader/PacienteHeader';
 import Pagination from '../../components/pagination/Pagination';
-import { getAllPatient } from '../../api/Api';
+import { getPatientWithPagination, getAllPatients } from '../../api/Api';
 import TopInfoHome from '../../components/topInfoHome/TopInfoHome';
 
 const Patient = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [patients, setPatients] = useState([]);
+  const [filteredPatients, setFilteredPatients] = useState([]);
   const [totalPatients, setTotalPatients] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const itemsPerPage = 15;
 
   useEffect(() => {
-    const fetchPatients = async () => {
+    const fetchAllPatients = async () => {
       try {
-        const response = await getAllPatient(currentPage);
-        console.log('API Response:', response.data.pacientes[0]);
-        setPatients(response.data.pacientes);
-        setTotalPatients(response.data.totalPacientes);
+        const response = await getAllPatients();
+        const allPatients = response.data.pacientes;
+        setPatients(allPatients);
+        setFilteredPatients(allPatients);
+        setTotalPatients(allPatients.length);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
     };
 
-    fetchPatients();
+    fetchAllPatients();
     window.scrollTo(0, 0);
-  }, [currentPage]);
+  }, []);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handleSearch = (searchValue) => {
+    setSearchTerm(searchValue);
+    const filtered = patients.filter(patient => 
+      patient.nombre.toLowerCase().includes(searchValue.toLowerCase()) ||
+      patient.apellido.toLowerCase().includes(searchValue.toLowerCase()) ||
+      patient.ciPaciente.toString().includes(searchValue)
+    );
+    setFilteredPatients(filtered);
+    setCurrentPage(1);
+  };
+
+  const getCurrentPageData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredPatients.slice(startIndex, endIndex);
   };
 
   return (
@@ -42,10 +57,10 @@ const Patient = () => {
         <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
         <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
       </div>
-      <SearchBar />
+      <SearchBar onSearch={handleSearch} />
       <PacienteHeader />
       <div className="card-paciente-container">
-        {patients.map((paciente) => (
+        {getCurrentPageData().map((paciente) => (
           <CardPaciente
             key={paciente.ciPaciente}
             ci={paciente.ciPaciente}
@@ -58,10 +73,10 @@ const Patient = () => {
         ))}
       </div>
       <Pagination
-        totalItems={totalPatients}
+        totalItems={filteredPatients.length}
         itemsPerPage={itemsPerPage}
         currentPage={currentPage}
-        onPageChange={handlePageChange}
+        onPageChange={setCurrentPage}
       />
     </>
   );
