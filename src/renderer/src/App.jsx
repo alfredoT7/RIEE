@@ -6,7 +6,7 @@ import Home from './pages/home/Home';
 import Patient from './pages/pacientes/Patient';
 import NewPatient from './pages/newPatient/NewPatient';
 import SearchBar from './components/searchBar/SearchBar';
-
+import Treatment from './pages/tratamientos/Treatment';
 
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path='/patient' element={<Patient />} />
           <Route path='/new-patient' element={<NewPatient />} />
+          <Route path='/treatment' element={<Treatment />} />
         </Routes>
       </div>
     </Router>

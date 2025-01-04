@@ -16,6 +16,9 @@ const Sidebar = () => {
         if (section === 'Pacientes') {
             navigate('/patient');
         }
+        if(section === 'Tratamiento'){
+            navigate('/treatment');
+        }
     };          
     return (
         <nav className='sidebar-container'>
@@ -29,9 +32,9 @@ const Sidebar = () => {
                     <FaUsers className="icon" />
                     <h4 className={selected === 'Pacientes' ? 'active-text' : ''}>Pacientes</h4>
                 </div>
-                <div className={selected === 'Historial' ? 'active' : ''} onClick={() => handleSelection('Historial')}>
+                <div className={selected === 'Tratamiento' ? 'active' : ''} onClick={() => handleSelection('Tratamiento')}>
                     <FaBookMedical className="icon" />
-                    <h4 className={selected === 'Historial' ? 'active-text' : ''}>Historial Clínico</h4>
+                    <h4 className={selected === 'Tratamiento' ? 'active-text' : ''}>Tratamientos</h4>
 
                 </div>
                 <div className={selected === 'Citas' ? 'active' : ''} onClick={() => handleSelection('Citas')}>
