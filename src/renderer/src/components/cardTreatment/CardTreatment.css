@@ -1,0 +1,43 @@
+@import '../../assets/base.css';
+.card-treatment{
+    display: flex;
+    gap: 15px;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    align-items: center;
+    background-color: var(--primary-color);
+    padding: 12px 12px 12px 12px;
+    border-radius: 10px;
+    justify-content: space-evenly;
+    flex: 1;
+}
+.card-treatment:hover{
+    cursor: pointer;
+}
+.card-treatment h3{
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: wrap;      
+    font-weight: 900;
+}
+.card-treatment p{
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-quaternary);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: wrap;      
+    font-weight: 500;
+}
+
+.card-treatment .right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 27px;
+    color: black;
+}

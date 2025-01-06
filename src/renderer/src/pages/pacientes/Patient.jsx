@@ -46,6 +46,7 @@ const Patient = () => {
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
+    window.scrollTo(0, 0);
     return filteredPatients.slice(startIndex, endIndex);
   };
 

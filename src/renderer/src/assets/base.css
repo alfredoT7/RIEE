@@ -6,11 +6,17 @@
 
   --color-text-primary: #2D3748;
   --color-text-secondary: #6d7784;
+  --color-text-tertiary: #ffffff;
+  --color-text-quaternary: #ebebeb;
 
   --color-green-parameter:#27c02f;
   --color-red-parameter:#E53E3E;
 
   --font-size-title: 18px;
+
+  --color-icon: #0d0b80;
+
+
 }
 
 

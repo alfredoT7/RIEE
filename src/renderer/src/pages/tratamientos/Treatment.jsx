@@ -1,18 +1,31 @@
 import React from 'react'
+import { FaKitMedical,FaPersonCirclePlus,FaBookMedical } from 'react-icons/fa6';
+import CardTreatment from '../../components/cardTreatment/CardTreatment';
+import './Treatment.css'
 
 const Treatment = () => {
   return (
     <main className='main-cont-treatment'>
       <div className='top'>
-        <div>
-          <p></p>
-        </div>
-        <div></div>
-        <div></div>
+        <CardTreatment 
+          title={'Gestionar Informacion Tratamientos'}
+          icon={<FaKitMedical />}
+          description={'Edita la informacion de los trataminetos'}
+        />
+        <CardTreatment 
+          title={'Iniciar tratamiento a un paciente'}
+          icon={<FaPersonCirclePlus />}
+          description={'Inicio de forma personalizada un tratamiento a un paciente'}
+        />
+        <CardTreatment 
+          title={'Ver el historial de tratamientos'}
+          icon={<FaBookMedical />}
+          description={'Ve el historial de tus pacientes'}
+        />
       </div>
       <div className='bot'>
         <div className='left'>
-          {/* tratamientos recientemente realizados */}
+
         </div>
         <div className='right'>
           <div></div>
