@@ -2,6 +2,7 @@ import React from 'react'
 import { FaKitMedical,FaPersonCirclePlus,FaBookMedical } from 'react-icons/fa6';
 import CardTreatment from '../../components/cardTreatment/CardTreatment';
 import './Treatment.css'
+import CardPaciente from '../../components/cardPaciente/CardPaciente';
 
 const Treatment = () => {
   return (
@@ -25,7 +26,17 @@ const Treatment = () => {
       </div>
       <div className='bot'>
         <div className='left'>
-
+          <h3>
+            Últimos Tratamientos Realizados
+          </h3>
+          <CardPaciente 
+            ci={'123456'}
+            imagen={''}
+            nombre={'Juan Perez'}
+            direccion={'Calle 1'}
+            fechaNacimiento={'01/01/2000'}
+            numeroTelefonico={'123456'}
+            />
         </div>
         <div className='right'>
           <div></div>

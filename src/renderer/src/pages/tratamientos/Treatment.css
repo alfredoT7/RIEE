@@ -6,3 +6,35 @@
     width: 100%;
     max-width: 100%;
 }
+.main-cont-treatment .bot{
+    display: flex;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 10px 0px 8px;
+    height: 440px;
+    gap: 10px;
+}
+.main-cont-treatment .bot .left{
+    flex: 1.8;
+    height: 100%;
+    background-color: #ffffff;
+    
+}
+.main-cont-treatment .bot .right{
+    flex: 1;
+    height: 50%;
+    background-color: #ffffff;
+    margin-right: 10px;
+}
+.main-cont-treatment .bot .left,.right{
+    border-radius: 10px;
+}
+.main-cont-treatment .bot .left h3{
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: wrap;      
+    font-weight: 900;
+    margin: 8px 0px 0px 10px;
+}
