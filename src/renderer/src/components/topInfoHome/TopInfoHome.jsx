@@ -1,6 +1,7 @@
 import React from 'react'
 import './TopInfoHome.css'
 import { FaWallet } from 'react-icons/fa'
+import { Calendar, Clock, TrendingUp, Users } from 'lucide-react';
 
 const TopInfoHome = ({title,quantity,porcentaje}) => {
   return (
@@ -10,7 +11,6 @@ const TopInfoHome = ({title,quantity,porcentaje}) => {
             <h4>{quantity}<span>{porcentaje}</span></h4>
         </div>
         <FaWallet className="icon-wallet" />
-        
     </div>
   )
 }

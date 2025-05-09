@@ -1,5 +1,4 @@
 @import '../../assets/base.css';
-
 .chards-container {
     display: flex;
     gap: 20px;
@@ -18,7 +17,7 @@
 }
 .div1 { grid-area: 1 / 1 / 2 / 2; 
     height: 140px;
-    background-color: #ffffff;
+    background-color: var(--bg--component-color-white);
     border-radius: 20px;
 
 }
@@ -35,7 +34,7 @@
 }
 .div4 { 
     grid-area: 2 / 3 / 3 / 4; 
-    background-color: #Ffffff;
+    background-color: var(--bg--component-color-white);
     border-radius: 20px;
 }
 
