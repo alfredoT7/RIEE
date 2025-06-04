@@ -1,32 +1,49 @@
 @import '../../assets/base.css';
 .info-chard{
     display: flex;
-    flex-direction: row;
-    gap: 15px;
-    align-items: center;
+    flex-direction: column;
+    gap: 1px;
     background-color: #ffffff;
-    /* width: 351px; */
     justify-content: space-between;
     border-radius: 10px;
     padding-inline: 10px;
     padding-top: 5px;
     padding-bottom: 5px;
+    width: 170px;
 }
-.info-chard div h5{
-    color: var(--color-text-secondary);
-    margin: 0;
-    
+.info-chard-top{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
 }
-.info-chard div h4{
-    font-weight: 800;
-    margin: 0;
-}
-.info-chard div h4 span{
-    color: var(--color-green-parameter);
+.info-chard-top h5{
+    font-size: 0.9rem;
     font-weight: 600;
-    font-size: small;
+    color: var(--color-text-secondary);
+    white-space: wrap;       
 }
-.icon-wallet{
+.info-chard-top h4{
+    font-size: 1.3rem;
+    font-weight: 500;
+    overflow: hidden;
+    white-space: wrap;       
+    font-weight: 900;
+}
+
+
+.info-chard-bot p{
     color: var(--primary-color);
-    font-size: 20px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+.icon-wallet{
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    padding: 5px;
+    background-color: var(--primary-color);
+    border-radius: 3px;
 }

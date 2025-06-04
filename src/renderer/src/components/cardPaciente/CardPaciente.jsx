@@ -13,10 +13,11 @@ const CardPaciente = ({ci, imagen, nombre, direccion, fechaNacimiento, numeroTel
 
   return (
     <div className="chard-paciente-main-cont">
-      <div className="ci">
+      <div className="ci" title='Carnet de Identidad'>
         <p>{ci}</p>
       </div>
       <img
+        title='Imagen del Paciente'
         src={imagen?.startsWith('http') ? imagen : ImagesApp.defaultImage}
         onError={(e) => {
           e.target.onerror = null;
@@ -25,9 +26,9 @@ const CardPaciente = ({ci, imagen, nombre, direccion, fechaNacimiento, numeroTel
         onClick={handleImageClick} 
       />
       <p className="name">{nombre}</p>
-      <p className="treatment">{direccion}</p>
-      <p className="date">{fechaNacimiento}</p>
-      <p className='phone'>{numeroTelefonico}</p>
+      <p className="treatment" title='Último tratamiento'>{direccion}</p>
+      <p className="date" title='Fecha nacimiento'>{fechaNacimiento}</p>
+      <p className='phone' title='Numero de contacto'>{numeroTelefonico}</p>
       {isImageExpanded && (
         <div className="image-modal" onClick={handleCloseModal}>
           <div className="modal-content">

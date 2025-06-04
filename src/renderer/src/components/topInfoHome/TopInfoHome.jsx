@@ -1,18 +1,23 @@
 import React from 'react'
 import './TopInfoHome.css'
-import { FaWallet } from 'react-icons/fa'
-import { Calendar, Clock, TrendingUp, Users } from 'lucide-react';
 
-const TopInfoHome = ({title,quantity,porcentaje}) => {
+const TopInfoHome = ({ title, quantity, porcentaje, icon }) => {
+  const IconComponent = icon;
+
   return (
     <div className="info-chard">
-        <div>
-            <h5>{title}</h5>
-            <h4>{quantity}<span>{porcentaje}</span></h4>
+        <div className='info-chard-top'>
+            <IconComponent className="icon-wallet" strokeWidth={2}/>
+            <div className='info-chard-top-right'>
+              <h5>{title}</h5>
+              <h4>{quantity}</h4>
+            </div>
         </div>
-        <FaWallet className="icon-wallet" />
+        <div className='info-chard-bot'>
+          <p>{porcentaje}</p>
+        </div>
+        
     </div>
   )
 }
-
 export default TopInfoHome

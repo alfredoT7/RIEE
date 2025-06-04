@@ -1,4 +1,4 @@
-  import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CardPaciente from '../../components/cardPaciente/CardPaciente';
 import SearchBar from '../../components/searchBar/SearchBar';
 import './Patient.css';
@@ -53,10 +53,10 @@ const Patient = () => {
   return (
     <>
       <div className='chards-container'>
+        {/* <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
         <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
         <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
-        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
-        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
+        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/> */}
       </div>
       <SearchBar onSearch={handleSearch} />
       <PacienteHeader />
