@@ -6,6 +6,7 @@ import PacienteHeader from '../../components/pacienteHeader/PacienteHeader';
 import Pagination from '../../components/pagination/Pagination';
 import { getPatientWithPagination, getAllPatients } from '../../api/Api';
 import TopInfoHome from '../../components/topInfoHome/TopInfoHome';
+import PacienteCard from '../../components/pacientescard/PacienteCard';
 
 const Patient = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,11 +53,9 @@ const Patient = () => {
 
   return (
     <>
-      <div className='chards-container'>
-        {/* <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
-        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
-        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/>
-        <TopInfoHome title='Pacientes' quantity={totalPatients} porcentaje='123'/> */}
+      <div className='pat-card-cont'>
+        <h3>Pacientes Recientes</h3>
+          <PacienteCard />
       </div>
       <SearchBar onSearch={handleSearch} />
       <PacienteHeader />

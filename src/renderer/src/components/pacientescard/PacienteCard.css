@@ -1,0 +1,54 @@
+@import '../../assets/base.css';
+.card-pat{
+    width: 250px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-app);
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+.card-pat .top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.3rem;
+}
+.card-pat .top .left {
+  flex: .8;
+  height: 100%;
+  background-color: lightblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-pat .top .left div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+.card-pat .top .left div img {
+  width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.card-pat .top .mid{
+    flex: 3;
+    background-color: lightgreen;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.card-pat .top .rigth{
+    flex: 1;
+    height: 100%;
+    background-color: lightcoral;
+    align-items: center;
+    display: flex;
+}

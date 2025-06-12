@@ -15,7 +15,7 @@
   --font-size-title: 18px;
 
   --color-icon: #0d0b80;
-
+  --input-border-color: #d2d4d8;
 
 }
 
@@ -46,4 +46,32 @@ body {
 }
 h1,h2,h3,h4,h5,h6{
   margin: 0;
+}
+
+.base-button{
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    border: none;
+    height: 35px;
+    color: white;
+    flex: 0.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 20px;
+    padding-right: 15px;
+}
+.base-button p{
+    font-size: 12px;
+    font-weight: bold;
+}
+.base-button:hover{
+    cursor: pointer;
+}
+.base-button:active{
+    background-color: var(--color-text-secondary);
+    color: white;
+}
+.button-icon{
+  margin-left: 10px;
 }
