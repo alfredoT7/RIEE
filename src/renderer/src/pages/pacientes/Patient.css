@@ -1,5 +1,11 @@
 @import '../../assets/base.css';
 .pat-card-cont{
-    height: 600px;
-    background-color: lightblue;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    padding-inline-start: 0.4rem;
+    padding-inline-end: 1rem;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 30px;
 }

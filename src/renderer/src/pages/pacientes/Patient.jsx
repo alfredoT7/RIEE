@@ -7,6 +7,7 @@ import Pagination from '../../components/pagination/Pagination';
 import { getPatientWithPagination, getAllPatients } from '../../api/Api';
 import TopInfoHome from '../../components/topInfoHome/TopInfoHome';
 import PacienteCard from '../../components/pacientescard/PacienteCard';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Patient = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,34 +53,65 @@ const Patient = () => {
   };
 
   return (
-    <>
-      <div className='pat-card-cont'>
+  <>
+    <SearchBar onSearch={handleSearch} />
+    {!searchTerm && (
+      <>
         <h3>Pacientes Recientes</h3>
+        <motion.div className='pat-card-cont'
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+        >
           <PacienteCard />
-      </div>
-      <SearchBar onSearch={handleSearch} />
-      <PacienteHeader />
-      <div className="card-paciente-container">
-        {getCurrentPageData().map((paciente) => (
-          <CardPaciente
-            key={paciente.ciPaciente}
-            ci={paciente.ciPaciente}
-            imagen={paciente.imagen}
-            nombre={`${paciente.nombre} ${paciente.apellido}`}
-            direccion={paciente.direccion}
-            fechaNacimiento={paciente.fechaNacimiento}
-            numeroTelefonico={paciente.numeroTelefono}
-          />
-        ))}
-      </div>
-      <Pagination
-        totalItems={filteredPatients.length}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-      />
-    </>
-  );
+          <PacienteCard />
+          <PacienteCard />
+          <PacienteCard />
+          <PacienteCard />
+          <PacienteCard />
+        </motion.div>
+      </>
+    )}
+
+    {searchTerm && (
+      <>
+        <PacienteHeader />
+        <motion.div  className="card-paciente-container"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+        >
+          <AnimatePresence>
+            {getCurrentPageData().map((paciente) => (
+              <motion.div
+                key={paciente.ciPaciente}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+              >
+                <CardPaciente
+                  ci={paciente.ciPaciente}
+                  imagen={paciente.imagen}
+                  nombre={`${paciente.nombre} ${paciente.apellido}`}
+                  direccion={paciente.direccion}
+                  fechaNacimiento={paciente.fechaNacimiento}
+                  numeroTelefonico={paciente.numeroTelefono}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+        <Pagination
+          totalItems={filteredPatients.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
+      </>
+    )}
+  </>
+);
 };
 
 export default Patient;
