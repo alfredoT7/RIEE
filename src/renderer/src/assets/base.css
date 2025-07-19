@@ -17,6 +17,52 @@
   --color-icon: #0d0b80;
   --input-border-color: #d2d4d8;
   --icon-color-gray: #b6b9bd;
+  /* nuevos colores */
+  --color-primary-light: #5ce1d4;
+  --color-primary-dark: #00897b;
+  --color-accent: #ff7043;
+  --color-light-gray: #f5f7fa;
+  --color-medium-gray: #e1e5eb;
+  --color-dark-gray: #6b7280;
+  
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  
+  --transition-fast: 0.15s;
+  --transition-normal: 0.3s;
+
+  /* Text colors */
+  --color-text-primary: #2D3748;
+  --color-text-secondary: #6d7784;
+  --color-text-tertiary: #ffffff;
+  --color-text-quaternary: #ebebeb;
+  
+  /* Status colors */
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+  
+  /* Font sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  
+  /* Espaciado */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
 
 }
 

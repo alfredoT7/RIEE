@@ -1,3 +1,4 @@
+
 .main-cont-treatment {
     padding: 8px 20px 8px 8px;
     width: 100%;
@@ -46,8 +47,6 @@
     margin: 0;
     color: white;
 }
-
-/* Estilos del buscador */
 .search-container {
     margin-bottom: 20px;
 }
@@ -145,7 +144,7 @@
 
 .code-cell {
     font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     color: var(--color-text-secondary);
     font-weight: 500;
 }
@@ -155,6 +154,7 @@
     align-items: center;
     gap: 10px;
     font-weight: 500;
+    font-size: .83rem;
 }
 
 .treatment-icon {
@@ -341,4 +341,216 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+}
+.featured-treatments-container {
+  margin-top: 40px;
+  padding: 0;
+}
+
+.featured-header {
+  margin-bottom: 30px;
+}
+
+.featured-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.featured-header p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 400;
+}
+
+.featured-treatments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.featured-treatment-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-treatment-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  transition: all 0.2s ease;
+}
+
+.featured-treatment-card.ortodonci­a::before {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.featured-treatment-card.implante::before {
+  background: linear-gradient(90deg, #a855f7, #c084fc);
+}
+
+.featured-treatment-card.blanqueamiento::before {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.featured-treatment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.featured-card-header {
+  margin-bottom: 16px;
+}
+
+.featured-treatment-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.featured-treatment-description {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.featured-treatment-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.featured-detail-group {
+  flex: 1;
+}
+
+.featured-detail-label {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.featured-detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.featured-price {
+  color: #059669;
+}
+
+.featured-popularity-section {
+  margin-top: 20px;
+}
+
+.featured-popularity-label {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.featured-popularity-percentage {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.featured-progress-bar {
+  height: 6px;
+  background-color: #f3f4f6;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.featured-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+
+.ortodonci­a-progress {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  width: 95%;
+}
+
+.implante-progress {
+  background: linear-gradient(90deg, #a855f7, #c084fc);
+  width: 85%;
+}
+
+.blanqueamiento-progress {
+  background: linear-gradient(90deg, #10b981, #34d399);
+  width: 78%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .featured-treatments-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .featured-treatment-details {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .featured-detail-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .featured-detail-label {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured-treatments-container {
+    margin-top: 30px;
+  }
+  
+  .featured-header h2 {
+    font-size: 20px;
+  }
+  
+  .featured-treatment-card {
+    padding: 16px;
+  }
+  
+  .featured-treatment-title {
+    font-size: 16px;
+  }
+  
+  .featured-treatment-description {
+    font-size: 12px;
+  }
 }

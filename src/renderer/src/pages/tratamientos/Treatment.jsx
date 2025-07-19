@@ -105,8 +105,6 @@ const Treatment = () => {
       status: 'Activo'
     }
   ];
-
-  // Filtrar tratamientos basado en el término de búsqueda
   const filteredTreatments = useMemo(() => {
     return treatments.filter(treatment =>
       treatment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -114,14 +112,10 @@ const Treatment = () => {
       treatment.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, treatments]);
-
-  // Calcular paginación
   const totalPages = Math.ceil(filteredTreatments.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTreatments = filteredTreatments.slice(startIndex, endIndex);
-
-  // Resetear página cuando cambia la búsqueda
   React.useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
@@ -142,6 +136,87 @@ const Treatment = () => {
     }
   };
 
+  const FeaturedTreatments = () => {
+    const featuredData = [
+      {
+        id: 1,
+        name: 'Ortodoncia Brackets',
+        description: 'Tratamiento de ortodoncia con brackets metálicos para corregir la alineación dental.',
+        category: 'Ortodoncia',
+        price: 'Bs. 3500',
+        duration: '18 meses',
+        popularity: 95
+      },
+      {
+        id: 2,
+        name: 'Implante Dental',
+        description: 'Colocación de implante de titanio para reemplazar piezas dentales perdidas.',
+        category: 'Implante',
+        price: 'Bs. 3000',
+        duration: '3-6 meses',
+        popularity: 85
+      },
+      {
+        id: 3,
+        name: 'Blanqueamiento LED',
+        description: 'Sistema avanzado de blanqueamiento dental con tecnología LED para resultados óptimos.',
+        category: 'Blanqueamiento',
+        price: 'Bs. 800',
+        duration: '2 sesiones',
+        popularity: 78
+      }
+    ];
+
+    return (
+      <div className="featured-treatments-container">
+        <div className="featured-header">
+          <h2>Tratamientos Destacados</h2>
+          <p>Tratamientos más solicitados en el último mes</p>
+        </div>
+
+        <div className="featured-treatments-grid">
+          {featuredData.map((treatment) => (
+            <div key={treatment.id} className={`featured-treatment-card ${treatment.category.toLowerCase()}`}>
+              <div className="featured-card-header">
+                <h3 className="featured-treatment-title">{treatment.name}</h3>
+              </div>
+              <p className="featured-treatment-description">
+                {treatment.description}
+              </p>
+              
+              <div className="featured-treatment-details">
+                <div className="featured-detail-group">
+                  <div className="featured-detail-label">Precio</div>
+                  <div className="featured-detail-value featured-price">{treatment.price}</div>
+                </div>
+                <div className="featured-detail-group">
+                  <div className="featured-detail-label">Duración</div>
+                  <div className="featured-detail-value">{treatment.duration}</div>
+                </div>
+              </div>
+
+              <div className="featured-popularity-section">
+                <div className="featured-popularity-label">
+                  <span>Popularidad</span>
+                  <span className="featured-popularity-percentage">{treatment.popularity}%</span>
+                </div>
+                <div className="featured-progress-bar">
+                  <div 
+                    className="featured-progress-fill" 
+                    style={{ width: `${treatment.popularity}%` }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+
+
+
   return (
     <main className='main-cont-treatment'>
       <div className='treatment-header'>
@@ -154,8 +229,6 @@ const Treatment = () => {
           <FaPlus className='button-icon'/>
         </button>
       </div>
-
-      {/* Buscador */}
       <div className='search-container'>
         <div className='search-input-wrapper'>
           <FaSearch className='search-icon' />
@@ -256,6 +329,8 @@ const Treatment = () => {
           </div>
         </div>
       )}
+      <FeaturedTreatments />
+
     </main>
   )
 };

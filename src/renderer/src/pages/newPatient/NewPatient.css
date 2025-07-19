@@ -57,7 +57,7 @@
     width: 100%;
     height: 30px;
     padding: 10px 10px 10px 15px;
-    border: 1px solid var(--color-text-secondary);
+    border: 1px solid var(--input-border-color);            
     border-radius: 10px;
     font-size: 15px;
     margin-bottom: 0px;
@@ -83,6 +83,14 @@
     align-items: center;
     flex: 1;
 }
+.input-side input:focus{
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.1);
+}
+
+
+    
 .input-two select{
     height: 35px;
     width: 150px;
