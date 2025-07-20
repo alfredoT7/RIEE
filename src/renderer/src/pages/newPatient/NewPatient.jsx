@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import ImagesApp from '../../assets/ImagesApp';
 import './NewPatient.css';
-import { FaUpload, FaFile } from 'react-icons/fa';
+import { FaCamera, FaUser, FaIdCard, FaCalendar, FaMapMarker, FaPhone, FaHeart, FaBriefcase, FaEnvelope, FaUserFriends, FaSave, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { registerPatient } from '../../api/Api';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -18,6 +19,7 @@ const validationSchema = Yup.object().shape({
   ci: Yup.string().required('Carnet de identidad es obligatorio'),
   birthDate: Yup.date().required('Fecha de nacimiento es obligatoria'),
   phone: Yup.string().required('Teléfono es obligatorio'),
+  secondPhone: Yup.string(),
   civilStatus: Yup.string().required('Estado civil es obligatorio'),
   occupation: Yup.string()
     .matches(/^[a-zA-Z\s]+$/, 'Ocupación no debe contener números')
@@ -42,6 +44,7 @@ const NewPatient = () => {
     birthDate: '',
     address: '',
     phone: '',
+    secondPhone: '',
     civilStatus: '',
     occupation: '',
     email: '',
@@ -133,9 +136,19 @@ const NewPatient = () => {
         imageUrl = await uploadImageToCloudinary(selectedFile);
       }
 
+      
+
+      const phoneNumbers = [{ numero: values.phone }];
+      if (values.secondPhone && values.secondPhone.trim() !== '') {
+        phoneNumbers.push({ numero: values.secondPhone });
+      }
+
       const patientData = {
         ciPaciente: parseInt(values.ci),
-        idEstadoCivil: parseInt(values.civilStatus),
+        email: values.email,
+        estadoCivil: {
+          id: parseInt(values.civilStatus)
+        },
         fechaNacimiento: values.birthDate,
         direccion: values.address,
         ocupacion: values.occupation,
@@ -144,18 +157,27 @@ const NewPatient = () => {
         imagen: imageUrl,
         nombre: values.name,
         apellido: values.lastname,
-        numeroTelefono: parseInt(values.phone),
+        phonesNumbers: phoneNumbers
       };
 
       await registerPatient(patientData);
       console.log('Form submitted:', patientData);
-      alert('Paciente registrado exitosamente');
+      
+      toast.success('¡Paciente registrado exitosamente!', {
+        description: `${values.name} ${values.lastname} ha sido agregado al sistema`,
+        duration: 4000,
+      });
+      
       setSelectedFile(null);
       setPreviewUrl(null);
       navigate('/patient');
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Error al registrar el paciente: revisa el formato de las entradas o posiblemente el carnet de identidad ya existe');
+      
+      toast.error('Error al registrar el paciente', {
+        description: 'Revisa el formato de las entradas o posiblemente el carnet de identidad ya existe',
+        duration: 5000,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -165,108 +187,311 @@ const NewPatient = () => {
     fileInputRef.current.click();
   };
 
+  const handleRemoveImage = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting }) => (
-        <Form className='cont-new-pat'>
-          <div className='img-card'>
-            <h3>Imagen del Paciente</h3>
-            <img
-              src={previewUrl || ImagesApp.defaultImage}
-              alt="Paciente"
-              style={{
-                height: '80%',
-                width: '80%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                borderRadius: '30px',
-              }}
-            />
-            <div>
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={handleFileChange}
-              />
-              <button
-                type="button"
-                onClick={handleFileButtonClick}
+    <div className="new-patient-container">
+      <div className="page-header">
+        <h1 className="page-title">
+          <FaUser className="title-icon" />
+          Registro de Nuevo Paciente
+        </h1>
+        <p className="page-subtitle">Complete la información del paciente</p>
+      </div>
+
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting, errors, touched }) => (
+          <Form className="patient-form">
+            {/* Sección de Imagen */}
+            <div className="form-section image-section">
+              <div className="section-header">
+                <h3>Fotografía del Paciente</h3>
+              </div>
+              
+              <div className="image-upload-container">
+                <div className="image-preview">
+                  <img
+                    src={previewUrl || ImagesApp.defaultImage}
+                    alt="Vista previa del paciente"
+                    className="preview-image"
+                  />
+                  <div className="image-overlay">
+                    <FaCamera className="camera-icon" />
+                  </div>
+                </div>
+                
+                <div className="image-controls">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                  />
+                  <button
+                    type="button"
+                    className="upload-btn"
+                    onClick={handleFileButtonClick}
+                    disabled={isSubmitting}
+                  >
+                    <FaCamera />
+                    Subir Foto
+                  </button>
+                  {previewUrl && (
+                    <button
+                      type="button"
+                      className="remove-btn"
+                      onClick={handleRemoveImage}
+                      disabled={isSubmitting}
+                    >
+                      <FaTrash />
+                      Quitar
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Información Personal */}
+            <div className="form-section">
+              <div className="section-header">
+                <h3>Información Personal</h3>
+              </div>
+              
+              <div className="form-grid">
+                <div className="input-group">
+                  <label htmlFor="name">
+                    <FaUser className="input-icon" />
+                    Nombres *
+                  </label>
+                  <Field 
+                    name="name" 
+                    type="text" 
+                    className={`form-input ${errors.name && touched.name ? 'error' : ''}`}
+                    placeholder="Ingrese los nombres"
+                  />
+                  <ErrorMessage name="name" component="div" className="error-message" />
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor="lastname">
+                    <FaUser className="input-icon" />
+                    Apellidos *
+                  </label>
+                  <Field 
+                    name="lastname" 
+                    type="text" 
+                    className={`form-input ${errors.lastname && touched.lastname ? 'error' : ''}`}
+                    placeholder="Ingrese los apellidos"
+                  />
+                  <ErrorMessage name="lastname" component="div" className="error-message" />
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor="ci">
+                    <FaIdCard className="input-icon" />
+                    Carnet de Identidad *
+                  </label>
+                  <Field 
+                    name="ci" 
+                    type="text" 
+                    className={`form-input ${errors.ci && touched.ci ? 'error' : ''}`}
+                    placeholder="Ej: 1234567 LP"
+                  />
+                  <ErrorMessage name="ci" component="div" className="error-message" />
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor="birthDate">
+                    <FaCalendar className="input-icon" />
+                    Fecha de Nacimiento *
+                  </label>
+                  <Field 
+                    name="birthDate" 
+                    type="date" 
+                    className={`form-input ${errors.birthDate && touched.birthDate ? 'error' : ''}`}
+                  />
+                  <ErrorMessage name="birthDate" component="div" className="error-message" />
+                </div>
+
+                <div className="input-group full-width">
+                  <label htmlFor="address">
+                    <FaMapMarker className="input-icon" />
+                    Dirección
+                  </label>
+                  <Field 
+                    name="address" 
+                    type="text" 
+                    className="form-input"
+                    placeholder="Ingrese la dirección completa"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Información de Contacto */}
+            <div className="form-section">
+              <div className="section-header">
+                <h3>Información de Contacto</h3>
+              </div>
+              
+              <div className="form-grid">
+                <div className="input-group">
+                  <label htmlFor="phone">
+                    <FaPhone className="input-icon" />
+                    Teléfono Principal *
+                  </label>
+                  <Field 
+                    name="phone" 
+                    type="tel" 
+                    className={`form-input ${errors.phone && touched.phone ? 'error' : ''}`}
+                    placeholder="70123456"
+                  />
+                  <ErrorMessage name="phone" component="div" className="error-message" />
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor="secondPhone">
+                    <FaPhone className="input-icon" />
+                    Teléfono Secundario
+                  </label>
+                  <Field 
+                    name="secondPhone" 
+                    type="tel" 
+                    className="form-input"
+                    placeholder="22334455 (Opcional)"
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor="email">
+                    <FaEnvelope className="input-icon" />
+                    Correo Electrónico *
+                  </label>
+                  <Field 
+                    name="email" 
+                    type="email" 
+                    className={`form-input ${errors.email && touched.email ? 'error' : ''}`}
+                    placeholder="ejemplo@correo.com"
+                  />
+                  <ErrorMessage name="email" component="div" className="error-message" />
+                </div>
+              </div>
+            </div>
+
+            {/* Información Adicional */}
+            <div className="form-section">
+              <div className="section-header">
+                <h3>Información Adicional</h3>
+              </div>
+              
+              <div className="form-grid">
+                <div className="input-group">
+                  <label htmlFor="civilStatus">
+                    <FaHeart className="input-icon" />
+                    Estado Civil *
+                  </label>
+                  <Field 
+                    as="select" 
+                    name="civilStatus" 
+                    className={`form-select ${errors.civilStatus && touched.civilStatus ? 'error' : ''}`}
+                  >
+                    <option value="">Seleccione estado civil</option>
+                    <option value="1">Soltero(a)</option>
+                    <option value="2">Casado(a)</option>
+                    <option value="3">Divorciado(a)</option>
+                    <option value="4">Viudo(a)</option>
+                    <option value="5">Unión Libre</option>
+                  </Field>
+                  <ErrorMessage name="civilStatus" component="div" className="error-message" />
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor="occupation">
+                    <FaBriefcase className="input-icon" />
+                    Ocupación *
+                  </label>
+                  <Field 
+                    name="occupation" 
+                    type="text" 
+                    className={`form-input ${errors.occupation && touched.occupation ? 'error' : ''}`}
+                    placeholder="Ej: Ingeniero, Estudiante, etc."
+                  />
+                  <ErrorMessage name="occupation" component="div" className="error-message" />
+                </div>
+              </div>
+            </div>
+
+            {/* Persona de Referencia */}
+            <div className="form-section">
+              <div className="section-header">
+                <h3>Persona de Referencia</h3>
+              </div>
+              
+              <div className="form-grid">
+                <div className="input-group">
+                  <label htmlFor="referencePerson">
+                    <FaUserFriends className="input-icon" />
+                    Nombre Completo *
+                  </label>
+                  <Field 
+                    name="referencePerson" 
+                    type="text" 
+                    className={`form-input ${errors.referencePerson && touched.referencePerson ? 'error' : ''}`}
+                    placeholder="Nombre de la persona de contacto"
+                  />
+                  <ErrorMessage name="referencePerson" component="div" className="error-message" />
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor="referencePhone">
+                    <FaPhone className="input-icon" />
+                    Teléfono de Referencia *
+                  </label>
+                  <Field 
+                    name="referencePhone" 
+                    type="tel" 
+                    className={`form-input ${errors.referencePhone && touched.referencePhone ? 'error' : ''}`}
+                    placeholder="Teléfono de contacto"
+                  />
+                  <ErrorMessage name="referencePhone" component="div" className="error-message" />
+                </div>
+              </div>
+            </div>
+
+            {/* Botones de Acción */}
+            <div className="form-actions">
+              <button 
+                type="button" 
+                className="btn-secondary"
+                onClick={() => navigate('/patient')}
                 disabled={isSubmitting}
               >
-                <FaFile />
-                <p>Subir Imagen</p>
+                Cancelar
+              </button>
+              <button 
+                type="submit" 
+                className="btn-primary"
+                disabled={isSubmitting}
+              >
+                <FaSave className="btn-icon" />
+                {isSubmitting ? 'Guardando...' : 'Registrar Paciente'}
               </button>
             </div>
-          </div>
-          <div className='input-side'>
-            <div className="input-group">
-              <label htmlFor="name">Nombres</label>
-              <Field className="input-card" id="name" name="name" type="text" />
-            </div>
-            <div className="input-group">
-              <label htmlFor="lastname">Apellido</label>
-              <Field className="input-card" id="lastname" name="lastname" type="text" />
-            </div>
-            <div className='div-inputs'>
-              <div className="input-group">
-                <label htmlFor="ci">Carnet de identidad</label>
-                <Field className="input-card" id="ci" name="ci" type="number" />
-              </div>
-              <div className="input-group">
-                <label htmlFor="birthDate">Fecha de Nacimiento</label>
-                <Field className="input-card" id="birthDate" name="birthDate" type="date" />
-              </div>
-            </div>
-            <div className="input-group">
-              <label htmlFor="address">Dirección</label>
-              <Field className="input-card" id="address" name="address" type="text" />
-            </div>
-            <div className='input-two'>
-              <div className="input-group">
-                <label htmlFor="phone">Teléfono</label>
-                <Field className="input-card" id="phone" name="phone" type="number" />
-              </div>
-              <div className="input-group">
-                <label htmlFor="civilStatus">Estado Civil</label>
-                <Field as="select" className="select" id="civilStatus" name="civilStatus">
-                  <option value="">Estado Civil</option>
-                  <option value="1">Soltero</option>
-                  <option value="2">Casado</option>
-                  <option value="3">Divorciado</option>
-                  <option value="4">Viudo</option>
-                  <option value="5">Unión Libre</option>
-                </Field>
-              </div>
-            </div>
-            <div className="input-group">
-              <label htmlFor="occupation">Ocupación</label>
-              <Field className="input-card" id="occupation" name="occupation" type="text" />
-            </div>
-            <div className="input-group">
-              <label htmlFor="email">Email</label>
-              <Field className="input-card" id="email" name="email" type="email" />
-            </div>
-            <div className="input-group">
-              <label htmlFor="referencePerson">Nombre de persona de Referencia</label>
-              <Field className="input-card" id="referencePerson" name="referencePerson" type="text" />
-            </div>
-            <div className="input-group inp-ref">
-              <label htmlFor="referencePhone">Num. de referencia</label>
-              <Field className="input-card" id="referencePhone" name="referencePhone" type="number" />
-            </div>
-            <button type="submit" disabled={isSubmitting}>
-              Añadir nuevo paciente
-            </button>
-          </div>
-        </Form>
-      )}
-    </Formik>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 };
 
