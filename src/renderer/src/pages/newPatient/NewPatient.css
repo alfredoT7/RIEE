@@ -1,126 +1,400 @@
 @import '../../assets/base.css';
-.cont-new-pat{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-    width: 744px;
-    height: 569px;
-    border-top-left-radius: 10px;
-    display: flex;
-    flex-direction: row;
-}
-.img-card {
-    height: 310px;
-    width: 290px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 1.5;
-}
-.img-card img {
-    width: 80%;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 30px;
-}
-.img-card div{
-    margin-top: 8px;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-.img-card div button{
-    display: flex;
-    height: 28px;
-    align-items: center;
-    border-radius: 8px;
-    border: none;
-    padding-inline: 8px;
-    gap: 5px;
-    background-color: white;
-}
-.img-card div button:hover{
-    cursor: pointer;
-}
-.img-card div button:active{
-    background-color: var(--color-text-secondary);
-    color: white;
-}
-.input-side{
-    padding: 0px 0px 20px 0px;
-    flex: 1.9;
-}
-.input-side input{
-    width: 100%;
-    height: 30px;
-    padding: 10px 10px 10px 15px;
-    border: 1px solid var(--input-border-color);            
-    border-radius: 10px;
-    font-size: 15px;
-    margin-bottom: 0px;
-    font-size: 15px;
-}
-.input-side .in-two{
-    width: 50%;
-}
-.div-inputs{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-}
-.input-two{
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    align-items: top;
-    justify-content: space-between;
-}
-.input-two input{
-    align-items: center;
-    flex: 1;
-}
-.input-side input:focus{
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.1);
+.new-patient-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+  background: var(--bg-app);
+  min-height: 100vh;
 }
 
+/* Header de la página */
+.page-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  padding: var(--space-lg);
+  background: linear-gradient(135deg, var(--primary-color), var(--color-primary-light));
+  border-radius: var(--border-radius-xl);
+  color: white;
+  box-shadow: var(--shadow-lg);
+}
 
-    
-.input-two select{
-    height: 35px;
+.page-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.title-icon {
+  font-size: 1.5em;
+}
+
+.page-subtitle {
+  font-size: var(--font-size-base);
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Formulario principal */
+.patient-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* Secciones del formulario */
+.form-section {
+  background: var(--bg--component-color-white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-medium-gray);
+  transition: all var(--transition-normal);
+}
+
+.form-section:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.section-header {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 2px solid var(--color-light-gray);
+}
+
+.section-header h3 {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Sección de imagen */
+.image-section {
+  text-align: center;
+}
+
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.image-preview {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--primary-color);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-normal);
+}
+
+.image-preview:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 176, 155, 0.3);
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: all var(--transition-normal);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.image-preview:hover .image-overlay {
+  opacity: 1;
+}
+
+.camera-icon {
+  color: white;
+  font-size: 2rem;
+}
+
+.image-controls {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.upload-btn, .remove-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-size: var(--font-size-sm);
+}
+
+.upload-btn {
+  background: var(--primary-color);
+  color: white;
+}
+
+.upload-btn:hover {
+  background: var(--sec-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.remove-btn {
+  background: var(--color-error);
+  color: white;
+}
+
+.remove-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.upload-btn:disabled, .remove-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Grid de formularios */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Grupos de input */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.input-group label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.input-icon {
+  color: var(--primary-color);
+  font-size: 1.1em;
+}
+
+/* Inputs y selects */
+.form-input, .form-select {
+  padding: var(--space-md);
+  border: 2px solid var(--color-medium-gray);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  transition: all var(--transition-normal);
+  background: white;
+}
+
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.1);
+  transform: translateY(-1px);
+}
+
+.form-input:hover, .form-select:hover {
+  border-color: var(--color-primary-light);
+}
+
+.form-input::placeholder {
+  color: var(--color-dark-gray);
+  opacity: 0.7;
+}
+
+/* Estados de error */
+.form-input.error, .form-select.error {
+  border-color: var(--color-error);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.error-message {
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+  margin-top: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.error-message::before {
+  content: "⚠";
+  font-size: 1em;
+}
+
+/* Select específico */
+.form-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300b09b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right var(--space-md) center;
+  background-size: 1.2em;
+  appearance: none;
+  padding-right: 3rem;
+}
+
+/* Acciones del formulario */
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-xl);
+  border-top: 2px solid var(--color-light-gray);
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  min-width: 160px;
+  height: 50px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--color-primary-light));
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--sec-color), var(--primary-color));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+  background: var(--color-light-gray);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-medium-gray);
+}
+
+.btn-secondary:hover {
+  background: var(--color-medium-gray);
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled, .btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-icon {
+  font-size: 1.1em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .new-patient-container {
+    padding: var(--space-md);
+  }
+  
+  .page-header {
+    padding: var(--space-md);
+  }
+  
+  .page-title {
+    font-size: var(--font-size-xl);
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .form-section {
+    padding: var(--space-lg);
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .image-preview {
     width: 150px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 10px;
-}
-.input-side button{
-    background-color: var(--primary-color);
-    height: 35px;
-    border: none;
-    border-radius: 10px;
-    padding-inline: 20px;
-    color: white;
-    font-weight: bold;
-}
-.input-side button:hover{
-    cursor: pointer;
-}
-.input-side button:active{
-    background-color: var(--color-text-secondary);
+    height: 150px;
+  }
+  
+  .image-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .upload-btn, .remove-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
+  }
 }
 
-.error {
-    border: 1px solid red;
-}
-.input-side label{
-    font-size: 13px;
-    font-weight: bold;    
-}
-.inp-ref{
-    margin-bottom: 10px;
+@media (max-width: 480px) {
+  .new-patient-container {
+    padding: var(--space-sm);
+  }
+  
+  .page-header {
+    padding: var(--space-sm);
+  }
+  
+  .form-section {
+    padding: var(--space-md);
+  }
+  
+  .image-preview {
+    width: 120px;
+    height: 120px;
+  }
 }
