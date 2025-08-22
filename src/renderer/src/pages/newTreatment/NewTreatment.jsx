@@ -1,33 +1,35 @@
 import React, { useState, useRef } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import ImagesApp from '../../assets/ImagesApp';
 import treatmentPhoto from '../../assets/img/treatmentphoto.png';
 import './NewTreatment.css';
 import { FaCamera, FaTooth, FaFileAlt, FaClipboardList, FaClock, FaDollarSign, FaStickyNote, FaSave, FaTrash, FaArrowLeft } from 'react-icons/fa';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { useNewTreatment } from './useNewTreatment';
 
 const validationSchema = Yup.object().shape({
   nombreTratamiento: Yup.string()
-    .min(3, 'El nombre debe tener al menos 3 caracteres')
-    .required('Nombre del tratamiento es obligatorio'),
+    .trim()
+    .min(1, 'El nombre del tratamiento es obligatorio')
+    .max(255, 'El nombre del tratamiento debe tener máximo 255 caracteres')
+    .required('El nombre del tratamiento es obligatorio'),
   descripcion: Yup.string()
-    .max(500, 'La descripción no puede exceder 500 caracteres')
-    .required('Descripción es obligatoria'),
+    .max(500, 'La descripción debe tener máximo 500 caracteres'),
   procedimiento: Yup.string()
-    .max(1000, 'El procedimiento no puede exceder 1000 caracteres')
-    .required('Procedimiento es obligatorio'),
+    .max(1000, 'El procedimiento debe tener máximo 1000 caracteres'),
   semanasEstimadas: Yup.number()
+    .typeError('Las semanas estimadas deben ser un número')
     .min(1, 'Las semanas estimadas deben ser al menos 1')
-    .max(104, 'Las semanas estimadas no pueden exceder 104 (2 años)')
-    .required('Semanas estimadas es obligatorio'),
+    .max(104, 'Las semanas estimadas no pueden exceder 104')
+    .integer('Las semanas estimadas deben ser un número entero')
+    .required('Las semanas estimadas son obligatorias'),
   costoBaseTratamiento: Yup.number()
-    .min(0, 'El costo no puede ser negativo')
-    .required('Costo base del tratamiento es obligatorio'),
+    .typeError('El costo base debe ser un número')
+    .min(0, 'El costo base no puede ser negativo')
+    .integer('El costo base debe ser un número entero')
+    .required('El costo base es obligatorio'),
   notasAdicionales: Yup.string()
-    .max(500, 'Las notas no pueden exceder 500 caracteres'),
+    .max(500, 'Las notas adicionales deben tener máximo 500 caracteres'),
 });
 
 const NewTreatment = () => {
@@ -35,6 +37,9 @@ const NewTreatment = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  
+  // Usar el hook personalizado
+  const { createTreatment, isSubmitting, resizeImage } = useNewTreatment();
 
   const initialValues = {
     nombreTratamiento: '',
@@ -43,47 +48,6 @@ const NewTreatment = () => {
     semanasEstimadas: '',
     costoBaseTratamiento: '',
     notasAdicionales: '',
-  };
-
-  const resizeImage = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const maxWidth = 550;
-          const maxHeight = 550;
-
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > maxWidth) {
-              height = (height * maxWidth) / width;
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width = (width * maxHeight) / height;
-              height = maxHeight;
-            }
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          canvas.toBlob((blob) => {
-            const resizedFile = new File([blob], file.name, { type: file.type });
-            resolve(resizedFile);
-          }, 'image/jpeg', 0.7);
-        };
-        img.onerror = (error) => reject(error);
-        img.src = e.target.result;
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
-    });
   };
 
   const handleFileChange = async (event) => {
@@ -104,63 +68,18 @@ const NewTreatment = () => {
     }
   };
 
-  const uploadImageToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'riee-consultorio');
-
-    try {
-      const response = await axios.post(
-        'https://api.cloudinary.com/v1_1/dzizafv5s/image/upload',
-        formData
-      );
-      return response.data.secure_url;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      throw new Error('Error al subir la imagen');
-    }
-  };
-
-  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
-    try {
-      let imageUrl = treatmentPhoto;
-
-      if (selectedFile) {
-        imageUrl = await uploadImageToCloudinary(selectedFile);
-      }
-
-      const treatmentData = {
-        nombreTratamiento: values.nombreTratamiento,
-        descripcion: values.descripcion,
-        procedimiento: values.procedimiento,
-        semanasEstimadas: parseInt(values.semanasEstimadas),
-        costoBaseTratamiento: parseInt(values.costoBaseTratamiento),
-        notasAdicionales: values.notasAdicionales || null,
-        imagen_referencial: imageUrl
-      };
-
-      // Aquí harías la llamada a tu API para registrar el tratamiento
-      // await registerTreatment(treatmentData);
-      console.log('Treatment data to submit:', treatmentData);
-      
-      toast.success('¡Tratamiento registrado exitosamente!', {
-        description: `${values.nombreTratamiento} ha sido agregado al sistema`,
-        duration: 4000,
-      });
-      
+  const handleSubmit = async (values, { setSubmitting }) => {
+    setSubmitting(true);
+    
+    const result = await createTreatment(values, selectedFile, treatmentPhoto);
+    
+    if (result.success) {
+      // Limpiar formulario y estado
       setSelectedFile(null);
       setPreviewUrl(null);
-      navigate('/treatment');
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      
-      toast.error('Error al registrar el tratamiento', {
-        description: 'Revisa los datos ingresados e intenta nuevamente',
-        duration: 5000,
-      });
-    } finally {
-      setSubmitting(false);
     }
+    
+    setSubmitting(false);
   };
 
   const handleFileButtonClick = () => {

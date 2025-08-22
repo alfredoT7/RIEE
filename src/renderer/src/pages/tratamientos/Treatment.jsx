@@ -1,118 +1,28 @@
-import React, { useState, useMemo } from 'react'
+import React from 'react'
 import { FaPlus, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useTreatment } from './useTreatment';
 import './Treatment.css'
 
 const Treatment = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
   const navigate = useNavigate();
-
-  const treatments = [
-    {
-      id: 1,
-      nombreTratamiento: 'Consulta de ortodoncia',
-      descripcion: 'Evaluación inicial y diagnóstico para tratamientos de ortodoncia',
-      procedimiento: 'Examen clínico, radiografías, análisis de modelos y plan de tratamiento',
-      semanasEstimadas: 2,
-      costoBaseTratamiento: 150,
-      notasAdicionales: 'Incluye material de diagnóstico'
-    },
-    {
-      id: 2,
-      nombreTratamiento: 'Limpieza dental profesional',
-      descripcion: 'Profilaxis dental completa con eliminación de placa y sarro',
-      procedimiento: 'Raspado, alisado radicular, pulido dental y aplicación de flúor',
-      semanasEstimadas: 1,
-      costoBaseTratamiento: 200,
-      notasAdicionales: 'Se recomienda cada 6 meses'
-    },
-    {
-      id: 3,
-      nombreTratamiento: 'Extracción simple',
-      descripcion: 'Extracción de piezas dentales no complicadas',
-      procedimiento: 'Anestesia local, luxación, extracción y sutura si es necesario',
-      semanasEstimadas: 1,
-      costoBaseTratamiento: 250,
-      notasAdicionales: 'Cuidados post-operatorios incluidos'
-    },
-    {
-      id: 4,
-      nombreTratamiento: 'Implante dental',
-      descripcion: 'Colocación de implante de titanio para reemplazar pieza dental',
-      procedimiento: 'Cirugía de colocación, período de oseointegración y colocación de corona',
-      semanasEstimadas: 16,
-      costoBaseTratamiento: 3000,
-      notasAdicionales: 'Incluye corona provisional'
-    },
-    {
-      id: 5,
-      nombreTratamiento: 'Blanqueamiento dental',
-      descripcion: 'Aclaramiento del color dental mediante geles blanqueadores',
-      procedimiento: 'Protección de encías, aplicación de gel blanqueador y activación',
-      semanasEstimadas: 3,
-      costoBaseTratamiento: 500,
-      notasAdicionales: 'Evitar alimentos pigmentantes'
-    },
-    {
-      id: 6,
-      nombreTratamiento: 'Tratamiento de conducto',
-      descripcion: 'Endodoncia para tratar infecciones del nervio dental',
-      procedimiento: 'Apertura, limpieza de conductos, medicación y obturación',
-      semanasEstimadas: 4,
-      costoBaseTratamiento: 800,
-      notasAdicionales: 'Requiere corona posterior'
-    },
-    {
-      id: 7,
-      nombreTratamiento: 'Corona dental',
-      descripcion: 'Prótesis fija para restaurar forma y función dental',
-      procedimiento: 'Preparación del diente, toma de impresión, fabricación y cementado',
-      semanasEstimadas: 3,
-      costoBaseTratamiento: 1200,
-      notasAdicionales: 'Material cerámico de alta calidad'
-    },
-    {
-      id: 8,
-      nombreTratamiento: 'Obturación dental',
-      descripcion: 'Restauración de caries con material de resina',
-      procedimiento: 'Remoción de caries, preparación de cavidad y obturación',
-      semanasEstimadas: 1,
-      costoBaseTratamiento: 180,
-      notasAdicionales: 'Color personalizado al diente'
-    }
-  ];
-  const filteredTreatments = useMemo(() => {
-    return treatments.filter(treatment =>
-      treatment.nombreTratamiento.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      treatment.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      treatment.procedimiento.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm, treatments]);
-  const totalPages = Math.ceil(filteredTreatments.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTreatments = filteredTreatments.slice(startIndex, endIndex);
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  
+  const {
+    loading,
+    error,
+    searchTerm,
+    currentPage,
+    currentTreatments,
+    totalPages,
+    startIndex,
+    endIndex,
+    handlePageChange,
+    handlePreviousPage,
+    handleNextPage,
+    handleSearchChange,
+    refreshTreatments,
+    stats
+  } = useTreatment();
 
   const FeaturedTreatments = () => {
     const featuredData = [
@@ -217,13 +127,15 @@ const Treatment = () => {
             type='text'
             placeholder='Buscar por nombre, descripción o procedimiento...'
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className='search-input'
           />
         </div>
         <div className='search-results-info'>
           {searchTerm && (
-            <span>{filteredTreatments.length} resultado{filteredTreatments.length !== 1 ? 's' : ''} encontrado{filteredTreatments.length !== 1 ? 's' : ''}</span>
+            <span>
+              {stats.filtered} resultado{stats.filtered !== 1 ? 's' : ''} encontrado{stats.filtered !== 1 ? 's' : ''}
+            </span>
           )}
         </div>
       </div>
@@ -240,7 +152,30 @@ const Treatment = () => {
             </tr>
           </thead>
           <tbody>
-            {currentTreatments.length > 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan="5" className='loading-cell'>
+                  <div className="loading-content">
+                    <div className="loading-spinner"></div>
+                    <span>Cargando tratamientos...</span>
+                  </div>
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan="5" className='error-cell'>
+                  <div className="error-content">
+                    <span>❌ {error}</span>
+                    <button 
+                      className="retry-btn"
+                      onClick={refreshTreatments}
+                    >
+                      Reintentar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ) : currentTreatments.length > 0 ? (
               currentTreatments.map((treatment, index) => (
                 <tr key={treatment.id || index}>
                   <td className='treatment-cell'>
@@ -251,7 +186,7 @@ const Treatment = () => {
                   </td>
                   <td className='description-cell'>
                     <div className='description-text'>
-                      {treatment.descripcion}
+                      {treatment.descripcion || 'Sin descripción'}
                     </div>
                   </td>
                   <td className='weeks-cell'>
@@ -260,7 +195,7 @@ const Treatment = () => {
                     </span>
                   </td>
                   <td className='price-cell'>
-                    <span className='price-amount'>Bs. {treatment.costoBaseTratamiento.toLocaleString()}</span>
+                    <span className='price-amount'>Bs. {treatment.costoBaseTratamiento?.toLocaleString()}</span>
                   </td>
                   <td className='notes-cell'>
                     <div className='notes-text'>
@@ -272,22 +207,25 @@ const Treatment = () => {
             ) : (
               <tr>
                 <td colSpan="5" className='no-results'>
-                  No se encontraron tratamientos que coincidan con tu búsqueda
+                  {searchTerm 
+                    ? 'No se encontraron tratamientos que coincidan con tu búsqueda'
+                    : 'No hay tratamientos registrados'
+                  }
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-      {filteredTreatments.length > itemsPerPage && (
+      {!loading && !error && stats.showPagination && (
         <div className='pagination-container'>
           <div className='pagination-info'>
-            Mostrando {startIndex + 1}-{Math.min(endIndex, filteredTreatments.length)} de {filteredTreatments.length} tratamientos
+            Mostrando {startIndex + 1}-{Math.min(endIndex, stats.filtered)} de {stats.filtered} tratamientos
           </div>
           <div className='pagination-controls'>
             <button 
               onClick={handlePreviousPage}
-              disabled={currentPage === 1}
+              disabled={!stats.hasPreviousPage}
               className='pagination-btn'
             >
               <FaChevronLeft />
@@ -305,7 +243,7 @@ const Treatment = () => {
             
             <button 
               onClick={handleNextPage}
-              disabled={currentPage === totalPages}
+              disabled={!stats.hasNextPage}
               className='pagination-btn'
             >
               <FaChevronRight />
