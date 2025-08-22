@@ -1,115 +1,93 @@
 import React, { useState, useMemo } from 'react'
 import { FaPlus, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import './Treatment.css'
 
 const Treatment = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const navigate = useNavigate();
 
   const treatments = [
     {
-      code: 'ORTHO-01',
-      name: 'Consulta de ortodoncia',
-      category: 'Ortodoncia',
-      duration: '30 min',
-      price: 'Bs. 150',
-      status: 'Activo'
+      id: 1,
+      nombreTratamiento: 'Consulta de ortodoncia',
+      descripcion: 'Evaluación inicial y diagnóstico para tratamientos de ortodoncia',
+      procedimiento: 'Examen clínico, radiografías, análisis de modelos y plan de tratamiento',
+      semanasEstimadas: 2,
+      costoBaseTratamiento: 150,
+      notasAdicionales: 'Incluye material de diagnóstico'
     },
     {
-      code: 'CLEAN-01',
-      name: 'Limpieza dental profesional',
-      category: 'Higiene',
-      duration: '45 min',
-      price: 'Bs. 200',
-      status: 'Activo'
+      id: 2,
+      nombreTratamiento: 'Limpieza dental profesional',
+      descripcion: 'Profilaxis dental completa con eliminación de placa y sarro',
+      procedimiento: 'Raspado, alisado radicular, pulido dental y aplicación de flúor',
+      semanasEstimadas: 1,
+      costoBaseTratamiento: 200,
+      notasAdicionales: 'Se recomienda cada 6 meses'
     },
     {
-      code: 'EXTRACT-01',
-      name: 'Extracción simple',
-      category: 'Cirugía',
-      duration: '40 min',
-      price: 'Bs. 250',
-      status: 'Activo'
+      id: 3,
+      nombreTratamiento: 'Extracción simple',
+      descripcion: 'Extracción de piezas dentales no complicadas',
+      procedimiento: 'Anestesia local, luxación, extracción y sutura si es necesario',
+      semanasEstimadas: 1,
+      costoBaseTratamiento: 250,
+      notasAdicionales: 'Cuidados post-operatorios incluidos'
     },
     {
-      code: 'IMPLANT-01',
-      name: 'Implante dental',
-      category: 'Rehabilitación',
-      duration: '90 min',
-      price: 'Bs. 3000',
-      status: 'Activo'
+      id: 4,
+      nombreTratamiento: 'Implante dental',
+      descripcion: 'Colocación de implante de titanio para reemplazar pieza dental',
+      procedimiento: 'Cirugía de colocación, período de oseointegración y colocación de corona',
+      semanasEstimadas: 16,
+      costoBaseTratamiento: 3000,
+      notasAdicionales: 'Incluye corona provisional'
     },
     {
-      code: 'WHITEN-01',
-      name: 'Blanqueamiento dental',
-      category: 'Estética',
-      duration: '60 min',
-      price: 'Bs. 500',
-      status: 'Inactivo'
+      id: 5,
+      nombreTratamiento: 'Blanqueamiento dental',
+      descripcion: 'Aclaramiento del color dental mediante geles blanqueadores',
+      procedimiento: 'Protección de encías, aplicación de gel blanqueador y activación',
+      semanasEstimadas: 3,
+      costoBaseTratamiento: 500,
+      notasAdicionales: 'Evitar alimentos pigmentantes'
     },
     {
-      code: 'ROOT-01',
-      name: 'Tratamiento de conducto',
-      category: 'Endodoncia',
-      duration: '75 min',
-      price: 'Bs. 800',
-      status: 'Activo'
+      id: 6,
+      nombreTratamiento: 'Tratamiento de conducto',
+      descripcion: 'Endodoncia para tratar infecciones del nervio dental',
+      procedimiento: 'Apertura, limpieza de conductos, medicación y obturación',
+      semanasEstimadas: 4,
+      costoBaseTratamiento: 800,
+      notasAdicionales: 'Requiere corona posterior'
     },
     {
-      code: 'CROWN-01',
-      name: 'Corona dental',
-      category: 'Rehabilitación',
-      duration: '60 min',
-      price: 'Bs. 1200',
-      status: 'Activo'
+      id: 7,
+      nombreTratamiento: 'Corona dental',
+      descripcion: 'Prótesis fija para restaurar forma y función dental',
+      procedimiento: 'Preparación del diente, toma de impresión, fabricación y cementado',
+      semanasEstimadas: 3,
+      costoBaseTratamiento: 1200,
+      notasAdicionales: 'Material cerámico de alta calidad'
     },
     {
-      code: 'FILLING-01',
-      name: 'Obturación dental',
-      category: 'Odontología General',
-      duration: '30 min',
-      price: 'Bs. 180',
-      status: 'Activo'
-    },
-    {
-      code: 'XRAY-01',
-      name: 'Radiografía dental',
-      category: 'Diagnóstico',
-      duration: '15 min',
-      price: 'Bs. 50',
-      status: 'Activo'
-    },
-    {
-      code: 'BRIDGE-01',
-      name: 'Puente dental',
-      category: 'Rehabilitación',
-      duration: '120 min',
-      price: 'Bs. 2500',
-      status: 'Activo'
-    },
-    {
-      code: 'VENEER-01',
-      name: 'Carillas dentales',
-      category: 'Estética',
-      duration: '90 min',
-      price: 'Bs. 800',
-      status: 'Activo'
-    },
-    {
-      code: 'PERIO-01',
-      name: 'Tratamiento periodontal',
-      category: 'Periodoncia',
-      duration: '60 min',
-      price: 'Bs. 400',
-      status: 'Activo'
+      id: 8,
+      nombreTratamiento: 'Obturación dental',
+      descripcion: 'Restauración de caries con material de resina',
+      procedimiento: 'Remoción de caries, preparación de cavidad y obturación',
+      semanasEstimadas: 1,
+      costoBaseTratamiento: 180,
+      notasAdicionales: 'Color personalizado al diente'
     }
   ];
   const filteredTreatments = useMemo(() => {
     return treatments.filter(treatment =>
-      treatment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      treatment.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      treatment.category.toLowerCase().includes(searchTerm.toLowerCase())
+      treatment.nombreTratamiento.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      treatment.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      treatment.procedimiento.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, treatments]);
   const totalPages = Math.ceil(filteredTreatments.length / itemsPerPage);
@@ -224,7 +202,10 @@ const Treatment = () => {
           <h4>Tratamientos</h4>
           <p>Gestione los tratamientos y procedimientos dentales</p>
         </div>
-        <button className='base-button'>
+        <button 
+          className='base-button'
+          onClick={() => navigate('/new-treatment')}
+        >
           <p>Nuevo tratamiento</p>
           <FaPlus className='button-icon'/>
         </button>
@@ -234,7 +215,7 @@ const Treatment = () => {
           <FaSearch className='search-icon' />
           <input
             type='text'
-            placeholder='Buscar por nombre, código o categoría...'
+            placeholder='Buscar por nombre, descripción o procedimiento...'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className='search-input'
@@ -251,43 +232,46 @@ const Treatment = () => {
         <table className='treatment-table'>
           <thead>
             <tr>
-              <th>CÓDIGO</th>
               <th>TRATAMIENTO</th>
-              <th>CATEGORÍA</th>
-              <th>DURACIÓN</th>
-              <th>PRECIO</th>
-              <th>ESTADO</th>
+              <th>DESCRIPCIÓN</th>
+              <th>SEMANAS ESTIMADAS</th>
+              <th>COSTO BASE (Bs.)</th>
+              <th>NOTAS</th>
             </tr>
           </thead>
           <tbody>
             {currentTreatments.length > 0 ? (
               currentTreatments.map((treatment, index) => (
-                <tr key={index}>
-                  <td className='code-cell'>{treatment.code}</td>
+                <tr key={treatment.id || index}>
                   <td className='treatment-cell'>
                     <span className='treatment-icon'>🦷</span>
-                    {treatment.name}
+                    <div className='treatment-info'>
+                      <div className='treatment-name'>{treatment.nombreTratamiento}</div>
+                    </div>
                   </td>
-                  <td>
-                    <span className={`category-tag ${treatment.category.toLowerCase().replace(/[íáéóú\s]/g, (match) => {
-                      const replacements = {'í': 'i', 'á': 'a', 'é': 'e', 'ó': 'o', 'ú': 'u', ' ': '-'};
-                      return replacements[match] || match;
-                    })}`}>
-                      {treatment.category}
+                  <td className='description-cell'>
+                    <div className='description-text'>
+                      {treatment.descripcion}
+                    </div>
+                  </td>
+                  <td className='weeks-cell'>
+                    <span className='weeks-badge'>
+                      {treatment.semanasEstimadas} {treatment.semanasEstimadas === 1 ? 'semana' : 'semanas'}
                     </span>
                   </td>
-                  <td>{treatment.duration}</td>
-                  <td className='price-cell'>{treatment.price}</td>
-                  <td>
-                    <span className={`status-badge ${treatment.status.toLowerCase()}`}>
-                      {treatment.status}
-                    </span>
+                  <td className='price-cell'>
+                    <span className='price-amount'>Bs. {treatment.costoBaseTratamiento.toLocaleString()}</span>
+                  </td>
+                  <td className='notes-cell'>
+                    <div className='notes-text'>
+                      {treatment.notasAdicionales || 'Sin notas adicionales'}
+                    </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className='no-results'>
+                <td colSpan="5" className='no-results'>
                   No se encontraron tratamientos que coincidan con tu búsqueda
                 </td>
               </tr>

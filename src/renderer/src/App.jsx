@@ -7,6 +7,7 @@ import Patient from './pages/pacientes/Patient';
 import NewPatient from './pages/newPatient/NewPatient';
 import SearchBar from './components/searchBar/SearchBar';
 import Treatment from './pages/tratamientos/Treatment';
+import NewTreatment from './pages/newTreatment/NewTreatment';
 import { Toaster } from 'sonner';
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path='/patient' element={<Patient />} />
           <Route path='/new-patient' element={<NewPatient />} />
           <Route path='/treatment' element={<Treatment />} />
+          <Route path='/new-treatment' element={<NewTreatment />} />
         </Routes>
         <Toaster 
           position="top-right"

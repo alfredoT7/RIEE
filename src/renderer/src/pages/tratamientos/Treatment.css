@@ -157,6 +157,77 @@
     font-size: .83rem;
 }
 
+.treatment-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.treatment-name {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+}
+
+.description-cell {
+    max-width: 250px;
+}
+
+.description-text {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.weeks-cell {
+    text-align: center;
+}
+
+.weeks-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: rgba(0, 176, 155, 0.1);
+    color: var(--primary-color);
+    text-align: center;
+    min-width: 80px;
+}
+
+.price-cell {
+    font-weight: 600;
+    text-align: right;
+}
+
+.price-amount {
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+.notes-cell {
+    max-width: 200px;
+}
+
+.notes-text {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+}
+
 .treatment-icon {
     background-color: rgba(39, 192, 47, 0.1); /* usando --color-green-parameter con opacidad */
     color: var(--color-green-parameter);
@@ -331,6 +402,22 @@
         gap: 5px;
     }
     
+    .description-cell,
+    .notes-cell {
+        max-width: 180px;
+    }
+    
+    .description-text,
+    .notes-text {
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+    }
+    
+    .weeks-badge {
+        min-width: 60px;
+        font-size: 0.7rem;
+    }
+    
     .pagination-container {
         flex-direction: column;
         gap: 15px;
@@ -340,6 +427,25 @@
     .pagination-controls {
         flex-wrap: wrap;
         justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .treatment-table-container {
+        overflow-x: auto;
+    }
+    
+    .treatment-table {
+        min-width: 600px;
+    }
+    
+    .description-cell,
+    .notes-cell {
+        max-width: 120px;
+    }
+    
+    .treatment-name {
+        font-size: 0.8rem;
     }
 }
 .featured-treatments-container {
