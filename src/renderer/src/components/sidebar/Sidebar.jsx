@@ -19,6 +19,9 @@ const Sidebar = () => {
         if(section === 'Tratamiento'){
             navigate('/treatment');
         }
+        if(section === 'Citas'){
+            navigate('/appointments');
+        }
     };          
     return (
         <nav className='sidebar-container'>
