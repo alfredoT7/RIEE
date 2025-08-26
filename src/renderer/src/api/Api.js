@@ -28,3 +28,5 @@ const api = axios.create({
 export const registerPatient = (data) => api.post('/api/v1/riee/patients', data);
 export const getPatientWithPagination = (pageNumber) => api.get(`/api/pacientes/all/${pageNumber}`);
 export const getAllPatients = () => api.get('/api/v1/riee/patients');
+export const getAllTreatments = () => api.get('/api/v1/riee/treatments');
+export const registerTreatment = (data) => api.post('/api/v1/riee/treatments', data);

@@ -1,0 +1,457 @@
+.appointments-container {
+  padding: 24px;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+.appointments-summary {
+  margin-bottom: 32px;
+}
+
+.appointments-summary h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.summary-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0 0 24px 0;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.calendar-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.patients-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.hours-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.treatments-icon {
+  background: #fce7f3;
+  color: #ec4899;
+}
+
+.card-content {
+  flex: 1;
+}
+
+.card-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 1px 0;
+}
+
+.card-label {
+  color: #64748b;
+  font-size: 11px;
+  margin: 0 0 2px 0;
+  font-weight: 500;
+}
+
+.card-change {
+  font-size: 9px;
+  font-weight: 500;
+  padding: 1px 4px;
+  border-radius: 10px;
+}
+
+.card-change.positive {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.card-change.negative {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Agenda */
+.appointments-agenda {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  min-height: 600px;
+}
+
+.agenda-header {
+  grid-column: 1 / -1;
+  padding: 24px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.agenda-title h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.agenda-title p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.new-appointment-btn {
+  background: #059669;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.new-appointment-btn:hover {
+  background: #047857;
+}
+
+.agenda-controls {
+  grid-column: 1;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-navigation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid #e2e8f0;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.current-date {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.today-label {
+  background: #10b981;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.view-controls {
+  display: flex;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.view-btn {
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-btn.active,
+.view-btn:hover {
+  background: white;
+  color: #1e293b;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.agenda-content {
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  height: fit-content;
+}
+
+.schedule-column {
+  border-right: 1px solid #e2e8f0;
+}
+
+.time-slot {
+  height: 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.time {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.appointments-column {
+  padding-left: 16px;
+}
+
+.appointment-slot {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-right: 16px;
+}
+
+.appointment {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  border-left: 4px solid;
+}
+
+.appointment.initial-consultation {
+  background: #eff6ff;
+  border-left-color: #3b82f6;
+  border-color: #dbeafe;
+}
+
+.appointment.dental-cleaning {
+  background: #f0fdf4;
+  border-left-color: #10b981;
+  border-color: #d1fae5;
+}
+
+.appointment.dental-extraction {
+  background: #fef2f2;
+  border-left-color: #ef4444;
+  border-color: #fecaca;
+}
+
+.appointment.orthodontic-review {
+  background: #faf5ff;
+  border-left-color: #8b5cf6;
+  border-color: #e9d5ff;
+}
+
+.appointment.endodontic {
+  background: #fffbeb;
+  border-left-color: #f59e0b;
+  border-color: #fed7aa;
+}
+
+.appointment.consultation {
+  background: #f8fafc;
+  border-left-color: #6b7280;
+  border-color: #e5e7eb;
+}
+
+.appointment-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 2px 0;
+}
+
+.appointment-info p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+.appointment-duration {
+  font-size: 11px;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.empty-slot {
+  color: #94a3b8;
+  font-size: 14px;
+  font-style: italic;
+  padding: 12px 16px;
+}
+
+/* Próximas citas */
+.upcoming-appointments {
+  grid-column: 2;
+  border-left: 1px solid #e2e8f0;
+  padding: 24px;
+}
+
+.upcoming-appointments h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+}
+
+.upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.upcoming-item {
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.upcoming-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.upcoming-info p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 8px 0;
+}
+
+.upcoming-time {
+  font-size: 12px;
+  font-weight: 600;
+  color: #059669;
+}
+
+.details-btn {
+  background: none;
+  border: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #64748b;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+
+.details-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .appointments-agenda {
+    grid-template-columns: 1fr;
+  }
+  
+  .upcoming-appointments {
+    border-left: none;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .appointments-container {
+    padding: 16px;
+  }
+  
+  .agenda-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .agenda-controls {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .date-navigation {
+    justify-content: center;
+  }
+  
+  .view-controls {
+    align-self: center;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,140 +1,28 @@
-import React, { useState, useMemo } from 'react'
+import React from 'react'
 import { FaPlus, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { useTreatment } from './useTreatment';
 import './Treatment.css'
 
 const Treatment = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const treatments = [
-    {
-      code: 'ORTHO-01',
-      name: 'Consulta de ortodoncia',
-      category: 'Ortodoncia',
-      duration: '30 min',
-      price: 'Bs. 150',
-      status: 'Activo'
-    },
-    {
-      code: 'CLEAN-01',
-      name: 'Limpieza dental profesional',
-      category: 'Higiene',
-      duration: '45 min',
-      price: 'Bs. 200',
-      status: 'Activo'
-    },
-    {
-      code: 'EXTRACT-01',
-      name: 'Extracción simple',
-      category: 'Cirugía',
-      duration: '40 min',
-      price: 'Bs. 250',
-      status: 'Activo'
-    },
-    {
-      code: 'IMPLANT-01',
-      name: 'Implante dental',
-      category: 'Rehabilitación',
-      duration: '90 min',
-      price: 'Bs. 3000',
-      status: 'Activo'
-    },
-    {
-      code: 'WHITEN-01',
-      name: 'Blanqueamiento dental',
-      category: 'Estética',
-      duration: '60 min',
-      price: 'Bs. 500',
-      status: 'Inactivo'
-    },
-    {
-      code: 'ROOT-01',
-      name: 'Tratamiento de conducto',
-      category: 'Endodoncia',
-      duration: '75 min',
-      price: 'Bs. 800',
-      status: 'Activo'
-    },
-    {
-      code: 'CROWN-01',
-      name: 'Corona dental',
-      category: 'Rehabilitación',
-      duration: '60 min',
-      price: 'Bs. 1200',
-      status: 'Activo'
-    },
-    {
-      code: 'FILLING-01',
-      name: 'Obturación dental',
-      category: 'Odontología General',
-      duration: '30 min',
-      price: 'Bs. 180',
-      status: 'Activo'
-    },
-    {
-      code: 'XRAY-01',
-      name: 'Radiografía dental',
-      category: 'Diagnóstico',
-      duration: '15 min',
-      price: 'Bs. 50',
-      status: 'Activo'
-    },
-    {
-      code: 'BRIDGE-01',
-      name: 'Puente dental',
-      category: 'Rehabilitación',
-      duration: '120 min',
-      price: 'Bs. 2500',
-      status: 'Activo'
-    },
-    {
-      code: 'VENEER-01',
-      name: 'Carillas dentales',
-      category: 'Estética',
-      duration: '90 min',
-      price: 'Bs. 800',
-      status: 'Activo'
-    },
-    {
-      code: 'PERIO-01',
-      name: 'Tratamiento periodontal',
-      category: 'Periodoncia',
-      duration: '60 min',
-      price: 'Bs. 400',
-      status: 'Activo'
-    }
-  ];
-  const filteredTreatments = useMemo(() => {
-    return treatments.filter(treatment =>
-      treatment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      treatment.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      treatment.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm, treatments]);
-  const totalPages = Math.ceil(filteredTreatments.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTreatments = filteredTreatments.slice(startIndex, endIndex);
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  const navigate = useNavigate();
+  
+  const {
+    loading,
+    error,
+    searchTerm,
+    currentPage,
+    currentTreatments,
+    totalPages,
+    startIndex,
+    endIndex,
+    handlePageChange,
+    handlePreviousPage,
+    handleNextPage,
+    handleSearchChange,
+    refreshTreatments,
+    stats
+  } = useTreatment();
 
   const FeaturedTreatments = () => {
     const featuredData = [
@@ -224,7 +112,10 @@ const Treatment = () => {
           <h4>Tratamientos</h4>
           <p>Gestione los tratamientos y procedimientos dentales</p>
         </div>
-        <button className='base-button'>
+        <button 
+          className='base-button'
+          onClick={() => navigate('/new-treatment')}
+        >
           <p>Nuevo tratamiento</p>
           <FaPlus className='button-icon'/>
         </button>
@@ -234,15 +125,17 @@ const Treatment = () => {
           <FaSearch className='search-icon' />
           <input
             type='text'
-            placeholder='Buscar por nombre, código o categoría...'
+            placeholder='Buscar por nombre, descripción o procedimiento...'
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className='search-input'
           />
         </div>
         <div className='search-results-info'>
           {searchTerm && (
-            <span>{filteredTreatments.length} resultado{filteredTreatments.length !== 1 ? 's' : ''} encontrado{filteredTreatments.length !== 1 ? 's' : ''}</span>
+            <span>
+              {stats.filtered} resultado{stats.filtered !== 1 ? 's' : ''} encontrado{stats.filtered !== 1 ? 's' : ''}
+            </span>
           )}
         </div>
       </div>
@@ -251,59 +144,88 @@ const Treatment = () => {
         <table className='treatment-table'>
           <thead>
             <tr>
-              <th>CÓDIGO</th>
               <th>TRATAMIENTO</th>
-              <th>CATEGORÍA</th>
-              <th>DURACIÓN</th>
-              <th>PRECIO</th>
-              <th>ESTADO</th>
+              <th>DESCRIPCIÓN</th>
+              <th>SEMANAS ESTIMADAS</th>
+              <th>COSTO BASE (Bs.)</th>
+              <th>NOTAS</th>
             </tr>
           </thead>
           <tbody>
-            {currentTreatments.length > 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan="5" className='loading-cell'>
+                  <div className="loading-content">
+                    <div className="loading-spinner"></div>
+                    <span>Cargando tratamientos...</span>
+                  </div>
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan="5" className='error-cell'>
+                  <div className="error-content">
+                    <span>❌ {error}</span>
+                    <button 
+                      className="retry-btn"
+                      onClick={refreshTreatments}
+                    >
+                      Reintentar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ) : currentTreatments.length > 0 ? (
               currentTreatments.map((treatment, index) => (
-                <tr key={index}>
-                  <td className='code-cell'>{treatment.code}</td>
+                <tr key={treatment.id || index}>
                   <td className='treatment-cell'>
                     <span className='treatment-icon'>🦷</span>
-                    {treatment.name}
+                    <div className='treatment-info'>
+                      <div className='treatment-name'>{treatment.nombreTratamiento}</div>
+                    </div>
                   </td>
-                  <td>
-                    <span className={`category-tag ${treatment.category.toLowerCase().replace(/[íáéóú\s]/g, (match) => {
-                      const replacements = {'í': 'i', 'á': 'a', 'é': 'e', 'ó': 'o', 'ú': 'u', ' ': '-'};
-                      return replacements[match] || match;
-                    })}`}>
-                      {treatment.category}
+                  <td className='description-cell'>
+                    <div className='description-text'>
+                      {treatment.descripcion || 'Sin descripción'}
+                    </div>
+                  </td>
+                  <td className='weeks-cell'>
+                    <span className='weeks-badge'>
+                      {treatment.semanasEstimadas} {treatment.semanasEstimadas === 1 ? 'semana' : 'semanas'}
                     </span>
                   </td>
-                  <td>{treatment.duration}</td>
-                  <td className='price-cell'>{treatment.price}</td>
-                  <td>
-                    <span className={`status-badge ${treatment.status.toLowerCase()}`}>
-                      {treatment.status}
-                    </span>
+                  <td className='price-cell'>
+                    <span className='price-amount'>Bs. {treatment.costoBaseTratamiento?.toLocaleString()}</span>
+                  </td>
+                  <td className='notes-cell'>
+                    <div className='notes-text'>
+                      {treatment.notasAdicionales || 'Sin notas adicionales'}
+                    </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className='no-results'>
-                  No se encontraron tratamientos que coincidan con tu búsqueda
+                <td colSpan="5" className='no-results'>
+                  {searchTerm 
+                    ? 'No se encontraron tratamientos que coincidan con tu búsqueda'
+                    : 'No hay tratamientos registrados'
+                  }
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-      {filteredTreatments.length > itemsPerPage && (
+      {!loading && !error && stats.showPagination && (
         <div className='pagination-container'>
           <div className='pagination-info'>
-            Mostrando {startIndex + 1}-{Math.min(endIndex, filteredTreatments.length)} de {filteredTreatments.length} tratamientos
+            Mostrando {startIndex + 1}-{Math.min(endIndex, stats.filtered)} de {stats.filtered} tratamientos
           </div>
           <div className='pagination-controls'>
             <button 
               onClick={handlePreviousPage}
-              disabled={currentPage === 1}
+              disabled={!stats.hasPreviousPage}
               className='pagination-btn'
             >
               <FaChevronLeft />
@@ -321,7 +243,7 @@ const Treatment = () => {
             
             <button 
               onClick={handleNextPage}
-              disabled={currentPage === totalPages}
+              disabled={!stats.hasNextPage}
               className='pagination-btn'
             >
               <FaChevronRight />
