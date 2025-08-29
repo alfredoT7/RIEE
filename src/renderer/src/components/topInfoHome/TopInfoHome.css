@@ -10,6 +10,11 @@
     padding-top: 5px;
     padding-bottom: 5px;
     width: 170px;
+    min-width: 150px;
+    flex: 1;
+    max-width: 250px;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
 }
 .info-chard-top{
     display: flex;

@@ -64,6 +64,10 @@
   --space-lg: 1.5rem;
   --space-xl: 2rem;
 
+  /* Sidebar variables */
+  --sidebar-width-expanded: 240px;
+  --sidebar-width-collapsed: 80px;
+
 }
 
 
@@ -82,14 +86,29 @@ ul {
 body {
   color: var(--color-text-primary);
   background: var(--bg-app);
-    line-height: 1.6;
-  font-family:
-  Helvetica,Arial,sans-serif;
+  line-height: 1.6;
+  font-family: Helvetica,Arial,sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-top: 15px;
-  padding-left: 240px;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width-expanded);
+  transition: margin-left var(--transition-normal);
+  padding: 0 0 0 0;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: var(--sidebar-width-collapsed);
 }
 h1,h2,h3,h4,h5,h6{
   margin: 0;

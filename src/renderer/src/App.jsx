@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { SidebarProvider, useSidebar } from './context/SidebarContext';
 import Sidebar from './components/sidebar/Sidebar';
 import Header from './components/header/Header';
 import Home from './pages/home/Home';
@@ -11,13 +12,13 @@ import NewTreatment from './pages/newTreatment/NewTreatment';
 import Appointments from './pages/citas/Appointments';
 import { Toaster } from 'sonner';
 
-
-function App() {
+const AppContent = () => {
+  const { isCollapsed } = useSidebar();
   
   return (
-    <Router>
-      <div>
-        <Sidebar />
+    <div className="app-container">
+      <Sidebar />
+      <div className={`main-content ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -27,15 +28,25 @@ function App() {
           <Route path='/new-treatment' element={<NewTreatment />} />
           <Route path='/appointments' element={<Appointments />} />
         </Routes>
-        <Toaster 
-          position="top-right"
-          richColors
-          closeButton
-          expand={true}
-          duration={4000}
-        />
       </div>
-    </Router>
+      <Toaster 
+        position="top-right"
+        richColors
+        closeButton
+        expand={true}
+        duration={4000}
+      />
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <SidebarProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </SidebarProvider>
   );
 }
 

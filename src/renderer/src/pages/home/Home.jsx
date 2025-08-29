@@ -32,6 +32,14 @@ const Home = () => {
 
       <h3 className="recent-title">Pacientes Recientes</h3>
         <div className="card-paciente-container">
+          <div className="patients-header">
+            <div className="header-ci">CI</div>
+            <div className="header-photo">Foto</div>
+            <div className="header-name">Nombre</div>
+            <div className="header-treatment">Tratamiento</div>
+            <div className="header-date">Fecha Nac.</div>
+            <div className="header-phone">Teléfono</div>
+          </div>
           <CardPaciente ci="12345600" nombre="Juan Perez"   direccion="Ortodoncia"  fechaNacimiento="12/12/2021" numeroTelefonico={70774739}/>
           <CardPaciente ci="1231"     nombre="Juan Perez"   direccion="Ortodoncia"  fechaNacimiento="12/12/2021" numeroTelefonico={70774739}/>
           <CardPaciente ci="12345600" nombre="Juan Perez"   direccion="Ortodoncia"  fechaNacimiento="12/12/2021" numeroTelefonico={70774739}/>

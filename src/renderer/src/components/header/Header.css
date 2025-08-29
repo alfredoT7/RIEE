@@ -1,29 +1,82 @@
 @import '../../assets/base.css';
-.header-container div h5{
-    color: var(--color-text-secondary);
-    margin: 0;
-}
-.header-container div h5 span{
-    color: var(--color-text-primary);
-    font-weight: bold;
-}
-.header-container div h4{
-    font-weight: bolder;
-}
-.header-container{
+
+.header-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-right: 20px;
-    padding-left: 10px;
+    padding: 0 var(--space-lg);
+    height: 70px;
+    background: var(--bg--component-color-white);
+    border-bottom: 1px solid var(--color-light-gray);
+    box-shadow: var(--shadow-sm);
 }
-.header-container :first-child{
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.sidebar-toggle-btn {
+    background: none;
+    border: none;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: var(--space-sm);
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--color-light-gray);
+    color: var(--primary-color);
+}
+
+.breadcrumb {
     display: flex;
     flex-direction: column;
 }
-.header-container :last-child{
-    align-items: center;
+
+.breadcrumb h5 {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: var(--font-size-sm);
+}
+
+.breadcrumb h5 span {
+    color: var(--color-text-primary);
+    font-weight: bold;
+}
+
+.breadcrumb h4 {
+    font-weight: bolder;
+    margin: 0;
+    color: var(--color-text-primary);
+}
+
+.header-right {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.header-right h5 {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: var(--font-size-sm);
+}
+
+.header-right svg {
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-normal);
+}
+
+.header-right svg:hover {
+    color: var(--primary-color);
 }

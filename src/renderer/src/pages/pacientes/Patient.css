@@ -9,3 +9,9 @@
     align-items: center;
     padding-bottom: 30px;
 }
+
+/* Ajuste simple para cuando el sidebar está colapsado */
+.main-content.sidebar-collapsed .pat-card-cont {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
