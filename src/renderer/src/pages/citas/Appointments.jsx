@@ -98,37 +98,67 @@ const Appointments = () => {
               <span className="time">08:00</span>
             </div>
             <div className="time-slot">
+              <span className="time">08:30</span>
+            </div>
+            <div className="time-slot">
               <span className="time">09:00</span>
+            </div>
+            <div className="time-slot">
+              <span className="time">09:30</span>
             </div>
             <div className="time-slot">
               <span className="time">10:00</span>
             </div>
             <div className="time-slot">
+              <span className="time">10:30</span>
+            </div>
+            <div className="time-slot">
               <span className="time">11:00</span>
+            </div>
+            <div className="time-slot">
+              <span className="time">11:30</span>
             </div>
             <div className="time-slot">
               <span className="time">12:00</span>
             </div>
             <div className="time-slot">
+              <span className="time">12:30</span>
+            </div>
+            <div className="time-slot">
               <span className="time">13:00</span>
+            </div>
+            <div className="time-slot">
+              <span className="time">13:30</span>
             </div>
             <div className="time-slot">
               <span className="time">14:00</span>
             </div>
             <div className="time-slot">
+              <span className="time">14:30</span>
+            </div>
+            <div className="time-slot">
               <span className="time">15:00</span>
+            </div>
+            <div className="time-slot">
+              <span className="time">15:30</span>
             </div>
             <div className="time-slot">
               <span className="time">16:00</span>
             </div>
             <div className="time-slot">
+              <span className="time">16:30</span>
+            </div>
+            <div className="time-slot">
               <span className="time">17:00</span>
+            </div>
+            <div className="time-slot">
+              <span className="time">17:30</span>
             </div>
           </div>
 
           <div className="appointments-column">
             <div className="appointment-slot">
-              <div className="appointment initial-consultation">
+              <div className="appointment initial-consultation duration-30" style={{top: '2px'}}>
                 <div className="appointment-info">
                   <h4>Juan Pérez</h4>
                   <p>Consulta inicial</p>
@@ -137,22 +167,26 @@ const Appointments = () => {
               </div>
             </div>
 
+            <div className="appointment-slot"></div>
+
             <div className="appointment-slot">
-              <div className="appointment dental-cleaning">
+              <div className="appointment dental-cleaning duration-60" style={{top: '2px'}}>
                 <div className="appointment-info">
                   <h4>María García</h4>
                   <p>Limpieza dental</p>
                 </div>
-                <span className="appointment-duration">45 min</span>
+                <span className="appointment-duration">60 min</span>
               </div>
             </div>
 
-            <div className="appointment-slot empty">
-              <span className="empty-slot">Disponible</span>
-            </div>
+            <div className="appointment-slot"></div>
+
+            <div className="appointment-slot"></div>
+
+            <div className="appointment-slot"></div>
 
             <div className="appointment-slot">
-              <div className="appointment dental-extraction">
+              <div className="appointment dental-extraction duration-30" style={{top: '2px'}}>
                 <div className="appointment-info">
                   <h4>Carlos Rodríguez</h4>
                   <p>Extracción dental</p>
@@ -161,40 +195,48 @@ const Appointments = () => {
               </div>
             </div>
 
-            <div className="appointment-slot empty">
-              <span className="empty-slot">Disponible</span>
-            </div>
+            <div className="appointment-slot"></div>
 
-            <div className="appointment-slot empty">
-              <span className="empty-slot">Disponible</span>
-            </div>
+            <div className="appointment-slot"></div>
+
+            <div className="appointment-slot"></div>
+
+            <div className="appointment-slot"></div>
+
+            <div className="appointment-slot"></div>
 
             <div className="appointment-slot">
-              <div className="appointment orthodontic-review">
+              <div className="appointment orthodontic-review duration-90" style={{top: '2px'}}>
                 <div className="appointment-info">
                   <h4>Ana Martínez</h4>
                   <p>Revisión de ortodoncia</p>
                 </div>
-                <span className="appointment-duration">20 min</span>
+                <span className="appointment-duration">90 min</span>
               </div>
             </div>
 
+            <div className="appointment-slot"></div>
+
+            <div className="appointment-slot"></div>
+
             <div className="appointment-slot">
-              <div className="appointment endodontic">
+              <div className="appointment endodontic duration-120" style={{top: '2px'}}>
                 <div className="appointment-info">
                   <h4>Laura Sanchez</h4>
                   <p>Endodoncia</p>
                 </div>
-                <span className="appointment-duration">60 min</span>
+                <span className="appointment-duration">120 min</span>
               </div>
             </div>
 
-            <div className="appointment-slot empty">
-              <span className="empty-slot">Disponible</span>
-            </div>
+            <div className="appointment-slot"></div>
+
+            <div className="appointment-slot"></div>
+
+            <div className="appointment-slot"></div>
 
             <div className="appointment-slot">
-              <div className="appointment consultation">
+              <div className="appointment consultation duration-30" style={{top: '2px'}}>
                 <div className="appointment-info">
                   <h4>Roberto Gomez</h4>
                   <p>Consulta</p>
@@ -202,48 +244,8 @@ const Appointments = () => {
                 <span className="appointment-duration">30 min</span>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="upcoming-appointments">
-          <h3>Próximas citas</h3>
-          
-          <div className="upcoming-list">
-            <div className="upcoming-item">
-              <div className="upcoming-info">
-                <h4>Juan Pérez</h4>
-                <p>Consulta inicial</p>
-                <span className="upcoming-time">08:00 AM</span>
-              </div>
-              <button className="details-btn">Ver detalles</button>
-            </div>
-
-            <div className="upcoming-item">
-              <div className="upcoming-info">
-                <h4>María García</h4>
-                <p>Limpieza dental</p>
-                <span className="upcoming-time">09:00 AM</span>
-              </div>
-              <button className="details-btn">Ver detalles</button>
-            </div>
-
-            <div className="upcoming-item">
-              <div className="upcoming-info">
-                <h4>Carlos Rodríguez</h4>
-                <p>Extracción dental</p>
-                <span className="upcoming-time">11:00 AM</span>
-              </div>
-              <button className="details-btn">Ver detalles</button>
-            </div>
-
-            <div className="upcoming-item">
-              <div className="upcoming-info">
-                <h4>Ana Martínez</h4>
-                <p>Revisión de ortodoncia</p>
-                <span className="upcoming-time">02:00 PM</span>
-              </div>
-              <button className="details-btn">Ver detalles</button>
-            </div>
+            <div className="appointment-slot"></div>
           </div>
         </div>
       </div>
