@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Appointments.css';
 
 const Appointments = () => {
+  const navigate = useNavigate();
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const handleNewAppointment = () => {
+    navigate('/nueva-cita');
+  };
   return (
     <div className="appointments-container">
       <div className="appointments-summary">
@@ -74,7 +81,12 @@ const Appointments = () => {
             <h2>Citas</h2>
             <p>Gestión de agenda y citas programadas</p>
           </div>
-          <button className="new-appointment-btn">+ Nueva Cita</button>
+          <button 
+            className="new-appointment-btn"
+            onClick={handleNewAppointment}
+          >
+            + Nueva Cita
+          </button>
         </div>
 
         <div className="agenda-controls">

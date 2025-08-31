@@ -110,6 +110,7 @@ const Patient = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
+                className="card-item" // Agregar clase para el item individual
               >
                 <CardPaciente
                   ci={paciente.ciPaciente}

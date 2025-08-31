@@ -12,14 +12,21 @@ export const useSidebar = () => {
 
 export const SidebarProvider = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [currentPage, setCurrentPage] = useState('Inicio');
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
+  const updateCurrentPage = (pageName) => {
+    setCurrentPage(pageName);
+  };
+
   const value = {
     isCollapsed,
+    currentPage,
     toggleSidebar,
+    updateCurrentPage,
   };
 
   return (

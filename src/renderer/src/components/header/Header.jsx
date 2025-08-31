@@ -4,7 +4,7 @@ import { FaUser, FaSlidersH, FaBars } from "react-icons/fa";
 import { useSidebar } from '../../context/SidebarContext';
 
 const Header = () => {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, currentPage } = useSidebar();
 
   return (
     <header className="header-container">
@@ -13,8 +13,8 @@ const Header = () => {
                 <FaBars />
             </button>
             <div className="breadcrumb">
-                <h5>pages / Inicio</h5>
-                <h4>Inicio</h4>
+                <h5>RIEE / {currentPage}</h5>
+                <h4>{currentPage}</h4>
             </div>
         </div>
         <div className="header-right">

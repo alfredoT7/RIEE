@@ -1,0 +1,202 @@
+@import '../../assets/base.css';
+
+.patient-search-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.patient-search-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.patient-search-input-container {
+  position: relative;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  z-index: 1;
+}
+
+.patient-search-input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-xl) var(--space-sm) 35px;
+  border: 1px solid var(--color-medium-gray);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  background-color: var(--bg--component-color-white);
+  transition: all var(--transition-normal);
+  outline: none;
+}
+
+.patient-search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.1);
+}
+
+.clear-selection-btn {
+  position: absolute;
+  right: var(--space-sm);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.clear-selection-btn:hover {
+  background-color: var(--color-light-gray);
+  color: var(--color-text-primary);
+}
+
+.patient-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg--component-color-white);
+  border: 1px solid var(--color-medium-gray);
+  border-top: none;
+  border-radius: 0 0 var(--border-radius-sm) var(--border-radius-sm);
+  box-shadow: var(--shadow-lg);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.patient-option {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  border-bottom: 1px solid var(--color-light-gray);
+}
+
+.patient-option:last-child {
+  border-bottom: none;
+}
+
+.patient-option:hover {
+  background-color: var(--color-light-gray);
+}
+
+.patient-avatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--primary-color), var(--sec-color));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--font-size-sm);
+  margin-right: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.patient-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.patient-name {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.patient-details {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.no-results {
+  padding: var(--space-md);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+.selected-patient-info {
+  display: flex;
+  align-items: center;
+  margin-top: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 1px solid #bbf7d0;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-primary);
+}
+
+.selected-icon {
+  color: var(--color-success);
+  margin-right: var(--space-xs);
+  font-size: var(--font-size-xs);
+}
+
+/* Scrollbar personalizado para el dropdown */
+.patient-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.patient-dropdown::-webkit-scrollbar-track {
+  background: var(--color-light-gray);
+}
+
+.patient-dropdown::-webkit-scrollbar-thumb {
+  background: var(--color-medium-gray);
+  border-radius: 3px;
+}
+
+.patient-dropdown::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dark-gray);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .patient-dropdown {
+    max-height: 150px;
+  }
+  
+  .patient-option {
+    padding: var(--space-sm) var(--space-xs);
+  }
+  
+  .patient-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-xs);
+  }
+}

@@ -10,6 +10,7 @@ import SearchBar from './components/searchBar/SearchBar';
 import Treatment from './pages/tratamientos/Treatment';
 import NewTreatment from './pages/newTreatment/NewTreatment';
 import Appointments from './pages/citas/Appointments';
+import NewAppointment from './pages/newAppointment/NewAppointment';
 import { Toaster } from 'sonner';
 
 const AppContent = () => {
@@ -27,6 +28,7 @@ const AppContent = () => {
           <Route path='/treatment' element={<Treatment />} />
           <Route path='/new-treatment' element={<NewTreatment />} />
           <Route path='/appointments' element={<Appointments />} />
+          <Route path='/nueva-cita' element={<NewAppointment />} />
         </Routes>
       </div>
       <Toaster 

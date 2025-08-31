@@ -1,17 +1,155 @@
 @import '../../assets/base.css';
-.pat-card-cont{
+
+.pat-card-cont {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    padding-inline-start: 0.4rem;
-    padding-inline-end: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-lg); /* Aumentado para más espacio cuando sidebar normal */
+    padding: 0 var(--space-lg);
     justify-content: center;
-    align-items: center;
-    padding-bottom: 30px;
+    align-items: start;
 }
 
-/* Ajuste simple para cuando el sidebar está colapsado */
+/* Ajuste para cuando el sidebar está colapsado */
 .main-content.sidebar-collapsed .pat-card-cont {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.5rem;
+    gap: var(--space-xl); /* Aún más espacio cuando sidebar colapsado */
+    padding: 0 var(--space-xl);
+}
+
+/* Estilos para el container de búsqueda específico de Patient */
+.card-paciente-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: 0 var(--space-lg);
+    margin-bottom: var(--space-xl);
+    background-color: var(--bg--component-color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.main-content.sidebar-collapsed .card-paciente-container {
+    padding: 0 var(--space-xl);
+}
+
+/* Estilos para los items individuales del grid */
+.card-item {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* Estilos específicos para la vista de tabla de pacientes */
+.card-paciente-container .card-item {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.card-paciente-container .chard-paciente-main-cont {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: var(--space-xs);
+}
+
+/* Estilos adicionales para mejor organización */
+.pat-card-cont h3 {
+    grid-column: 1 / -1; /* Título ocupa toda la fila */
+    margin: var(--space-lg) 0 var(--space-md) 0;
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* Estilo específico para el título "Pacientes Recientes" */
+h3 {
+    margin: var(--space-lg) var(--space-lg) var(--space-md) var(--space-lg);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* Cuando el sidebar está colapsado */
+.main-content.sidebar-collapsed h3 {
+    margin: var(--space-lg) var(--space-xl) var(--space-md) var(--space-xl);
+}
+
+/* Responsive para tablets */
+@media (max-width: 1024px) {
+    .pat-card-cont {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: var(--space-md); /* Gap medio para tablets */
+        padding: 0 var(--space-md);
+    }
+    
+    .card-paciente-container {
+        padding: 0 var(--space-md);
+    }
+    
+    .card-item {
+        width: 100%;
+    }
+    
+    h3 {
+        margin: var(--space-lg) var(--space-md) var(--space-md) var(--space-md);
+    }
+    
+    .main-content.sidebar-collapsed h3 {
+        margin: var(--space-lg) var(--space-md) var(--space-md) var(--space-md);
+    }
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .pat-card-cont {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--space-sm);
+        padding: 0 var(--space-sm);
+    }
+    
+    .main-content.sidebar-collapsed .pat-card-cont {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--space-sm);
+        padding: 0 var(--space-sm);
+    }
+    
+    .card-paciente-container {
+        padding: 0 var(--space-sm);
+    }
+    
+    .main-content.sidebar-collapsed .card-paciente-container {
+        padding: 0 var(--space-sm);
+    }
+    
+    .card-item {
+        width: 100%;
+    }
+    
+    h3 {
+        margin: var(--space-lg) var(--space-sm) var(--space-md) var(--space-sm);
+    }
+    
+    .main-content.sidebar-collapsed h3 {
+        margin: var(--space-lg) var(--space-sm) var(--space-md) var(--space-sm);
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .pat-card-cont {
+        grid-template-columns: 1fr 1fr; /* Solo 2 columnas en móviles pequeños */
+        gap: var(--space-xs);
+        padding: 0 var(--space-xs);
+    }
+    
+    .card-paciente-container {
+        padding: 0 var(--space-xs);
+    }
+    
+    .card-item {
+        width: 100%;
+    }
+    
+    h3 {
+        margin: var(--space-lg) var(--space-xs) var(--space-md) var(--space-xs);
+    }
 }

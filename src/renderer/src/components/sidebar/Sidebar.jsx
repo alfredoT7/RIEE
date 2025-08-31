@@ -1,16 +1,38 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Sidebar.css'
 import { FaHome, FaUsers, FaBookMedical, FaCalendarAlt, FaToolbox, FaMoneyCheckAlt, FaUserMd } from "react-icons/fa";
 import { useSidebar } from '../../context/SidebarContext';
 
 const Sidebar = () => {
     const [selected, setSelected] = useState('Inicio');
-    const { isCollapsed } = useSidebar();
+    const { isCollapsed, updateCurrentPage } = useSidebar();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const routeToPageName = useMemo(() => ({
+        '/': 'Inicio',
+        '/patient': 'Pacientes',
+        '/new-patient': 'Nuevo Paciente',
+        '/treatment': 'Tratamiento',
+        '/new-treatment': 'Nuevo Tratamiento',
+        '/appointments': 'Citas',
+        '/nueva-cita': 'Nueva Cita',
+        '/inventario': 'Inventario',
+        '/cuentas': 'Cuentas',
+        '/perfil': 'Perfil'
+    }), []);
+
+    // Efecto para sincronizar la página actual con la ruta
+    useEffect(() => {
+        const currentPageName = routeToPageName[location.pathname] || 'Inicio';
+        setSelected(currentPageName);
+        updateCurrentPage(currentPageName);
+    }, [location.pathname, routeToPageName, updateCurrentPage]);
 
     const handleSelection = (section) => {
         setSelected(section);
+        updateCurrentPage(section);
         if (section === 'Inicio') {
             navigate('/');
         }
@@ -28,7 +50,7 @@ const Sidebar = () => {
     const menuItems = useMemo(() => [
         { key: 'Inicio', icon: FaHome, label: 'Inicio' },
         { key: 'Pacientes', icon: FaUsers, label: 'Pacientes' },
-        { key: 'Tratamiento', icon: FaBookMedical, label: 'Tratamientos' },
+        { key: 'Tratamiento', icon: FaBookMedical, label: 'Tratamiento' },
         { key: 'Citas', icon: FaCalendarAlt, label: 'Citas' },
         { key: 'Inventario', icon: FaToolbox, label: 'Inventario' },
         { key: 'Cuentas', icon: FaMoneyCheckAlt, label: 'Cuentas' },

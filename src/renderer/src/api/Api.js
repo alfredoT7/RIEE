@@ -30,3 +30,5 @@ export const getPatientWithPagination = (pageNumber) => api.get(`/api/pacientes/
 export const getAllPatients = () => api.get('/api/v1/riee/patients');
 export const getAllTreatments = () => api.get('/api/v1/riee/treatments');
 export const registerTreatment = (data) => api.post('/api/v1/riee/treatments', data);
+export const registerAppointment = (data) => api.post('/api/v1/riee/appointments', data);
+export const getAllAppointments = () => api.get('/api/v1/riee/appointments');

@@ -536,3 +536,202 @@
     grid-template-columns: 80px 1fr;
   }
 }
+
+/* MODAL DE CITAS - DISEÑO COMPLETAMENTE NUEVO */
+.appointments-container .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: var(--space-md);
+}
+
+.appointments-container .modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* Header simple y centrado */
+.appointments-container .modal-header {
+  background: white;
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+  position: relative;
+}
+
+.appointments-container .modal-header h2 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Botón de cerrar simple */
+.appointments-container .close-btn {
+  position: absolute;
+  top: 50%;
+  right: var(--space-md);
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 20px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.appointments-container .close-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Formulario limpio y simple */
+.appointments-container .appointment-form {
+  padding: var(--space-xl);
+  background: white;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.appointments-container .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.appointments-container .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.appointments-container .form-group label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: var(--space-xs);
+}
+
+.appointments-container .form-group input,
+.appointments-container .form-group select,
+.appointments-container .form-group textarea {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  background-color: white;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.appointments-container .form-group input:focus,
+.appointments-container .form-group select:focus,
+.appointments-container .form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 176, 155, 0.1);
+}
+
+.appointments-container .form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* Botones simples y limpios */
+.appointments-container .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  margin: 0;
+}
+
+.appointments-container .btn-cancel {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #6b7280;
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.appointments-container .btn-cancel:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.appointments-container .btn-submit {
+  padding: 8px 20px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.appointments-container .btn-submit:hover {
+  background-color: var(--sec-color);
+}
+
+/* Responsive simple y funcional */
+@media (max-width: 768px) {
+  .appointments-container .modal-overlay {
+    padding: var(--space-sm);
+  }
+  
+  .appointments-container .modal-content {
+    max-width: none;
+    width: 100%;
+  }
+  
+  .appointments-container .modal-header {
+    padding: var(--space-md) var(--space-lg);
+  }
+  
+  .appointments-container .appointment-form {
+    padding: var(--space-md);
+  }
+  
+  .appointments-container .form-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+  
+  .appointments-container .form-actions {
+    flex-direction: column-reverse;
+    padding: var(--space-md);
+  }
+  
+  .appointments-container .btn-cancel,
+  .appointments-container .btn-submit {
+    width: 100%;
+    text-align: center;
+  }
+}
