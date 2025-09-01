@@ -11,6 +11,8 @@ import Treatment from './pages/tratamientos/Treatment';
 import NewTreatment from './pages/newTreatment/NewTreatment';
 import Appointments from './pages/citas/Appointments';
 import NewAppointment from './pages/newAppointment/NewAppointment';
+import Inventory from './pages/inventario/Inventory';
+import NewProduct from './pages/inventario/NewProduct';
 import { Toaster } from 'sonner';
 
 const AppContent = () => {
@@ -29,6 +31,8 @@ const AppContent = () => {
           <Route path='/new-treatment' element={<NewTreatment />} />
           <Route path='/appointments' element={<Appointments />} />
           <Route path='/nueva-cita' element={<NewAppointment />} />
+          <Route path='/inventario' element={<Inventory />} />
+          <Route path='/inventario/nuevo-producto' element={<NewProduct />} />
         </Routes>
       </div>
       <Toaster 

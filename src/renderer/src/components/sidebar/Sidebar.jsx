@@ -19,6 +19,7 @@ const Sidebar = () => {
         '/appointments': 'Citas',
         '/nueva-cita': 'Nueva Cita',
         '/inventario': 'Inventario',
+        '/inventario/nuevo-producto': 'Nuevo Producto',
         '/cuentas': 'Cuentas',
         '/perfil': 'Perfil'
     }), []);
@@ -44,6 +45,9 @@ const Sidebar = () => {
         }
         if(section === 'Citas'){
             navigate('/appointments');
+        }
+        if(section === 'Inventario'){
+            navigate('/inventario');
         }
     };
 
