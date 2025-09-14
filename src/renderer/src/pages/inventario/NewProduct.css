@@ -232,3 +232,91 @@ textarea {
     padding: var(--space-md);
   }
 }
+
+/* Dark Mode Support */
+html.dark-mode .new-product-container,
+.dark-mode .new-product-container {
+  background-color: var(--bg-app);
+}
+
+html.dark-mode .new-product-form,
+html.dark-mode .btn-back,
+.dark-mode .new-product-form,
+.dark-mode .btn-back {
+  background: var(--bg--component-color-white);
+  border-color: var(--color-medium-gray);
+}
+
+html.dark-mode .header-text h1,
+.dark-mode .header-text h1 {
+  color: var(--color-text-primary);
+}
+
+html.dark-mode .header-text p,
+.dark-mode .header-text p {
+  color: var(--color-text-secondary);
+}
+
+html.dark-mode .btn-back,
+.dark-mode .btn-back {
+  color: var(--color-text-secondary);
+}
+
+html.dark-mode .btn-back:hover,
+.dark-mode .btn-back:hover {
+  background: var(--color-medium-gray);
+  color: var(--primary-color);
+}
+
+html.dark-mode .form-group label,
+.dark-mode .form-group label {
+  color: var(--color-text-primary);
+}
+
+html.dark-mode .form-group input,
+html.dark-mode .form-group select,
+html.dark-mode .form-group textarea,
+.dark-mode .form-group input,
+.dark-mode .form-group select,
+.dark-mode .form-group textarea {
+  background-color: var(--bg--component-color-white);
+  color: var(--color-text-primary);
+  border-color: var(--color-medium-gray);
+}
+
+html.dark-mode .form-group input::placeholder,
+html.dark-mode .form-group textarea::placeholder,
+.dark-mode .form-group input::placeholder,
+.dark-mode .form-group textarea::placeholder {
+  color: var(--color-text-secondary);
+}
+
+html.dark-mode .form-group input:focus,
+html.dark-mode .form-group select:focus,
+html.dark-mode .form-group textarea:focus,
+.dark-mode .form-group input:focus,
+.dark-mode .form-group select:focus,
+.dark-mode .form-group textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.1);
+}
+
+html.dark-mode .form-actions,
+.dark-mode .form-actions {
+  background: var(--color-medium-gray);
+  border-top-color: var(--color-medium-gray);
+}
+
+html.dark-mode .btn-secondary,
+.dark-mode .btn-secondary {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-color: var(--color-medium-gray);
+}
+
+html.dark-mode .btn-secondary:hover,
+.dark-mode .btn-secondary:hover {
+  background: var(--color-medium-gray);
+  color: var(--color-text-primary);
+  border-color: var(--color-text-secondary);
+}

@@ -3,7 +3,25 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import ImagesApp from '../../assets/ImagesApp';
 import './NewPatient.css';
-import { FaCamera, FaUser, FaIdCard, FaCalendar, FaMapMarker, FaPhone, FaHeart, FaBriefcase, FaEnvelope, FaUserFriends, FaSave, FaTrash } from 'react-icons/fa';
+import { 
+  FaCamera, 
+  FaUser, 
+  FaIdCard, 
+  FaCalendar, 
+  FaMapMarker, 
+  FaPhone, 
+  FaHeart, 
+  FaBriefcase, 
+  FaEnvelope, 
+  FaUserFriends, 
+  FaSave, 
+  FaTrash,
+  FaUserPlus,
+  FaAddressCard,
+  FaPhoneAlt,
+  FaInfoCircle,
+  FaArrowLeft
+} from 'react-icons/fa';
 import axios from 'axios';
 import { registerPatient } from '../../api/Api';
 import { useNavigate } from 'react-router-dom';
@@ -199,10 +217,10 @@ const NewPatient = () => {
     <div className="new-patient-container">
       <div className="page-header">
         <h1 className="page-title">
-          <FaUser className="title-icon" />
+          <FaUserPlus className="title-icon" />
           Registro de Nuevo Paciente
         </h1>
-        <p className="page-subtitle">Complete la información del paciente</p>
+        <p className="page-subtitle">Complete toda la información del paciente para crear su perfil médico</p>
       </div>
 
       <Formik
@@ -215,7 +233,7 @@ const NewPatient = () => {
             {/* Sección de Imagen */}
             <div className="form-section image-section">
               <div className="section-header">
-                <h3>Fotografía del Paciente</h3>
+                <h3><FaCamera /> Fotografía del Paciente</h3>
               </div>
               
               <div className="image-upload-container">
@@ -265,7 +283,7 @@ const NewPatient = () => {
             {/* Información Personal */}
             <div className="form-section">
               <div className="section-header">
-                <h3>Información Personal</h3>
+                <h3><FaAddressCard /> Información Personal</h3>
               </div>
               
               <div className="form-grid">
@@ -342,7 +360,7 @@ const NewPatient = () => {
             {/* Información de Contacto */}
             <div className="form-section">
               <div className="section-header">
-                <h3>Información de Contacto</h3>
+                <h3><FaPhoneAlt /> Información de Contacto</h3>
               </div>
               
               <div className="form-grid">
@@ -392,7 +410,7 @@ const NewPatient = () => {
             {/* Información Adicional */}
             <div className="form-section">
               <div className="section-header">
-                <h3>Información Adicional</h3>
+                <h3><FaInfoCircle /> Información Adicional</h3>
               </div>
               
               <div className="form-grid">
@@ -477,6 +495,7 @@ const NewPatient = () => {
                 onClick={() => navigate('/patient')}
                 disabled={isSubmitting}
               >
+                <FaArrowLeft className="btn-icon" />
                 Cancelar
               </button>
               <button 

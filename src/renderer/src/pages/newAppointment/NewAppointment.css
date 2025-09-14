@@ -4,6 +4,7 @@
   padding: var(--space-xl);
   background-color: var(--bg-app);
   min-height: 100vh;
+  transition: background-color var(--transition-normal);
 }
 
 .new-appointment-header {
@@ -15,12 +16,14 @@
   font-weight: 600;
   color: var(--color-text-primary);
   margin: 0 0 var(--space-xs) 0;
+  transition: color var(--transition-normal);
 }
 
 .new-appointment-header p {
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   margin: 0;
+  transition: color var(--transition-normal);
 }
 
 .new-appointment-content {
@@ -29,6 +32,7 @@
   padding: var(--space-xl);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-light-gray);
+  transition: all var(--transition-normal);
 }
 
 .appointment-form {
@@ -46,6 +50,7 @@
   margin: 0 0 var(--space-md) 0;
   padding-bottom: var(--space-xs);
   border-bottom: 2px solid var(--color-light-gray);
+  transition: color var(--transition-normal);
 }
 
 .form-row {
@@ -66,6 +71,7 @@
   font-weight: 500;
   color: var(--color-text-primary);
   margin-bottom: var(--space-xs);
+  transition: color var(--transition-normal);
 }
 
 .form-group input,
@@ -76,8 +82,9 @@
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-sm);
   background-color: var(--bg--component-color-white);
-  transition: border-color 0.3s ease;
+  transition: all var(--transition-normal);
   font-family: inherit;
+  color: var(--color-text-primary);
 }
 
 .form-group input:focus,
@@ -86,6 +93,12 @@
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.7;
 }
 
 .form-group textarea {
@@ -162,4 +175,51 @@
     width: 100%;
     text-align: center;
   }
+}
+
+/* Estilos para modo oscuro */
+html.dark-mode .new-appointment-container,
+.dark-mode .new-appointment-container {
+  background: var(--bg-app);
+}
+
+html.dark-mode .new-appointment-content,
+.dark-mode .new-appointment-content {
+  background: var(--bg--component-color-white);
+  border-color: var(--input-border-color);
+}
+
+html.dark-mode .form-group input,
+html.dark-mode .form-group select,
+html.dark-mode .form-group textarea,
+.dark-mode .form-group input,
+.dark-mode .form-group select,
+.dark-mode .form-group textarea {
+  background: var(--bg--component-color-white);
+  color: var(--color-text-primary);
+  border-color: var(--color-medium-gray);
+}
+
+html.dark-mode .form-group input::placeholder,
+html.dark-mode .form-group textarea::placeholder,
+.dark-mode .form-group input::placeholder,
+.dark-mode .form-group textarea::placeholder {
+  color: var(--color-text-secondary);
+}
+
+html.dark-mode .form-section h3,
+.dark-mode .form-section h3 {
+  color: var(--color-text-primary);
+}
+
+html.dark-mode .form-group label,
+.dark-mode .form-group label {
+  color: var(--color-text-primary);
+}
+
+html.dark-mode .btn-cancel,
+.dark-mode .btn-cancel {
+  background-color: var(--bg--component-color-white);
+  color: var(--color-text-secondary);
+  border-color: var(--color-medium-gray);
 }

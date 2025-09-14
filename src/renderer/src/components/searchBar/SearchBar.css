@@ -8,7 +8,7 @@
     align-items: center;
     margin-bottom: 10px;
     border-radius: 10px;
-    background-color: var(--color-text-tertiary);
+    /* background-color: var(--color-text-tertiary); */
 }
 .sb-main-cont input{
     flex: 1;
@@ -17,7 +17,9 @@
     border: 1px solid var(--input-border-color);
     border-radius: 10px;
     font-size: 15px;
-    
+    background-color: var(--bg--component-color-white);
+    color: var(--color-text-primary);
+    transition: all var(--transition-normal);
 }
 .sb-main-cont input:focus {
     outline: none;

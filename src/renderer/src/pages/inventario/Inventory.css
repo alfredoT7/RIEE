@@ -531,3 +531,115 @@
     flex-direction: column;
   }
 }
+
+/* Dark Mode Support */
+html.dark-mode .inventory-container,
+.dark-mode .inventory-container {
+  background-color: var(--bg-app);
+}
+
+html.dark-mode .stat-card,
+html.dark-mode .products-table-container,
+html.dark-mode .new-product-form,
+.dark-mode .stat-card,
+.dark-mode .products-table-container,
+.dark-mode .new-product-form {
+  background: var(--bg--component-color-white);
+  border-color: var(--color-medium-gray);
+}
+
+html.dark-mode .header-text h1,
+html.dark-mode .stat-number,
+html.dark-mode .product-name,
+html.dark-mode .stock-text,
+html.dark-mode .price-text,
+html.dark-mode .products-table th,
+.dark-mode .header-text h1,
+.dark-mode .stat-number,
+.dark-mode .product-name,
+.dark-mode .stock-text,
+.dark-mode .price-text,
+.dark-mode .products-table th {
+  color: var(--color-text-primary);
+}
+
+html.dark-mode .header-text p,
+html.dark-mode .stat-label,
+html.dark-mode .product-id,
+html.dark-mode .expiry-text,
+html.dark-mode .inventory-footer p,
+.dark-mode .header-text p,
+.dark-mode .stat-label,
+.dark-mode .product-id,
+.dark-mode .expiry-text,
+.dark-mode .inventory-footer p {
+  color: var(--color-text-secondary);
+}
+
+html.dark-mode .search-input,
+html.dark-mode .category-filter,
+.dark-mode .search-input,
+.dark-mode .category-filter {
+  background-color: var(--bg--component-color-white);
+  color: var(--color-text-primary);
+  border-color: var(--color-medium-gray);
+}
+
+html.dark-mode .search-input::placeholder,
+.dark-mode .search-input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+html.dark-mode .view-btn,
+.dark-mode .view-btn {
+  background: var(--bg--component-color-white);
+  color: var(--color-text-secondary);
+  border-color: var(--color-medium-gray);
+}
+
+html.dark-mode .view-btn.active,
+.dark-mode .view-btn.active {
+  background-color: rgba(0, 176, 155, 0.1);
+  color: var(--primary-color);
+}
+
+html.dark-mode .view-btn:hover,
+.dark-mode .view-btn:hover {
+  background-color: var(--color-medium-gray);
+}
+
+html.dark-mode .products-table thead,
+.dark-mode .products-table thead {
+  background-color: var(--color-medium-gray);
+}
+
+html.dark-mode .products-table tbody tr,
+.dark-mode .products-table tbody tr {
+  border-bottom-color: var(--color-medium-gray);
+}
+
+html.dark-mode .products-table tbody tr:hover,
+.dark-mode .products-table tbody tr:hover {
+  background-color: rgba(0, 176, 155, 0.05);
+}
+
+html.dark-mode .row-odd,
+.dark-mode .row-odd {
+  background-color: rgba(107, 114, 128, 0.05);
+}
+
+html.dark-mode .product-icon,
+.dark-mode .product-icon {
+  background-color: var(--color-medium-gray);
+  color: var(--color-text-secondary);
+}
+
+html.dark-mode .action-btn,
+.dark-mode .action-btn {
+  color: var(--color-text-secondary);
+}
+
+html.dark-mode .search-icon,
+.dark-mode .search-icon {
+  color: var(--color-text-secondary);
+}

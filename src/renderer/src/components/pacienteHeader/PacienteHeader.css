@@ -11,7 +11,7 @@
     /* justify-content: space-between; */
     align-items: center;
     padding-left: 8px;
-    ;
+    transition: color var(--transition-normal);
 }
 .head-paciente-title1 .ci{
     text-align: center;

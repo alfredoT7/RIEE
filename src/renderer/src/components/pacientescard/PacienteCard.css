@@ -6,7 +6,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: white;
+    background-color: var(--bg--component-color-white);
     border-radius: 10px;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -14,6 +14,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: var(--icon-color-gray);
+    transition: background-color var(--transition-normal), border-color var(--transition-normal);
 }
 .card-pat .top {
   display: flex;
@@ -26,6 +27,7 @@
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-bottom-color: var(--icon-color-gray);
+  transition: border-bottom-color var(--transition-normal);
 }
 .card-pat .top .left {
   flex: .8;
@@ -56,17 +58,19 @@
 .card-pat .top .mid h5{
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   margin: 0;
   cursor: pointer;
+  transition: color var(--transition-normal);
 }
 .card-pat .top .mid p{
   font-size: 0.7rem;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color var(--transition-normal);
 }
 .card-pat .top .rigth{
   flex: 1;
@@ -81,6 +85,10 @@
   width: 1.3rem;
   height: 1.3rem;
   cursor: pointer;
+  transition: color var(--transition-normal);
+}
+.ic:hover {
+  color: var(--primary-color);
 }
 .card-pat .mid2{
   width: 100%;
@@ -95,6 +103,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color var(--transition-normal);
 }
 .card-pat .mid2 div{
   display: flex;
@@ -111,6 +120,7 @@
   border-top-width: 1px;
   border-top-color: var(--icon-color-gray);
   padding-top: 0.8rem;
+  transition: border-top-color var(--transition-normal);
 }
 .card-pat .bot1 .p1{
   font-size: 0.85rem;
@@ -119,6 +129,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color var(--transition-normal);
 }
 .card-pat .bot1 .p2{
   font-size: 0.95rem;
@@ -128,6 +139,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-bottom: 0.5rem;
+  transition: color var(--transition-normal);
 }
 .card-pat .bot1 .rigth1 .p2{
   color: var(--primary-color);
@@ -149,7 +161,14 @@
   border-width: 1px;
   border-style: solid;
   border-color: var(--icon-color-gray);
+  background-color: var(--bg--component-color-white);
+  color: var(--color-text-primary);
   cursor: pointer;
+  transition: all var(--transition-normal);
+}
+.card-pat .bot1 button:hover {
+  background-color: var(--color-light-gray);
+  border-color: var(--primary-color);
 }
 .card-pat .bot1 button .ic2{
   width: 1.1rem;
@@ -164,6 +183,10 @@
   width: 1.1rem;
   height: 1.1rem;
   color: var(--icon-color-gray);
+  transition: color var(--transition-normal);
+}
+.card-pat .mid2 .ic2:hover {
+  color: var(--primary-color);
 }
 .card-pat .mid2 div{
   padding-inline: 0.5rem;

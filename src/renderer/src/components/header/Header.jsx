@@ -2,6 +2,7 @@ import React from 'react'
 import './Header.css'
 import { FaUser, FaSlidersH, FaBars } from "react-icons/fa";
 import { useSidebar } from '../../context/SidebarContext';
+import ThemeToggle from '../themeToggle/ThemeToggle';
 
 const Header = () => {
   const { toggleSidebar, currentPage } = useSidebar();
@@ -18,6 +19,7 @@ const Header = () => {
             </div>
         </div>
         <div className="header-right">
+            <ThemeToggle />
             <h5>Dra. Luzgarda</h5>
             <FaSlidersH/>
         </div>

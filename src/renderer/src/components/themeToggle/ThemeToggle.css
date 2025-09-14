@@ -1,0 +1,60 @@
+.theme-toggle {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+
+.toggle-track {
+  width: 50px;
+  height: 24px;
+  background: var(--color-medium-gray);
+  border-radius: 12px;
+  position: relative;
+  transition: background-color var(--transition-normal);
+  border: 1px solid var(--input-border-color);
+}
+
+.theme-toggle.dark .toggle-track {
+  background: var(--primary-color);
+}
+
+.toggle-thumb {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform var(--transition-normal), background-color var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle.dark .toggle-thumb {
+  transform: translateX(26px);
+  background: #1a1a1a;
+  color: #ffd700;
+}
+
+.theme-toggle.light .toggle-thumb {
+  color: #ff8c00;
+}
+
+.theme-toggle:hover .toggle-track {
+  background: var(--color-dark-gray);
+}
+
+.theme-toggle.dark:hover .toggle-track {
+  background: var(--color-primary-dark);
+}
+
+.theme-toggle:focus .toggle-track {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { SidebarProvider, useSidebar } from './context/SidebarContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Sidebar from './components/sidebar/Sidebar';
 import Header from './components/header/Header';
 import Home from './pages/home/Home';
@@ -48,11 +49,13 @@ const AppContent = () => {
 
 function App() {
   return (
-    <SidebarProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </SidebarProvider>
+    <ThemeProvider>
+      <SidebarProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }
 
