@@ -48,6 +48,9 @@ const Sidebar = () => {
         if(section === 'Inventario'){
             navigate('/inventario');
         }
+        if(section === 'Cuentas'){
+            navigate('/cuentas');
+        }
     };
 
     const menuItems = useMemo(() => [

@@ -14,7 +14,9 @@ import Appointments from './pages/citas/Appointments';
 import NewAppointment from './pages/newAppointment/NewAppointment';
 import Inventory from './pages/inventario/Inventory';
 import NewProduct from './pages/inventario/NewProduct';
+import Cuentas from './pages/cuentas/Cuentas';
 import { Toaster } from 'sonner';
+
 
 const AppContent = () => {
   const { isCollapsed } = useSidebar();
@@ -34,6 +36,7 @@ const AppContent = () => {
           <Route path='/nueva-cita' element={<NewAppointment />} />
           <Route path='/inventario' element={<Inventory />} />
           <Route path='/inventario/nuevo-producto' element={<NewProduct />} />
+          <Route path='/cuentas' element={<Cuentas />} />
         </Routes>
       </div>
       <Toaster 
