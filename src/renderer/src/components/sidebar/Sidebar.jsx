@@ -24,7 +24,6 @@ const Sidebar = () => {
         '/perfil': 'Perfil'
     }), []);
 
-    // Efecto para sincronizar la página actual con la ruta
     useEffect(() => {
         const currentPageName = routeToPageName[location.pathname] || 'Inicio';
         setSelected(currentPageName);

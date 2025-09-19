@@ -9,8 +9,6 @@ const PatientSearch = ({ patients, onPatientSelect, selectedPatientId, placehold
   const [selectedPatient, setSelectedPatient] = useState(null);
   const searchRef = useRef(null);
   const dropdownRef = useRef(null);
-
-  // Filtrar pacientes basado en el término de búsqueda
   useEffect(() => {
     if (searchTerm.length > 0) {
       const filtered = patients.filter(patient =>

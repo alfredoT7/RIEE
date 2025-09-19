@@ -12,8 +12,6 @@ const CardPaciente = ({ci, imagen, nombre, direccion, fechaNacimiento, numeroTel
   const handleCloseModal = () => {
     setIsImageExpanded(false);
   }
-
-  // Cerrar modal con ESC
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
@@ -23,7 +21,6 @@ const CardPaciente = ({ci, imagen, nombre, direccion, fechaNacimiento, numeroTel
 
     if (isImageExpanded) {
       document.addEventListener('keydown', handleEscape);
-      // Prevenir scroll en el body cuando el modal está abierto
       document.body.style.overflow = 'hidden';
     }
 
@@ -32,8 +29,6 @@ const CardPaciente = ({ci, imagen, nombre, direccion, fechaNacimiento, numeroTel
       document.body.style.overflow = 'unset';
     };
   }, [isImageExpanded]);
-
-  // Prevenir que el click en la imagen cierre el modal
   const handleImageModalClick = (e) => {
     e.stopPropagation();
   };

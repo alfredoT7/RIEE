@@ -12,16 +12,12 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Recuperar el tema guardado del localStorage
     const savedTheme = localStorage.getItem('theme');
     return savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
   });
 
   useEffect(() => {
-    // Guardar el tema en localStorage
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-    
-    // Aplicar la clase al documento
     document.documentElement.classList.toggle('dark-mode', isDarkMode);
   }, [isDarkMode]);
 
