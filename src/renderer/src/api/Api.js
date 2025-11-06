@@ -25,6 +25,12 @@ const api = axios.create({
     }
 });
 
+const publicApi = axios.create({
+    baseURL: baseURL,
+    responseType: 'json',
+    timeout: 10000
+});
+
 export const registerPatient = (data) => api.post('/api/v1/riee/patients', data);
 export const getPatientWithPagination = (pageNumber) => api.get(`/api/pacientes/all/${pageNumber}`);
 export const getAllPatients = () => api.get('/api/v1/riee/patients');
@@ -32,3 +38,5 @@ export const getAllTreatments = () => api.get('/api/v1/riee/treatments');
 export const registerTreatment = (data) => api.post('/api/v1/riee/treatments', data);
 export const registerAppointment = (data) => api.post('/api/v1/riee/appointments', data);
 export const getAllAppointments = () => api.get('/api/v1/riee/appointments');
+export const getAllSpecialities = () => publicApi.get('/api/v1/riee/specialities');
+export const registerDentist = (data) => publicApi.post('/api/v1/riee/dentists', data);

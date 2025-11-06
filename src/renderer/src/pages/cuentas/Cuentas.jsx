@@ -12,9 +12,7 @@ const Cuentas = () => {
           <p className="cuentas-subtitle">Gestión financiera y reportes</p>
         </div>
 
-        {/* Financial Summary Cards */}
         <div className="financial-summary-cards">
-          {/* Ingresos */}
           <div className="summary-card">
             <div className="card-header">
               <span className="card-label">Ingresos</span>
@@ -32,7 +30,6 @@ const Cuentas = () => {
             </div>
           </div>
 
-          {/* Gastos */}
           <div className="summary-card">
             <div className="card-header">
               <span className="card-label">Gastos</span>
@@ -85,7 +82,6 @@ const Cuentas = () => {
               </select>
             </div>
             
-            {/* Chart Placeholder */}
             <div className="chart-container">
               <div className="chart-content">
                 <div className="chart-placeholder">
@@ -96,7 +92,6 @@ const Cuentas = () => {
             </div>
           </div>
 
-          {/* Transacciones Recientes */}
           <div className="recent-transactions">
             <div className="section-header-simple">
               <h3 className="section-title">Transacciones Recientes</h3>
@@ -172,7 +167,6 @@ const Cuentas = () => {
           </div>
         </div>
 
-        {/* Income Report */}
         <div className="income-report">
           <div className="report-header">
             <div className="header-info">
@@ -283,7 +277,6 @@ const Cuentas = () => {
         <div className="functionality-section">
           <h2 className="functionality-title">Funcionalidades de Pago</h2>
           
-          {/* Basic Functionalities */}
           <div className="basic-functionalities">
             <h3 className="subsection-title">
               <span className="title-dot"></span>
@@ -322,7 +315,6 @@ const Cuentas = () => {
             </div>
           </div>
 
-          {/* Payment Options */}
           <div className="payment-options">
             <h3 className="subsection-title">
               <span className="title-dot"></span>
@@ -382,3 +374,4 @@ const Cuentas = () => {
 };
 
 export default Cuentas;
+
