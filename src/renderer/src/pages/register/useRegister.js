@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { registerDentist, getAllSpecialities } from '../../api/Api';
+import { getAllSpecialities } from '../../api/Api';
+import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 
 export const useRegister = () => {
   const navigate = useNavigate();
+  const { register: registerUser } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [specialities, setSpecialities] = useState([]);
@@ -217,61 +219,33 @@ export const useRegister = () => {
         universidad: formData.universidad.trim(),
         promocion: parseInt(formData.promocion),
         especialidadIds: formData.especialidadIds,
-        imagenUrl: formData.imagenUrl.trim() || null,
+        imagenUrl: formData.imagenUrl.trim() || 'https://example.com/default-dentist.jpg',
         password: formData.password
       };
 
       console.log('Enviando datos de registro:', dataToSend);
 
-      const response = await registerDentist(dataToSend);
+      // Usar el método register del contexto de autenticación
+      const result = await registerUser(dataToSend);
 
-      if (response.data.success) {
-        toast.success('¡Registro exitoso! Bienvenido a RIEE');
+      if (result.success) {
+        toast.success(result.message || '¡Registro exitoso! Bienvenido a RIEE');
         
-        // Limpiar formulario
-        setFormData({
-          nombres: '',
-          apellidos: '',
-          email: '',
-          username: '',
-          telefono: '',
-          ciDentista: '',
-          universidad: '',
-          promocion: '',
-          especialidadIds: [],
-          imagenUrl: '',
-          password: '',
-          confirmPassword: ''
-        });
-        
-        setCurrentStep(1);
-        
-        // Redirigir al login después de 2 segundos
+        // Redirigir al home (ya está autenticado)
         setTimeout(() => {
-          navigate('/login');
-        }, 2000);
+          navigate('/');
+        }, 1500);
       } else {
-        toast.error(response.data.message || 'Error al registrar dentista');
+        toast.error(result.error || 'Error al registrar dentista');
+        
+        // Si hay errores de validación del backend, mostrarlos
+        if (result.errors) {
+          setErrors(result.errors);
+        }
       }
     } catch (error) {
       console.error('Error en registro:', error);
-      
-      if (error.response) {
-        // Error de la API
-        const errorMessage = error.response.data?.message || 'Error al registrar dentista';
-        toast.error(errorMessage);
-        
-        // Si hay errores de validación del backend, mostrarlos
-        if (error.response.data?.errors) {
-          setErrors(error.response.data.errors);
-        }
-      } else if (error.request) {
-        // Error de red
-        toast.error('No se pudo conectar con el servidor');
-      } else {
-        // Otro error
-        toast.error('Error inesperado al registrar');
-      }
+      toast.error('Error inesperado al registrar');
     } finally {
       setIsLoading(false);
     }

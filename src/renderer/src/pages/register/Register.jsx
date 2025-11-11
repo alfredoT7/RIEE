@@ -252,22 +252,33 @@ const Register = () => {
             {currentStep === 3 && (
               <div className="form-step">
                 <div className="register-form-group">
-                  <label>
+                  <label className="main-label">
                     <FaUserMd className="label-icon" />
-                    Especialidades * <span className="label-hint">(Selecciona al menos una)</span>
+                    Especialidades * 
+                    <span className="label-hint">(Selecciona al menos una)</span>
                   </label>
                   {loadingSpecialities ? (
-                    <div style={{ textAlign: 'center', padding: '1rem' }}>Cargando especialidades...</div>
+                    <div className="loading-specialities">
+                      <div className="loading-spinner-small"></div>
+                      <span>Cargando especialidades...</span>
+                    </div>
+                  ) : specialities.length === 0 ? (
+                    <div className="no-specialities">
+                      <p>No se encontraron especialidades disponibles</p>
+                    </div>
                   ) : (
                     <div className="especialidades-grid">
                       {specialities.map(esp => (
-                        <label key={esp.id} className="especialidad-checkbox">
+                        <label key={esp.id} className={`especialidad-item ${formData.especialidadIds.includes(esp.id) ? 'selected' : ''}`}>
                           <input
                             type="checkbox"
                             checked={formData.especialidadIds.includes(esp.id)}
                             onChange={() => handleCheckboxChange(esp.id)}
                           />
-                          <span>{esp.nombre}</span>
+                          <span className="especialidad-name">{esp.nombre}</span>
+                          {formData.especialidadIds.includes(esp.id) && (
+                            <FaCheck className="check-icon" />
+                          )}
                         </label>
                       ))}
                     </div>

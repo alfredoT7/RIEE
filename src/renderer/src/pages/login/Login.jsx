@@ -34,18 +34,22 @@ const Login = () => {
 
     setIsLoading(true);
 
-    // Simulación de login con el contexto
-    setTimeout(async () => {
-      const result = await login(formData);
+    try {
+      // Llamar al método login del contexto que ahora usa el servicio real
+      const result = await login(formData.emailOrUsername, formData.password);
       
       if (result.success) {
-        toast.success('¡Bienvenido a RIEE!');
+        toast.success(result.message || '¡Bienvenido a RIEE!');
         navigate('/');
       } else {
-        toast.error('Credenciales incorrectas');
+        toast.error(result.error || 'Credenciales incorrectas');
       }
+    } catch (error) {
+      toast.error('Error de conexión con el servidor');
+      console.error('Error en login:', error);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleGoogleLogin = () => {

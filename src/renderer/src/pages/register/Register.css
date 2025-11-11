@@ -520,40 +520,107 @@
 /* Especialidades Grid */
 .especialidades-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .especialidad-item {
   display: flex;
   align-items: center;
-  padding: 0.5rem 0.7rem;
-  border: 1px solid var(--input-border-color);
-  border-radius: var(--border-radius-md);
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--input-border-color);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   background: var(--bg--component-color-white);
+  position: relative;
 }
 
 .especialidad-item:hover {
   border-color: var(--primary-color);
   background: rgba(0, 176, 155, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 176, 155, 0.15);
+}
+
+.especialidad-item.selected {
+  border-color: var(--primary-color);
+  background: linear-gradient(135deg, rgba(0, 176, 155, 0.1) 0%, rgba(14, 165, 164, 0.1) 100%);
+  box-shadow: 0 2px 8px rgba(0, 176, 155, 0.2);
 }
 
 .especialidad-item input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  margin-right: 0.5rem;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   accent-color: var(--primary-color);
+  flex-shrink: 0;
 }
 
-.especialidad-item label {
-  margin: 0;
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  user-select: none;
+.especialidad-name {
   flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-color);
+  user-select: none;
+}
+
+.especialidad-item.selected .especialidad-name {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.check-icon {
+  color: var(--primary-color);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.main-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.label-hint {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-left: 0.25rem;
+}
+
+.loading-specialities {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  background: var(--bg--component-color-white);
+  border: 1px solid var(--input-border-color);
+  border-radius: 12px;
+}
+
+.loading-spinner-small {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(0, 176, 155, 0.2);
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.no-specialities {
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg--component-color-white);
+  border: 1px dashed var(--input-border-color);
+  border-radius: 12px;
+  color: var(--text-secondary);
 }
 
 .checkbox-item {
@@ -790,6 +857,42 @@
   .password-requirements li {
     font-size: 0.7rem;
     margin-bottom: 0.25rem;
+  }
+}
+
+/* Responsive para especialidades */
+@media (max-width: 768px) {
+  .especialidades-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .especialidad-item {
+    padding: 0.75rem 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .especialidades-grid {
+    gap: 0.5rem;
+  }
+
+  .especialidad-item {
+    padding: 0.625rem 0.75rem;
+    border-radius: 10px;
+  }
+
+  .especialidad-name {
+    font-size: 0.875rem;
+  }
+
+  .especialidad-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+
+  .check-icon {
+    font-size: 0.875rem;
   }
 }
 

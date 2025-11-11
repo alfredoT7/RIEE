@@ -1,30 +1,45 @@
 import axios from 'axios';
 
+// URL directa al backend
 const baseURL = "http://localhost:8080";
 
-console.log('Todas las variables de entorno:', import.meta.env);
-const username = import.meta.env.VITE_API_USERNAME;
-const password = import.meta.env.VITE_API_PASSWORD;
-
-console.log('Credenciales cargadas:', {
-  username: username,
-  password: password ? '***' : 'NO_PASSWORD',
-  fromEnv: {
-    username: import.meta.env.VITE_API_USERNAME ? 'YES' : 'NO',
-    password: import.meta.env.VITE_API_PASSWORD ? 'YES' : 'NO'
-  }
-});
-
+// Crear instancia de axios con configuración base
 const api = axios.create({
     baseURL: baseURL,
     responseType: 'json',
-    timeout: 10000,
-    auth: {
-        username: username,
-        password: password
-    }
+    timeout: 10000
 });
 
+// Interceptor para agregar el token JWT a todas las peticiones
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Interceptor para manejar errores de autenticación
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Token expirado o inválido
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            // Puedes redirigir al login aquí si usas react-router
+            console.log('Sesión expirada');
+        }
+        return Promise.reject(error);
+    }
+);
+
+// API pública sin autenticación
 const publicApi = axios.create({
     baseURL: baseURL,
     responseType: 'json',

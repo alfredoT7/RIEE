@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import * as authService from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -17,48 +18,54 @@ export const AuthProvider = ({ children }) => {
 
   // Verificar si hay una sesión guardada al cargar
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Error al cargar sesión:', error);
-        localStorage.removeItem('user');
-      }
+    const token = authService.getToken();
+    const storedUser = authService.getCurrentUser();
+    
+    if (token && storedUser) {
+      setUser({ username: storedUser });
+      setIsAuthenticated(true);
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (credentials) => {
+  const login = async (username, password) => {
     try {
-      // Aquí conectarás con tu API real
-      // const response = await fetch('API_URL/login', { ... });
+      const result = await authService.login(username, password);
       
-      // Simulación de login exitoso
-      const userData = {
-        id: 1,
-        name: 'Dra. Luzgarda',
-        email: credentials.emailOrUsername,
-        role: 'dentist'
-      };
-
-      setUser(userData);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      return { success: true };
+      if (result.success) {
+        setUser({ username });
+        setIsAuthenticated(true);
+        return { success: true, message: result.message };
+      } else {
+        return { success: false, error: result.message };
+      }
     } catch (error) {
       console.error('Error en login:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: 'Error de conexión con el servidor' };
+    }
+  };
+
+  const register = async (dentistData) => {
+    try {
+      const result = await authService.register(dentistData);
+      
+      if (result.success) {
+        setUser({ username: dentistData.username });
+        setIsAuthenticated(true);
+        return { success: true, message: result.message };
+      } else {
+        return { success: false, error: result.message, errors: result.errors };
+      }
+    } catch (error) {
+      console.error('Error en registro:', error);
+      return { success: false, error: 'Error de conexión con el servidor' };
     }
   };
 
   const logout = () => {
+    authService.logout();
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('user');
   };
 
   const value = {
@@ -66,6 +73,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     isLoading,
     login,
+    register,
     logout
   };
 
