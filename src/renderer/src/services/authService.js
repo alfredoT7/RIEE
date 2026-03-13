@@ -1,12 +1,11 @@
-import axios from 'axios';
+import { publicApi } from '../api/Api';
 
-// URL directa al backend - el proxy no funcionó como esperado
-const API_URL = 'http://localhost:8080/api/v1/riee/auth';
+const AUTH_BASE_PATH = '/api/v1/riee/auth';
 
 // Función para hacer login
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, {
+    const response = await publicApi.post(`${AUTH_BASE_PATH}/login`, {
       username,
       password
     });
@@ -28,9 +27,12 @@ export const login = async (username, password) => {
     };
   } catch (error) {
     console.error('Error en login:', error);
+    const isTimeout = error.code === 'ECONNABORTED';
     return {
       success: false,
-      message: error.response?.data?.message || 'Error de conexión con el servidor'
+      message: error.response?.data?.message || (isTimeout
+        ? 'El servidor tardó demasiado en responder. Intenta nuevamente.'
+        : 'Error de conexión con el servidor')
     };
   }
 };
@@ -38,7 +40,7 @@ export const login = async (username, password) => {
 // Función para registrar un dentista
 export const register = async (dentistData) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, dentistData);
+    const response = await publicApi.post(`${AUTH_BASE_PATH}/register`, dentistData);
 
     if (response.data.success && response.data.data.token) {
       // Guardar el token en localStorage
@@ -57,9 +59,12 @@ export const register = async (dentistData) => {
     };
   } catch (error) {
     console.error('Error en registro:', error);
+    const isTimeout = error.code === 'ECONNABORTED';
     return {
       success: false,
-      message: error.response?.data?.message || 'Error de conexión con el servidor',
+      message: error.response?.data?.message || (isTimeout
+        ? 'El servidor tardó demasiado en responder. Intenta nuevamente.'
+        : 'Error de conexión con el servidor'),
       errors: error.response?.data?.errors
     };
   }
