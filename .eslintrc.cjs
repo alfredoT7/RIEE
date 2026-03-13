@@ -6,4 +6,8 @@ module.exports = {
     '@electron-toolkit',
     '@electron-toolkit/eslint-config-prettier'
   ]
+  ,
+  rules: {
+    'no-unused-vars': ['warn', { 'varsIgnorePattern': '^React$' }]
+  }
 }
