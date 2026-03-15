@@ -5,7 +5,6 @@ import { FcGoogle } from 'react-icons/fc';
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
 import ImagesApp from '../../assets/ImagesApp';
-import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();

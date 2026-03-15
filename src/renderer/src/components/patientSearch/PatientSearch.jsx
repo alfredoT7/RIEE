@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './PatientSearch.css';
 import { FaSearch, FaUser } from 'react-icons/fa';
 
 const PatientSearch = ({ patients, onPatientSelect, selectedPatientId, placeholder = "Buscar paciente..." }) => {

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaLock, FaEnvelope, FaPhone, FaIdCard, FaUniversity, FaGraduationCap, FaEye, FaEyeSlash, FaUserMd, FaImage, FaArrowRight, FaArrowLeft, FaCheck } from 'react-icons/fa';
 import ImagesApp from '../../assets/ImagesApp';
 import { useRegister } from './useRegister';
-import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();

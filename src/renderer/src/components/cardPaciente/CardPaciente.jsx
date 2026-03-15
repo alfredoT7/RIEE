@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import './CardPaciente.css'
 import ImagesApp from '../../assets/ImagesApp'
 
 const CardPaciente = ({ci, imagen, nombre, direccion, fechaNacimiento, numeroTelefonico}) => {

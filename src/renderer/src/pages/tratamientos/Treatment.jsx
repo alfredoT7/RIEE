@@ -2,7 +2,6 @@ import React from 'react'
 import { FaPlus, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useTreatment } from './useTreatment';
-import './Treatment.css'
 
 const Treatment = () => {
   const navigate = useNavigate();

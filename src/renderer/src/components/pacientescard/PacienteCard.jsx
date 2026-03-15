@@ -1,5 +1,4 @@
 import React from 'react'
-import './PacienteCard.css';
 import ImagesApp from '../../assets/ImagesApp'
 import { SquarePen, Trash, Phone, Mail, MapPin, FileText } from 'lucide-react';
 

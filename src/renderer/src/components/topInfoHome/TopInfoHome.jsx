@@ -1,5 +1,4 @@
 import React from 'react'
-import './TopInfoHome.css'
 
 const TopInfoHome = ({ title, quantity, porcentaje, icon }) => {
   const IconComponent = icon;

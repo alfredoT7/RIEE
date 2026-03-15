@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaArrowUp, FaArrowDown, FaCreditCard, FaFileAlt, FaCalendarAlt, FaBolt, FaMobileAlt, FaDollarSign, FaChartLine, FaChartBar } from 'react-icons/fa';
-import './Cuentas.css';
 
 const Cuentas = () => {
   return (

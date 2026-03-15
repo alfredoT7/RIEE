@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Inventory.css';
 import { FaSearch, FaPlus, FaBox, FaExclamationTriangle, FaShoppingCart, FaTh, FaList, FaEdit, FaTrash } from 'react-icons/fa';
 
 const Inventory = () => {

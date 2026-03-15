@@ -1,4 +1,3 @@
-import './Home.css'
 import TopInfoHome from '../../components/topInfoHome/TopInfoHome'
 import CardPaciente from '../../components/cardPaciente/CardPaciente'
 import { Link } from 'react-router-dom';
