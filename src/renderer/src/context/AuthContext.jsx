@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     const storedUser = authService.getCurrentUser();
     
     if (token && storedUser) {
-      setUser({ username: storedUser });
+      setUser(storedUser);
       setIsAuthenticated(true);
     }
     setIsLoading(false);
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       const result = await authService.login(username, password);
       
       if (result.success) {
-        setUser({ username });
+        setUser(result.user || { username });
         setIsAuthenticated(true);
         return { success: true, message: result.message };
       } else {
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
       const result = await authService.register(dentistData);
       
       if (result.success) {
-        setUser({ username: dentistData.username });
+        setUser(result.user || { username: dentistData.username });
         setIsAuthenticated(true);
         return { success: true, message: result.message };
       } else {

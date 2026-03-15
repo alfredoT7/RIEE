@@ -11,12 +11,22 @@ export const login = async (username, password) => {
     });
 
     if (response.data.success && response.data.data.token) {
+      const userData = response.data.data;
+      const user = {
+        id: userData.id,
+        username,
+        nombres: userData.nombres || '',
+        apellidos: userData.apellidos || '',
+        imagenUrl: userData.imagenUrl || ''
+      };
+
       // Guardar el token en localStorage
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('user', username);
+      localStorage.setItem('token', userData.token);
+      localStorage.setItem('user', JSON.stringify(user));
       return {
         success: true,
-        token: response.data.data.token,
+        token: userData.token,
+        user,
         message: response.data.message
       };
     }
@@ -43,12 +53,22 @@ export const register = async (dentistData) => {
     const response = await publicApi.post(`${AUTH_BASE_PATH}/register`, dentistData);
 
     if (response.data.success && response.data.data.token) {
+      const userData = response.data.data;
+      const user = {
+        id: userData.id,
+        username: dentistData.username,
+        nombres: userData.nombres || dentistData.nombres || '',
+        apellidos: userData.apellidos || dentistData.apellidos || '',
+        imagenUrl: userData.imagenUrl || dentistData.imagenUrl || ''
+      };
+
       // Guardar el token en localStorage
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('user', dentistData.username);
+      localStorage.setItem('token', userData.token);
+      localStorage.setItem('user', JSON.stringify(user));
       return {
         success: true,
-        token: response.data.data.token,
+        token: userData.token,
+        user,
         message: response.data.message
       };
     }
@@ -81,5 +101,13 @@ export const isAuthenticated = () => {
   return !!getToken();
 };
 export const getCurrentUser = () => {
-  return localStorage.getItem('user');
+  const storedUser = localStorage.getItem('user');
+  if (!storedUser) return null;
+
+  try {
+    return JSON.parse(storedUser);
+  } catch (error) {
+    // Compatibilidad con formato antiguo donde solo se guardaba username
+    return { username: storedUser };
+  }
 };
