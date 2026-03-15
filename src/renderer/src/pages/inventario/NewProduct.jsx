@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft, FaSave, FaTimes } from 'react-icons/fa'
-import './NewProduct.css'
 
 const NewProduct = () => {
   const navigate = useNavigate()

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import './Header.css'
 import { FaUser, FaSlidersH, FaBars, FaSignOutAlt } from "react-icons/fa";
 import { useSidebar } from '../../context/SidebarContext';
 import { useAuth } from '../../context/AuthContext';

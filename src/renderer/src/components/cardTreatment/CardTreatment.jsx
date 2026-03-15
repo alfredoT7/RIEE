@@ -1,5 +1,4 @@
 import React from 'react'
-import './CardTreatment.css'
 const CardTreatment = ( {title, icon, description} ) => {
   return (
     <div className='card-treatment'>

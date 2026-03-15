@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { FaGoogle, FaUser, FaLock, FaSpinner } from 'react-icons/fa';
 import { login } from '../../services/authService';
 import ImagesApp from '../../assets/ImagesApp';
-import './Login.css';
 
 const Login = ({ onLoginSuccess }) => {
-  const [identifier, setIdentifier] = useState(''); // username or email
+  const [identifier, setIdentifier] = useState(''); //username or email
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success' | 'error' | 'info'

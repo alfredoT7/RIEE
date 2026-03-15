@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CardPaciente from '../../components/cardPaciente/CardPaciente';
 import SearchBar from '../../components/searchBar/SearchBar';
-import './Patient.css';
 import PacienteHeader from '../../components/pacienteHeader/PacienteHeader';
 import Pagination from '../../components/pagination/Pagination';
 import { getPatientWithPagination, getAllPatients } from '../../api/Api';

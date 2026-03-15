@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import ImagesApp from '../../assets/ImagesApp';
-import './NewPatient.css';
 import { 
   FaCamera, 
   FaUser, 

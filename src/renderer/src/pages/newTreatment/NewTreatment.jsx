@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import treatmentPhoto from '../../assets/img/treatmentphoto.png';
-import './NewTreatment.css';
 import { FaCamera, FaTooth, FaFileAlt, FaClipboardList, FaClock, FaDollarSign, FaStickyNote, FaSave, FaTrash, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useNewTreatment } from './useNewTreatment';

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Appointments.css';
 
 const Appointments = () => {
   const navigate = useNavigate();

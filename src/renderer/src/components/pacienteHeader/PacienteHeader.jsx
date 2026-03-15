@@ -1,5 +1,4 @@
 import React from 'react'
-import './PacienteHeader.css'
 const PacienteHeader = () => {
   return (
     <div className="head-paciente-title1">
