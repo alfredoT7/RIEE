@@ -1,158 +1,159 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaSearch, FaUser } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from 'react'
+import { FaSearch, FaUser } from 'react-icons/fa'
 
-const PatientSearch = ({ patients, onPatientSelect, selectedPatientId, placeholder = "Buscar paciente..." }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [filteredPatients, setFilteredPatients] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const searchRef = useRef(null);
-  const dropdownRef = useRef(null);
+const PatientSearch = ({
+  patients,
+  onPatientSelect,
+  selectedPatientId,
+  placeholder = 'Buscar paciente...'
+}) => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
+  const [filteredPatients, setFilteredPatients] = useState([])
+  const [selectedPatient, setSelectedPatient] = useState(null)
+  const searchRef = useRef(null)
+
   useEffect(() => {
     if (searchTerm.length > 0) {
-      const filtered = patients.filter(patient =>
-        `${patient.nombre} ${patient.apellido}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        patient.cedula?.includes(searchTerm) ||
-        patient.telefono?.includes(searchTerm)
-      );
-      setFilteredPatients(filtered);
-    } else {
-      setFilteredPatients([]);
-    }
-  }, [searchTerm, patients]);
+      const filtered = patients.filter((patient) => {
+        const fullName = `${patient.nombre || ''} ${patient.apellido || ''}`.toLowerCase()
+        const ci = `${patient.cedula || patient.ciPaciente || ''}`
+        const phone = `${patient.telefono || patient.phonesNumbers?.[0]?.numero || ''}`
 
-  // Encontrar el paciente seleccionado cuando cambia selectedPatientId
+        return (
+          fullName.includes(searchTerm.toLowerCase()) ||
+          ci.includes(searchTerm) ||
+          phone.includes(searchTerm)
+        )
+      })
+
+      setFilteredPatients(filtered)
+    } else {
+      setFilteredPatients([])
+    }
+  }, [searchTerm, patients])
+
   useEffect(() => {
     if (selectedPatientId) {
-      const patient = patients.find(p => p.id === parseInt(selectedPatientId));
+      const patient = patients.find(
+        (item) => `${item.id || item.ciPaciente}` === `${selectedPatientId}`
+      )
+
       if (patient) {
-        setSelectedPatient(patient);
-        setSearchTerm(`${patient.nombre} ${patient.apellido}`);
+        setSelectedPatient(patient)
+        setSearchTerm(`${patient.nombre} ${patient.apellido}`)
       }
     } else {
-      setSelectedPatient(null);
-      setSearchTerm('');
+      setSelectedPatient(null)
+      setSearchTerm('')
     }
-  }, [selectedPatientId, patients]);
+  }, [selectedPatientId, patients])
 
-  // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setIsOpen(false);
+        setIsOpen(false)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    setIsOpen(true);
-    
-    // Si se borra el campo, resetear selección
-    if (value === '') {
-      setSelectedPatient(null);
-      onPatientSelect('');
+      document.removeEventListener('mousedown', handleClickOutside)
     }
-  };
-
-  const handlePatientSelect = (patient) => {
-    setSelectedPatient(patient);
-    setSearchTerm(`${patient.nombre} ${patient.apellido}`);
-    setIsOpen(false);
-    onPatientSelect(patient.id);
-  };
-
-  const handleInputFocus = () => {
-    if (searchTerm.length > 0) {
-      setIsOpen(true);
-    }
-  };
+  }, [])
 
   const clearSelection = () => {
-    setSelectedPatient(null);
-    setSearchTerm('');
-    setIsOpen(false);
-    onPatientSelect('');
-    searchRef.current?.focus();
-  };
+    setSelectedPatient(null)
+    setSearchTerm('')
+    setIsOpen(false)
+    onPatientSelect('')
+  }
 
   return (
-    <div className="patient-search-container" ref={searchRef}>
-      <label className="patient-search-label">Paciente *</label>
-      <div className="patient-search-input-container">
-        <div className="search-input-wrapper">
-          {/* <FaSearch className="search-icon" /> */}
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleInputChange}
-            onFocus={handleInputFocus}
-            placeholder={placeholder}
-            className="patient-search-input"
-            autoComplete="off"
-          />
-          {selectedPatient && (
-            <button
-              type="button"
-              onClick={clearSelection}
-              className="clear-selection-btn"
-            >
-              ×
-            </button>
-          )}
-        </div>
+    <div className="relative" ref={searchRef}>
+      <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Paciente *
+      </label>
 
-        {isOpen && filteredPatients.length > 0 && (
-          <div className="patient-dropdown" ref={dropdownRef}>
-            {filteredPatients.map((patient) => (
-              <div
-                key={patient.id}
-                className="patient-option"
-                onClick={() => handlePatientSelect(patient)}
-              >
-                <div className="patient-avatar">
-                  <FaUser />
-                </div>
-                <div className="patient-info">
-                  <div className="patient-name">
-                    {patient.nombre} {patient.apellido}
-                  </div>
-                  <div className="patient-details">
-                    {patient.cedula && <span>CI: {patient.cedula}</span>}
-                    {patient.telefono && <span> • Tel: {patient.telefono}</span>}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="relative">
+        <FaSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-slate-500" />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => {
+            const value = e.target.value
+            setSearchTerm(value)
+            setIsOpen(true)
 
-        {isOpen && searchTerm.length > 0 && filteredPatients.length === 0 && (
-          <div className="patient-dropdown">
-            <div className="no-results">
-              No se encontraron pacientes
-            </div>
-          </div>
+            if (!value) {
+              setSelectedPatient(null)
+              onPatientSelect('')
+            }
+          }}
+          onFocus={() => searchTerm.length > 0 && setIsOpen(true)}
+          placeholder={placeholder}
+          autoComplete="off"
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-12 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-[#00b09b]/40 focus:bg-white dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
+        />
+
+        {selectedPatient && (
+          <button
+            type="button"
+            onClick={clearSelection}
+            className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-slate-200 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+          >
+            ×
+          </button>
         )}
       </div>
 
+      {isOpen && (
+        <div className="absolute z-30 mt-2 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+          {filteredPatients.length > 0 ? (
+            filteredPatients.map((patient) => (
+              <button
+                key={patient.id || patient.ciPaciente}
+                type="button"
+                className="flex w-full items-center gap-3 border-b border-slate-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
+                onClick={() => {
+                  setSelectedPatient(patient)
+                  setSearchTerm(`${patient.nombre} ${patient.apellido}`)
+                  setIsOpen(false)
+                  onPatientSelect(patient.id || patient.ciPaciente)
+                }}
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#00b09b]/10 text-[#0f766e] dark:bg-[#00b09b]/15 dark:text-[#5ce1d4]">
+                  <FaUser />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
+                    {patient.nombre} {patient.apellido}
+                  </p>
+                  <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                    CI: {patient.cedula || patient.ciPaciente || 'N/D'}
+                  </p>
+                </div>
+              </button>
+            ))
+          ) : searchTerm ? (
+            <div className="px-4 py-4 text-sm text-slate-500 dark:text-slate-400">
+              No se encontraron pacientes.
+            </div>
+          ) : null}
+        </div>
+      )}
+
       {selectedPatient && (
-        <div className="selected-patient-info">
-          <FaUser className="selected-icon" />
+        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#00b09b]/10 px-3 py-1.5 text-sm font-medium text-[#0f766e] dark:bg-[#00b09b]/15 dark:text-[#5ce1d4]">
+          <FaUser className="text-xs" />
           <span>
             {selectedPatient.nombre} {selectedPatient.apellido}
-            {selectedPatient.cedula && ` • CI: ${selectedPatient.cedula}`}
           </span>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PatientSearch;
+export default PatientSearch

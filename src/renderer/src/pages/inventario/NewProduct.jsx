@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft, FaSave, FaTimes } from 'react-icons/fa'
 
+const fieldClassName =
+  'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-[#00b09b]/40 focus:bg-white dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500'
+
 const NewProduct = () => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -19,223 +22,121 @@ const NewProduct = () => {
   })
 
   const categories = [
-    { value: 'materiales', label: 'Materiales Dentales' },
-    { value: 'proteccion', label: 'Equipo de Protección' },
+    { value: 'materiales', label: 'Materiales dentales' },
+    { value: 'proteccion', label: 'Equipo de proteccion' },
     { value: 'medicamentos', label: 'Medicamentos' },
     { value: 'ortodoncia', label: 'Ortodoncia' },
     { value: 'instrumentos', label: 'Instrumentos' },
     { value: 'otros', label: 'Otros' }
   ]
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Aquí implementarías la lógica para guardar el producto
-    console.log('Producto a guardar:', formData)
-    // Simular guardado exitoso
-    alert('Producto agregado exitosamente')
-    navigate('/inventario')
-  }
-
-  const handleCancel = () => {
-    navigate('/inventario')
-  }
-
   return (
-    <div className="new-product-container">
-      <div className="new-product-header">
-        <div className="header-content">
-          <button 
-            className="btn-back"
-            onClick={handleCancel}
+    <section className="px-2 pb-6 pt-3">
+      <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+        <div className="mb-6 flex items-center gap-4">
+          <button
             type="button"
+            onClick={() => navigate('/inventario')}
+            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 text-slate-600 dark:border-slate-800 dark:text-slate-300"
           >
             <FaArrowLeft />
           </button>
-          <div className="header-text">
-            <h1>Nuevo Producto</h1>
-            <p>Agregar producto al inventario</p>
+          <div>
+            <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">Nuevo producto</h1>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Agrega un producto al inventario del consultorio.
+            </p>
           </div>
         </div>
-      </div>
 
-      <form onSubmit={handleSubmit} className="new-product-form">
-        <div className="form-content">
-          <div className="form-grid">
-            <div className="form-group">
-              <label htmlFor="name">Nombre del Producto *</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Ej: Resina Z350, Guantes de látex..."
-                required
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="code">Código de Barras</label>
-              <input
-                type="text"
-                id="code"
-                name="code"
-                value={formData.code}
-                onChange={handleInputChange}
-                placeholder="Código de barras del producto"
-              />
-            </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            navigate('/inventario')
+          }}
+          className="space-y-6"
+        >
+          <div className="grid gap-4 md:grid-cols-2">
+            {[
+              ['name', 'Nombre del producto *'],
+              ['code', 'Codigo de barras'],
+              ['supplier', 'Proveedor'],
+              ['location', 'Ubicacion en almacen'],
+              ['cost', 'Precio de costo'],
+              ['price', 'Precio (Bs.) *'],
+              ['stock', 'Stock actual *'],
+              ['minStock', 'Stock minimo'],
+              ['expiryDate', 'Fecha de vencimiento']
+            ].map(([name, label]) => (
+              <div key={name}>
+                <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  {label}
+                </label>
+                <input
+                  type={name === 'expiryDate' ? 'date' : ['cost', 'price', 'stock', 'minStock'].includes(name) ? 'number' : 'text'}
+                  name={name}
+                  value={formData[name]}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, [name]: e.target.value }))}
+                  className={fieldClassName}
+                />
+              </div>
+            ))}
 
-            <div className="form-group">
-              <label htmlFor="category">Categoría *</label>
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Categoria *
+              </label>
               <select
-                id="category"
                 name="category"
                 value={formData.category}
-                onChange={handleInputChange}
-                required
+                onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
+                className={fieldClassName}
               >
-                <option value="">Seleccionar categoría</option>
-                {categories.map(cat => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
+                <option value="">Seleccionar categoria</option>
+                {categories.map((category) => (
+                  <option key={category.value} value={category.value}>
+                    {category.label}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="supplier">Proveedor</label>
-              <input
-                type="text"
-                id="supplier"
-                name="supplier"
-                value={formData.supplier}
-                onChange={handleInputChange}
-                placeholder="Seleccionar proveedor"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="cost">Precio de Costo</label>
-              <input
-                type="number"
-                id="cost"
-                name="cost"
-                value={formData.cost}
-                onChange={handleInputChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="price">Precio (Bs.) *</label>
-              <input
-                type="number"
-                id="price"
-                name="price"
-                value={formData.price}
-                onChange={handleInputChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="stock">Stock Actual *</label>
-              <input
-                type="number"
-                id="stock"
-                name="stock"
-                value={formData.stock}
-                onChange={handleInputChange}
-                placeholder="0"
-                min="0"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="minStock">Stock Mínimo</label>
-              <input
-                type="number"
-                id="minStock"
-                name="minStock"
-                value={formData.minStock}
-                onChange={handleInputChange}
-                placeholder="0"
-                min="0"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="expiryDate">Fecha de Vencimiento</label>
-              <input
-                type="date"
-                id="expiryDate"
-                name="expiryDate"
-                value={formData.expiryDate}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="location">Ubicación en Almacén</label>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                placeholder="Ej: Estante A-3, Refrigerador 1..."
-              />
-            </div>
-
-            <div className="form-group full-width">
-              <label htmlFor="description">Descripción</label>
+            <div className="md:col-span-2">
+              <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Descripcion
+              </label>
               <textarea
-                id="description"
                 name="description"
+                rows="4"
                 value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Descripción detallada del producto..."
-                rows="3"
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, description: e.target.value }))
+                }
+                className={fieldClassName}
               />
             </div>
           </div>
-        </div>
 
-        <div className="form-actions">
-          <button 
-            type="button" 
-            className="btn-secondary"
-            onClick={handleCancel}
-          >
-            <FaTimes />
-            Cancelar
-          </button>
-          <button 
-            type="submit" 
-            className="btn-primary"
-          >
-            <FaSave />
-            Guardar
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="flex flex-wrap justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => navigate('/inventario')}
+              className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 dark:border-slate-800 dark:text-slate-300"
+            >
+              <FaTimes />
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-2xl bg-[#00b09b] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)]"
+            >
+              <FaSave />
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   )
 }
 

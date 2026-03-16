@@ -1,417 +1,377 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { CalendarDays, Clock3, Activity, Users } from 'lucide-react'
+
+const summaryCards = [
+  {
+    title: 'Total citas',
+    value: '24',
+    change: '+3 vs semana anterior',
+    icon: CalendarDays,
+    accent: 'from-sky-500 to-cyan-400'
+  },
+  {
+    title: 'Nuevos pacientes',
+    value: '8',
+    change: '+2 vs semana anterior',
+    icon: Users,
+    accent: 'from-emerald-500 to-teal-400'
+  },
+  {
+    title: 'Horas programadas',
+    value: '32h',
+    change: '+5h vs semana anterior',
+    icon: Clock3,
+    accent: 'from-amber-500 to-orange-400'
+  },
+  {
+    title: 'Tratamientos',
+    value: '18',
+    change: '-2 vs semana anterior',
+    icon: Activity,
+    accent: 'from-fuchsia-500 to-pink-400'
+  }
+]
+
+const appointmentsData = {
+  Dia: {
+    '2025-08-01': [
+      { time: '09:00', patient: 'Andrea Moreno', treatment: 'Consulta inicial', duration: 30 },
+      { time: '10:30', patient: 'Diego Herrera', treatment: 'Limpieza dental', duration: 60 },
+      { time: '14:00', patient: 'Patricia Luna', treatment: 'Ortodoncia', duration: 45 },
+      { time: '15:30', patient: 'Ricardo Vega', treatment: 'Consulta', duration: 30 }
+    ],
+    '2025-08-22': [
+      { time: '08:00', patient: 'Juan Perez', treatment: 'Consulta inicial', duration: 30 },
+      { time: '09:00', patient: 'Maria Garcia', treatment: 'Limpieza dental', duration: 60 },
+      { time: '11:00', patient: 'Carlos Rodriguez', treatment: 'Extraccion dental', duration: 30 },
+      { time: '13:00', patient: 'Ana Martinez', treatment: 'Revision de ortodoncia', duration: 90 },
+      { time: '15:30', patient: 'Laura Sanchez', treatment: 'Endodoncia', duration: 120 },
+      { time: '17:00', patient: 'Roberto Gomez', treatment: 'Consulta', duration: 30 }
+    ]
+  },
+  Semana: {
+    Lunes: [
+      { time: '09:00', patient: 'Pedro Lopez', treatment: 'Implante dental', duration: 120 },
+      { time: '14:00', patient: 'Sofia Vega', treatment: 'Blanqueamiento', duration: 60 }
+    ],
+    Martes: [
+      { time: '08:30', patient: 'Miguel Torres', treatment: 'Cirugia oral', duration: 90 },
+      { time: '11:00', patient: 'Elena Ruiz', treatment: 'Emergencia', duration: 30 }
+    ],
+    Miercoles: [
+      { time: '10:00', patient: 'Carmen Herrera', treatment: 'Odontopediatria', duration: 45 },
+      { time: '13:30', patient: 'Fernando Silva', treatment: 'Corona dental', duration: 90 }
+    ],
+    Jueves: [
+      { time: '08:00', patient: 'Luisa Morales', treatment: 'Puente dental', duration: 120 },
+      { time: '16:00', patient: 'Antonio Jimenez', treatment: 'Limpieza dental', duration: 60 }
+    ],
+    Viernes: [
+      { time: '09:30', patient: 'Isabella Cruz', treatment: 'Consulta inicial', duration: 30 },
+      { time: '11:00', patient: 'Rodrigo Mendoza', treatment: 'Extraccion', duration: 45 },
+      { time: '14:30', patient: 'Natalia Guerrero', treatment: 'Ortodoncia', duration: 60 }
+    ]
+  },
+  Mes: [
+    { date: '1', count: 8 },
+    { date: '2', count: 6 },
+    { date: '3', count: 0 },
+    { date: '4', count: 0 },
+    { date: '5', count: 12 },
+    { date: '6', count: 9 },
+    { date: '7', count: 7 },
+    { date: '8', count: 11 },
+    { date: '9', count: 5 },
+    { date: '10', count: 0 },
+    { date: '11', count: 0 },
+    { date: '12', count: 8 },
+    { date: '13', count: 10 },
+    { date: '14', count: 6 },
+    { date: '15', count: 9 },
+    { date: '16', count: 7 },
+    { date: '17', count: 0 },
+    { date: '18', count: 0 },
+    { date: '19', count: 12 },
+    { date: '20', count: 8 },
+    { date: '21', count: 11 },
+    { date: '22', count: 14 },
+    { date: '23', count: 6 },
+    { date: '24', count: 0 },
+    { date: '25', count: 0 },
+    { date: '26', count: 9 },
+    { date: '27', count: 8 },
+    { date: '28', count: 7 },
+    { date: '29', count: 10 },
+    { date: '30', count: 5 },
+    { date: '31', count: 8 }
+  ]
+}
+
+const viewOptions = ['Dia', 'Semana', 'Mes']
 
 const Appointments = () => {
-  const navigate = useNavigate();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [currentView, setCurrentView] = useState('Día'); // 'Día', 'Semana', 'Mes'
-  const [selectedDay, setSelectedDay] = useState(22); // Día seleccionado para la vista de día
+  const navigate = useNavigate()
+  const [currentView, setCurrentView] = useState('Dia')
+  const [selectedDay, setSelectedDay] = useState(22)
 
-  // Datos estáticos de citas - expandidos para múltiples días
-  const appointmentsData = {
-    'Día': {
-      '2025-08-01': [
-        { time: '09:00', patient: 'Andrea Moreno', treatment: 'Consulta inicial', duration: 30, type: 'initial-consultation' },
-        { time: '10:30', patient: 'Diego Herrera', treatment: 'Limpieza dental', duration: 60, type: 'dental-cleaning' },
-        { time: '14:00', patient: 'Patricia Luna', treatment: 'Ortodoncia', duration: 45, type: 'orthodontic-review' },
-        { time: '15:30', patient: 'Ricardo Vega', treatment: 'Consulta', duration: 30, type: 'consultation' },
-      ],
-      '2025-08-02': [
-        { time: '08:30', patient: 'Carmen Silva', treatment: 'Endodoncia', duration: 120, type: 'endodontic' },
-        { time: '11:00', patient: 'Manuel Torres', treatment: 'Extracción dental', duration: 45, type: 'dental-extraction' },
-        { time: '15:00', patient: 'Lucia Campos', treatment: 'Blanqueamiento', duration: 90, type: 'whitening' },
-      ],
-      '2025-08-05': [
-        { time: '08:00', patient: 'Fernando Castro', treatment: 'Implante dental', duration: 120, type: 'implant' },
-        { time: '10:30', patient: 'Gloria Mendez', treatment: 'Consulta inicial', duration: 30, type: 'initial-consultation' },
-        { time: '12:00', patient: 'Alberto Ruiz', treatment: 'Limpieza dental', duration: 60, type: 'dental-cleaning' },
-        { time: '14:30', patient: 'Rosa Martinez', treatment: 'Corona dental', duration: 90, type: 'crown' },
-        { time: '16:30', patient: 'Sergio Lopez', treatment: 'Seguimiento', duration: 30, type: 'follow-up' },
-      ],
-      '2025-08-06': [
-        { time: '09:00', patient: 'Isabella Cruz', treatment: 'Odontopediatría', duration: 45, type: 'pediatric' },
-        { time: '11:00', patient: 'Mateo Guerrero', treatment: 'Ortodoncia', duration: 60, type: 'orthodontic-review' },
-        { time: '13:00', patient: 'Valentina Soto', treatment: 'Cirugía oral', duration: 90, type: 'surgery' },
-        { time: '15:30', patient: 'Alejandro Vargas', treatment: 'Consulta', duration: 30, type: 'consultation' },
-      ],
-      '2025-08-07': [
-        { time: '08:30', patient: 'Camila Rodriguez', treatment: 'Puente dental', duration: 120, type: 'bridge' },
-        { time: '11:00', patient: 'Nicolas Fernandez', treatment: 'Limpieza dental', duration: 60, type: 'dental-cleaning' },
-        { time: '14:00', patient: 'Sofia Morales', treatment: 'Emergencia', duration: 45, type: 'emergency' },
-      ],
-      '2025-08-08': [
-        { time: '09:00', patient: 'Gabriel Santos', treatment: 'Consulta inicial', duration: 30, type: 'initial-consultation' },
-        { time: '10:00', patient: 'Daniela Jimenez', treatment: 'Blanqueamiento', duration: 90, type: 'whitening' },
-        { time: '12:30', patient: 'Emilio Herrera', treatment: 'Extracción dental', duration: 45, type: 'dental-extraction' },
-        { time: '14:30', patient: 'Mariana Castro', treatment: 'Ortodoncia', duration: 60, type: 'orthodontic-review' },
-        { time: '16:00', patient: 'Sebastian Torres', treatment: 'Seguimiento', duration: 30, type: 'follow-up' },
-      ],
-      '2025-08-09': [
-        { time: '08:00', patient: 'Adriana Lopez', treatment: 'Endodoncia', duration: 120, type: 'endodontic' },
-        { time: '11:00', patient: 'Joaquin Mendoza', treatment: 'Corona dental', duration: 90, type: 'crown' },
-        { time: '15:00', patient: 'Renata Silva', treatment: 'Consulta', duration: 30, type: 'consultation' },
-      ],
-      '2025-08-12': [
-        { time: '09:30', patient: 'Andres Gutierrez', treatment: 'Implante dental', duration: 120, type: 'implant' },
-        { time: '12:00', patient: 'Paola Reyes', treatment: 'Limpieza dental', duration: 60, type: 'dental-cleaning' },
-        { time: '14:30', patient: 'Miguel Vargas', treatment: 'Odontopediatría', duration: 45, type: 'pediatric' },
-        { time: '16:30', patient: 'Elena Moreno', treatment: 'Consulta inicial', duration: 30, type: 'initial-consultation' },
-      ],
-      '2025-08-22': [
-        { time: '08:00', patient: 'Juan Pérez', treatment: 'Consulta inicial', duration: 30, type: 'initial-consultation' },
-        { time: '09:00', patient: 'María García', treatment: 'Limpieza dental', duration: 60, type: 'dental-cleaning' },
-        { time: '11:00', patient: 'Carlos Rodríguez', treatment: 'Extracción dental', duration: 30, type: 'dental-extraction' },
-        { time: '13:00', patient: 'Ana Martínez', treatment: 'Revisión de ortodoncia', duration: 90, type: 'orthodontic-review' },
-        { time: '15:30', patient: 'Laura Sanchez', treatment: 'Endodoncia', duration: 120, type: 'endodontic' },
-        { time: '17:00', patient: 'Roberto Gomez', treatment: 'Consulta', duration: 30, type: 'consultation' }
-      ]
-    },
-    'Semana': {
-      'Lunes': [
-        { time: '09:00', patient: 'Pedro López', treatment: 'Implante dental', duration: 120, type: 'implant' },
-        { time: '14:00', patient: 'Sofia Vega', treatment: 'Blanqueamiento', duration: 60, type: 'whitening' }
-      ],
-      'Martes': [
-        { time: '08:30', patient: 'Miguel Torres', treatment: 'Cirugía oral', duration: 90, type: 'surgery' },
-        { time: '11:00', patient: 'Elena Ruiz', treatment: 'Emergencia', duration: 30, type: 'emergency' },
-        { time: '15:00', patient: 'David Castro', treatment: 'Seguimiento', duration: 30, type: 'follow-up' }
-      ],
-      'Miércoles': [
-        { time: '10:00', patient: 'Carmen Herrera', treatment: 'Odontopediatría', duration: 45, type: 'pediatric' },
-        { time: '13:30', patient: 'Fernando Silva', treatment: 'Corona dental', duration: 90, type: 'crown' }
-      ],
-      'Jueves': [
-        { time: '08:00', patient: 'Luisa Morales', treatment: 'Puente dental', duration: 120, type: 'bridge' },
-        { time: '16:00', patient: 'Antonio Jiménez', treatment: 'Limpieza dental', duration: 60, type: 'dental-cleaning' }
-      ],
-      'Viernes': [
-        { time: '09:30', patient: 'Isabella Cruz', treatment: 'Consulta inicial', duration: 30, type: 'initial-consultation' },
-        { time: '11:00', patient: 'Rodrigo Mendoza', treatment: 'Extracción', duration: 45, type: 'dental-extraction' },
-        { time: '14:30', patient: 'Natalia Guerrero', treatment: 'Ortodoncia', duration: 60, type: 'orthodontic-review' }
-      ]
-    },
-    'Mes': [
-      { date: '1', count: 8, highlight: false },
-      { date: '2', count: 6, highlight: false },
-      { date: '3', count: 0, highlight: false },
-      { date: '4', count: 0, highlight: false },
-      { date: '5', count: 12, highlight: false },
-      { date: '6', count: 9, highlight: false },
-      { date: '7', count: 7, highlight: false },
-      { date: '8', count: 11, highlight: false },
-      { date: '9', count: 5, highlight: false },
-      { date: '10', count: 0, highlight: false },
-      { date: '11', count: 0, highlight: false },
-      { date: '12', count: 8, highlight: false },
-      { date: '13', count: 10, highlight: false },
-      { date: '14', count: 6, highlight: false },
-      { date: '15', count: 9, highlight: false },
-      { date: '16', count: 7, highlight: false },
-      { date: '17', count: 0, highlight: false },
-      { date: '18', count: 0, highlight: false },
-      { date: '19', count: 12, highlight: false },
-      { date: '20', count: 8, highlight: false },
-      { date: '21', count: 11, highlight: false },
-      { date: '22', count: 14, highlight: true }, // Día actual
-      { date: '23', count: 6, highlight: false },
-      { date: '24', count: 0, highlight: false },
-      { date: '25', count: 0, highlight: false },
-      { date: '26', count: 9, highlight: false },
-      { date: '27', count: 8, highlight: false },
-      { date: '28', count: 7, highlight: false },
-      { date: '29', count: 10, highlight: false },
-      { date: '30', count: 5, highlight: false },
-      { date: '31', count: 8, highlight: false }
-    ]
-  };
+  const selectedDateKey = `2025-08-${selectedDay.toString().padStart(2, '0')}`
 
-  const handleNewAppointment = () => {
-    navigate('/nueva-cita');
-  };
+  const currentDayAppointments = useMemo(
+    () => appointmentsData.Dia[selectedDateKey] || [],
+    [selectedDateKey]
+  )
 
-  const handleViewChange = (view) => {
-    setCurrentView(view);
-  };
-
-  const handleDayClick = (day) => {
-    setSelectedDay(parseInt(day));
-    setCurrentView('Día');
-  };
+  const currentWeekAppointments = useMemo(
+    () => Object.entries(appointmentsData.Semana),
+    []
+  )
 
   const formatCurrentDate = () => {
-    if (currentView === 'Día') {
-      const date = new Date(2025, 7, selectedDay); // Agosto = mes 7 (0-indexed)
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      return date.toLocaleDateString('es-ES', options);
-    }
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return currentDate.toLocaleDateString('es-ES', options);
-  };
-
-  const getCurrentViewTitle = () => {
-    switch(currentView) {
-      case 'Día':
-        return formatCurrentDate();
-      case 'Semana':
-        return 'Semana del 19 al 25 de Agosto, 2025';
-      case 'Mes':
-        return 'Agosto 2025';
-      default:
-        return formatCurrentDate();
-    }
-  };
-
-  // Renderizado de vista de día
-  const renderDayView = () => {
-    const timeSlots = [];
-    for (let hour = 8; hour < 18; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        timeSlots.push(time);
-      }
+    if (currentView === 'Dia') {
+      const date = new Date(2025, 7, selectedDay)
+      return date.toLocaleDateString('es-ES', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
     }
 
-    // Usar el día seleccionado para obtener las citas
-    const selectedDateKey = `2025-08-${selectedDay.toString().padStart(2, '0')}`;
-    const dayAppointments = appointmentsData['Día'][selectedDateKey] || [];
+    if (currentView === 'Semana') {
+      return 'Semana del 19 al 25 de agosto de 2025'
+    }
 
-    return (
-      <div className="agenda-content">
-        <div className="schedule-column">
-          {timeSlots.map((time) => (
-            <div key={time} className="time-slot">
-              <span className="time">{time}</span>
-            </div>
-          ))}
+    return 'Agosto 2025'
+  }
+
+  return (
+    <section className="px-2 pb-6 pt-3">
+      <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
+        <div className="mb-5">
+          <h2 className="text-[1.2rem] font-semibold text-slate-800">Resumen de citas</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Vista general de citas, ocupacion y movimiento semanal.
+          </p>
         </div>
 
-        <div className="appointments-column">
-          {timeSlots.map((time, index) => {
-            const appointment = dayAppointments.find(apt => apt.time === time);
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {summaryCards.map((card) => {
+            const Icon = card.icon
+
             return (
-              <div key={time} className="appointment-slot">
-                {appointment && (
-                  <div className={`appointment ${appointment.type} duration-${appointment.duration}`} style={{top: '2px'}}>
-                    <div className="appointment-info">
-                      <h4>{appointment.patient}</h4>
-                      <p>{appointment.treatment}</p>
-                    </div>
-                    <span className="appointment-duration">{appointment.duration} min</span>
+              <div
+                key={card.title}
+                className="rounded-[22px] border border-slate-200 bg-white p-4 shadow-[0_12px_32px_rgba(15,23,42,0.05)]"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm text-slate-500">{card.title}</p>
+                    <h3 className="mt-2 text-2xl font-semibold text-slate-800">{card.value}</h3>
                   </div>
-                )}
+                  <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${card.accent} text-white`}
+                  >
+                    <Icon size={20} />
+                  </div>
+                </div>
+                <p
+                  className={`mt-4 text-sm font-medium ${
+                    card.change.startsWith('+') ? 'text-emerald-600' : 'text-rose-600'
+                  }`}
+                >
+                  {card.change}
+                </p>
               </div>
-            );
+            )
           })}
         </div>
       </div>
-    );
-  };
 
-  // Renderizado de vista de semana
-  const renderWeekView = () => {
-    const weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-    const timeSlots = [];
-    for (let hour = 8; hour < 18; hour++) {
-      timeSlots.push(`${hour.toString().padStart(2, '0')}:00`);
-    }
-
-    return (
-      <div className="agenda-content week-view">
-        <div className="week-header">
-          <div className="time-header"></div>
-          {weekDays.map(day => (
-            <div key={day} className="day-header">
-              <h4>{day}</h4>
-              <p>{19 + weekDays.indexOf(day)} Ago</p>
-            </div>
-          ))}
-        </div>
-        
-        <div className="week-content">
-          <div className="week-time-column">
-            {timeSlots.map(time => (
-              <div key={time} className="week-time-slot">
-                <span className="time">{time}</span>
-              </div>
-            ))}
-          </div>
-          
-          {weekDays.map(day => (
-            <div key={day} className="week-day-column">
-              {timeSlots.map(time => {
-                const dayAppointments = appointmentsData['Semana'][day] || [];
-                const appointment = dayAppointments.find(apt => apt.time.startsWith(time.split(':')[0]));
-                return (
-                  <div key={time} className="week-appointment-slot">
-                    {appointment && (
-                      <div className={`week-appointment ${appointment.type}`}>
-                        <div className="appointment-info">
-                          <h5>{appointment.patient}</h5>
-                          <p>{appointment.treatment}</p>
-                          <span className="time-duration">{appointment.time} ({appointment.duration}min)</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  // Renderizado de vista de mes
-  const renderMonthView = () => {
-    const monthData = appointmentsData['Mes'];
-    const weekDays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-    
-    return (
-      <div className="agenda-content month-view">
-        <div className="month-header">
-          {weekDays.map(day => (
-            <div key={day} className="month-day-header">{day}</div>
-          ))}
-        </div>
-        
-        <div className="month-grid">
-          {monthData.map((day, index) => (
-            <div 
-              key={index} 
-              className={`month-day ${day.highlight ? 'current-day' : ''} ${day.count === 0 ? 'no-appointments' : ''} ${parseInt(day.date) === selectedDay ? 'selected-day' : ''}`}
-              onClick={() => handleDayClick(day.date)}
-            >
-              <span className="day-number">{day.date}</span>
-              {day.count > 0 && (
-                <div className="appointment-count">
-                  <span className="count-badge">{day.count}</span>
-                  <span className="count-text">citas</span>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-  return (
-    <div className="appointments-container">
-      <div className="appointments-summary">
-        <h2>Resumen de citas</h2>
-        <p className="summary-subtitle">Vista general de las citas programadas para los próximos 7 días</p>
-        
-        <div className="summary-cards">
-          <div className="summary-card">
-            <div className="card-icon calendar-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-            </div>
-            <div className="card-content">
-              <h3 className="card-number">24</h3>
-              <p className="card-label">Total citas</p>
-              <span className="card-change positive">+3 vs semana anterior</span>
-            </div>
+      <div className="mt-8 rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)]">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 className="text-[1.2rem] font-semibold text-slate-800">Agenda</h2>
+            <p className="mt-1 text-sm text-slate-500">Gestion de agenda y citas programadas.</p>
           </div>
 
-          <div className="summary-card">
-            <div className="card-icon patients-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </div>
-            <div className="card-content">
-              <h3 className="card-number">8</h3>
-              <p className="card-label">Nuevos pacientes</p>
-              <span className="card-change positive">+2 vs semana anterior</span>
-            </div>
-          </div>
-
-          <div className="summary-card">
-            <div className="card-icon hours-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12,6 12,12 16,14"></polyline>
-              </svg>
-            </div>
-            <div className="card-content">
-              <h3 className="card-number">32h</h3>
-              <p className="card-label">Horas programadas</p>
-              <span className="card-change positive">+5h vs semana anterior</span>
-            </div>
-          </div>
-
-          <div className="summary-card">
-            <div className="card-icon treatments-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-              </svg>
-            </div>
-            <div className="card-content">
-              <h3 className="card-number">18</h3>
-              <p className="card-label">Tratamientos</p>
-              <span className="card-change negative">-2 vs semana anterior</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="appointments-agenda">
-        <div className="agenda-header">
-          <div className="agenda-title">
-            <h2>Citas</h2>
-            <p>Gestión de agenda y citas programadas</p>
-          </div>
-          <button 
-            className="new-appointment-btn"
-            onClick={handleNewAppointment}
+          <button
+            type="button"
+            onClick={() => navigate('/nueva-cita')}
+            className="inline-flex w-fit items-center rounded-2xl bg-[#00b09b] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)] transition-transform hover:-translate-y-0.5"
           >
-            + Nueva Cita
+            + Nueva cita
           </button>
         </div>
 
-        <div className="agenda-controls">
-          <div className="date-navigation">
-            <button className="nav-btn">‹</button>
-            <h3 className="current-date">{getCurrentViewTitle()}</h3>
-            <button className="nav-btn">›</button>
-            <span className="today-label">Hoy</span>
+        <div className="mt-6 flex flex-col gap-4 rounded-[22px] border border-slate-200 bg-slate-50/80 p-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+              Vista actual
+            </p>
+            <h3 className="mt-1 text-lg font-semibold capitalize text-slate-800">
+              {formatCurrentDate()}
+            </h3>
           </div>
-          
-          <div className="view-controls">
-            <button 
-              className={`view-btn ${currentView === 'Día' ? 'active' : ''}`}
-              onClick={() => handleViewChange('Día')}
-            >
-              Día
-            </button>
-            <button 
-              className={`view-btn ${currentView === 'Semana' ? 'active' : ''}`}
-              onClick={() => handleViewChange('Semana')}
-            >
-              Semana
-            </button>
-            <button 
-              className={`view-btn ${currentView === 'Mes' ? 'active' : ''}`}
-              onClick={() => handleViewChange('Mes')}
-            >
-              Mes
-            </button>
+
+          <div className="flex flex-wrap gap-2">
+            {viewOptions.map((view) => {
+              const isActive = currentView === view
+
+              return (
+                <button
+                  key={view}
+                  type="button"
+                  className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
+                    isActive
+                      ? 'bg-[#00b09b] text-white shadow-[0_10px_20px_rgba(0,176,155,0.2)]'
+                      : 'border border-slate-200 bg-white text-slate-600 hover:border-[#00b09b]/30 hover:text-[#0f766e]'
+                  }`}
+                  onClick={() => setCurrentView(view)}
+                >
+                  {view}
+                </button>
+              )
+            })}
           </div>
         </div>
 
-        {/* Renderizado condicional basado en la vista actual */}
-        {currentView === 'Día' && renderDayView()}
-        {currentView === 'Semana' && renderWeekView()}
-        {currentView === 'Mes' && renderMonthView()}
-      </div>
-    </div>
-  );
-};
+        {currentView === 'Dia' && (
+          <div className="mt-6 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="rounded-[22px] border border-slate-200 bg-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                Dias con mas actividad
+              </p>
+              <div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-7 lg:grid-cols-4">
+                {appointmentsData.Mes.map((day) => {
+                  const isSelected = Number(day.date) === selectedDay
 
-export default Appointments;
+                  return (
+                    <button
+                      key={day.date}
+                      type="button"
+                      onClick={() => setSelectedDay(Number(day.date))}
+                      className={`rounded-2xl border px-3 py-3 text-center transition-colors ${
+                        isSelected
+                          ? 'border-[#00b09b] bg-[#00b09b] text-white'
+                          : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-[#00b09b]/30 hover:bg-white'
+                      }`}
+                    >
+                      <span className="block text-sm font-semibold">{day.date}</span>
+                      <span className={`mt-1 block text-[11px] ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
+                        {day.count} citas
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-[22px] border border-slate-200 bg-white p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <h4 className="text-lg font-semibold text-slate-800">Agenda del dia</h4>
+                  <p className="text-sm text-slate-500">
+                    {currentDayAppointments.length} cita{currentDayAppointments.length === 1 ? '' : 's'} registradas.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {currentDayAppointments.map((appointment) => (
+                  <article
+                    key={`${appointment.time}-${appointment.patient}`}
+                    className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="rounded-2xl bg-[#00b09b]/10 px-3 py-2 text-sm font-semibold text-[#0f766e]">
+                        {appointment.time}
+                      </div>
+                      <div>
+                        <h5 className="text-sm font-semibold text-slate-800">{appointment.patient}</h5>
+                        <p className="mt-1 text-sm text-slate-500">{appointment.treatment}</p>
+                      </div>
+                    </div>
+                    <span className="w-fit rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+                      {appointment.duration} min
+                    </span>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {currentView === 'Semana' && (
+          <div className="mt-6 grid gap-4 xl:grid-cols-5">
+            {currentWeekAppointments.map(([day, appointments]) => (
+              <div
+                key={day}
+                className="rounded-[22px] border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]"
+              >
+                <div className="mb-4">
+                  <h4 className="text-base font-semibold text-slate-800">{day}</h4>
+                  <p className="text-sm text-slate-500">{appointments.length} citas programadas</p>
+                </div>
+
+                <div className="space-y-3">
+                  {appointments.map((appointment) => (
+                    <article key={`${day}-${appointment.time}-${appointment.patient}`} className="rounded-2xl bg-slate-50 p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-sm font-semibold text-[#0f766e]">{appointment.time}</span>
+                        <span className="text-xs text-slate-400">{appointment.duration} min</span>
+                      </div>
+                      <h5 className="mt-2 text-sm font-semibold text-slate-800">{appointment.patient}</h5>
+                      <p className="mt-1 text-sm text-slate-500">{appointment.treatment}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {currentView === 'Mes' && (
+          <div className="mt-6 rounded-[22px] border border-slate-200 bg-white p-4">
+            <div className="mb-4 grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+              {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((day) => (
+                <div key={day}>{day}</div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+              {appointmentsData.Mes.map((day) => {
+                const isSelected = Number(day.date) === selectedDay
+
+                return (
+                  <button
+                    key={day.date}
+                    type="button"
+                    onClick={() => {
+                      setSelectedDay(Number(day.date))
+                      setCurrentView('Dia')
+                    }}
+                    className={`rounded-[20px] border p-4 text-left transition-colors ${
+                      isSelected
+                        ? 'border-[#00b09b] bg-[#00b09b] text-white'
+                        : 'border-slate-200 bg-slate-50 hover:border-[#00b09b]/30 hover:bg-white'
+                    }`}
+                  >
+                    <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-slate-800'}`}>
+                      {day.date}
+                    </span>
+                    <p className={`mt-3 text-xs ${isSelected ? 'text-white/80' : 'text-slate-500'}`}>
+                      {day.count > 0 ? `${day.count} citas` : 'Sin citas'}
+                    </p>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+export default Appointments

@@ -4,16 +4,15 @@ import { login } from '../../services/authService';
 import ImagesApp from '../../assets/ImagesApp';
 
 const Login = ({ onLoginSuccess }) => {
-  const [identifier, setIdentifier] = useState(''); //username or email
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success' | 'error' | 'info'
+  const [messageType, setMessageType] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validación básica
     if (!identifier.trim() || !password.trim()) {
       setMessage('Por favor completa todos los campos.');
       setMessageType('error');
@@ -31,7 +30,6 @@ const Login = ({ onLoginSuccess }) => {
         setMessage('¡Login exitoso! Redirigiendo...');
         setMessageType('success');
         
-        // Callback para notificar al componente padre
         if (onLoginSuccess) {
           setTimeout(() => {
             onLoginSuccess(result.token);

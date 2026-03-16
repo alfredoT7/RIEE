@@ -1,15 +1,15 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png'//?asset'
+import icon from '../../resources/icon.png'
 
 function createWindow() {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1000,
     height: 670,
     minWidth: 1000,
     minHeight: 670,
+    fullscreen: true,
     resizable: true,
     maximizable: true,
     show: false,

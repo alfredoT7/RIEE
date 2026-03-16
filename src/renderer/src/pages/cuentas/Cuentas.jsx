@@ -1,376 +1,94 @@
-import React from 'react';
-import { FaArrowUp, FaArrowDown, FaCreditCard, FaFileAlt, FaCalendarAlt, FaBolt, FaMobileAlt, FaDollarSign, FaChartLine, FaChartBar } from 'react-icons/fa';
+import React from 'react'
+import { FaArrowDown, FaArrowUp, FaChartBar, FaChartLine, FaDollarSign } from 'react-icons/fa'
+
+const summaryCards = [
+  { title: 'Ingresos', amount: 'Bs. 25,320', trend: '+8.2%', positive: true, icon: FaChartLine },
+  { title: 'Gastos', amount: 'Bs. 12,450', trend: '-3.1%', positive: false, icon: FaChartBar },
+  { title: 'Ganancia neta', amount: 'Bs. 12,870', trend: '+12.5%', positive: true, icon: FaDollarSign }
+]
+
+const transactions = [
+  { title: 'Consulta ortodoncia - Juan Perez', date: '22 Oct 2023', amount: 'Bs. 350', income: true },
+  { title: 'Materiales dentales - Proveedor XYZ', date: '21 Oct 2023', amount: '- Bs. 1,200', income: false },
+  { title: 'Tratamiento conducto - Maria Garcia', date: '20 Oct 2023', amount: 'Bs. 800', income: true }
+]
 
 const Cuentas = () => {
   return (
-    <div className="cuentas-container">
-      <div className="cuentas-content">
-        {/* Header */}
-        <div className="cuentas-header">
-          <h1 className="cuentas-title">Finanzas</h1>
-          <p className="cuentas-subtitle">Gestión financiera y reportes</p>
+    <section className="px-2 pb-6 pt-3">
+      <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none">
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">Finanzas</h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Gestion financiera y reportes del consultorio.
+          </p>
         </div>
 
-        <div className="financial-summary-cards">
-          <div className="summary-card">
-            <div className="card-header">
-              <span className="card-label">Ingresos</span>
-              <FaChartLine className="card-icon income-icon" />
+        <div className="grid gap-4 md:grid-cols-3">
+          {summaryCards.map((card) => {
+            const Icon = card.icon
+
+            return (
+              <article key={card.title} className="rounded-[22px] border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{card.title}</p>
+                    <h3 className="mt-2 text-2xl font-semibold text-slate-800 dark:text-slate-100">{card.amount}</h3>
+                  </div>
+                  <Icon className="text-2xl text-[#0f766e]" />
+                </div>
+                <p className={`mt-4 text-sm font-semibold ${card.positive ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  {card.trend} vs mes anterior
+                </p>
+              </article>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-4 xl:grid-cols-[1.3fr_0.9fr]">
+        <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+          <div className="mb-5 flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Resumen financiero</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Ingresos y gastos del periodo.</p>
             </div>
-            <div className="card-amount">
-              <span className="amount-text">Bs. 25,320</span>
-            </div>
-            <div className="card-trend positive">
-              <div className="trend-info">
-                <FaArrowUp className="trend-icon" />
-                <span className="trend-percentage">+8.2%</span>
-              </div>
-              <span className="trend-text">vs mes anterior</span>
-            </div>
+            <select className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+              <option>Mensual</option>
+              <option>Semanal</option>
+              <option>Anual</option>
+            </select>
           </div>
 
-          <div className="summary-card">
-            <div className="card-header">
-              <span className="card-label">Gastos</span>
-              <FaChartBar className="card-icon expense-icon" />
-            </div>
-            <div className="card-amount">
-              <span className="amount-text">Bs. 12,450</span>
-            </div>
-            <div className="card-trend negative">
-              <div className="trend-info">
-                <FaArrowDown className="trend-icon" />
-                <span className="trend-percentage">-3.1%</span>
-              </div>
-              <span className="trend-text">vs mes anterior</span>
-            </div>
-          </div>
-
-          {/* Ganancia Neta */}
-          <div className="summary-card">
-            <div className="card-header">
-              <span className="card-label">Ganancia Neta</span>
-              <FaDollarSign className="card-icon profit-icon" />
-            </div>
-            <div className="card-amount">
-              <span className="amount-text">Bs. 12,870</span>
-            </div>
-            <div className="card-trend positive">
-              <div className="trend-info">
-                <FaArrowUp className="trend-icon" />
-                <span className="trend-percentage">+12.5%</span>
-              </div>
-              <span className="trend-text">vs mes anterior</span>
-            </div>
+          <div className="flex min-h-[260px] items-center justify-center rounded-[22px] border border-dashed border-slate-200 bg-slate-50 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+            Grafico de ingresos vs gastos
           </div>
         </div>
 
-        {/* Content Grid */}
-        <div className="content-grid">
-          {/* Resumen Financiero */}
-          <div className="financial-summary">
-            <div className="section-header">
-              <div className="header-info">
-                <h3 className="section-title">Resumen Financiero</h3>
-                <p className="section-subtitle">Visión general de los ingresos y gastos</p>
-              </div>
-              <select className="period-selector">
-                <option>Monthly</option>
-                <option>Weekly</option>
-                <option>Yearly</option>
-              </select>
-            </div>
-            
-            <div className="chart-container">
-              <div className="chart-content">
-                <div className="chart-placeholder">
-                  <div className="chart-icon"></div>
-                </div>
-                <p className="chart-text">Gráfico de Ingresos vs Gastos</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="recent-transactions">
-            <div className="section-header-simple">
-              <h3 className="section-title">Transacciones Recientes</h3>
-              <p className="section-subtitle">Últimas transacciones registradas</p>
-            </div>
-
-            <div className="transactions-list">
-              <div className="transaction-item income">
-                <div className="transaction-left">
-                  <div className="transaction-icon income">
-                    <FaArrowUp />
+        <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Transacciones recientes</h2>
+          <div className="mt-5 space-y-3">
+            {transactions.map((transaction) => (
+              <div key={transaction.title} className="flex items-center justify-between rounded-2xl bg-slate-50 p-4 dark:bg-slate-900">
+                <div className="flex items-center gap-3">
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${transaction.income ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10' : 'bg-rose-50 text-rose-600 dark:bg-rose-500/10'}`}>
+                    {transaction.income ? <FaArrowUp /> : <FaArrowDown />}
                   </div>
-                  <div className="transaction-info">
-                    <p className="transaction-title">Consulta ortodoncia - Juan Perez</p>
-                    <p className="transaction-date">22 Oct 2023</p>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{transaction.title}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{transaction.date}</p>
                   </div>
                 </div>
-                <span className="transaction-amount income">Bs. 350</span>
+                <span className={`text-sm font-semibold ${transaction.income ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  {transaction.amount}
+                </span>
               </div>
-
-              <div className="transaction-item expense">
-                <div className="transaction-left">
-                  <div className="transaction-icon expense">
-                    <FaArrowDown />
-                  </div>
-                  <div className="transaction-info">
-                    <p className="transaction-title">Materiales dentales - Proveedor XYZ</p>
-                    <p className="transaction-date">21 Oct 2023</p>
-                  </div>
-                </div>
-                <span className="transaction-amount expense">- Bs. 1,200</span>
-              </div>
-
-              <div className="transaction-item income">
-                <div className="transaction-left">
-                  <div className="transaction-icon income">
-                    <FaArrowUp />
-                  </div>
-                  <div className="transaction-info">
-                    <p className="transaction-title">Tratamiento conducto - María García</p>
-                    <p className="transaction-date">20 Oct 2023</p>
-                  </div>
-                </div>
-                <span className="transaction-amount income">Bs. 800</span>
-              </div>
-
-              <div className="transaction-item income">
-                <div className="transaction-left">
-                  <div className="transaction-icon income">
-                    <FaArrowUp />
-                  </div>
-                  <div className="transaction-info">
-                    <p className="transaction-title">Limpieza dental - Carlos Rodríguez</p>
-                    <p className="transaction-date">19 Oct 2023</p>
-                  </div>
-                </div>
-                <span className="transaction-amount income">Bs. 200</span>
-              </div>
-
-              <div className="transaction-item expense">
-                <div className="transaction-left">
-                  <div className="transaction-icon expense">
-                    <FaArrowDown />
-                  </div>
-                  <div className="transaction-info">
-                    <p className="transaction-title">Pago de servicios - Electricidad</p>
-                    <p className="transaction-date">18 Oct 2023</p>
-                  </div>
-                </div>
-                <span className="transaction-amount expense">- Bs. 350</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="income-report">
-          <div className="report-header">
-            <div className="header-info">
-              <h3 className="section-title">Reporte de Ingresos</h3>
-              <p className="section-subtitle">Ingresos desglosados por categoría de tratamiento</p>
-            </div>
-            <div className="report-date">
-              <FaCalendarAlt className="date-icon" />
-              Octubre 2023
-            </div>
-          </div>
-
-          <div className="categories-list">
-            <div className="category-item">
-              <div className="category-left">
-                <div className="category-dot blue"></div>
-                <span className="category-name">Ortodoncia</span>
-              </div>
-              <div className="category-right">
-                <div className="progress-container">
-                  <div className="progress-fill blue" style={{width: '66%'}}></div>
-                </div>
-                <span className="category-amount">Bs. 8,500</span>
-                <span className="category-percentage">33%</span>
-              </div>
-            </div>
-
-            <div className="category-item">
-              <div className="category-left">
-                <div className="category-dot teal"></div>
-                <span className="category-name">Limpieza Dental</span>
-              </div>
-              <div className="category-right">
-                <div className="progress-container">
-                  <div className="progress-fill teal" style={{width: '50%'}}></div>
-                </div>
-                <span className="category-amount">Bs. 5,200</span>
-                <span className="category-percentage">21%</span>
-              </div>
-            </div>
-
-            <div className="category-item">
-              <div className="category-left">
-                <div className="category-dot purple"></div>
-                <span className="category-name">Tratamientos de Conducto</span>
-              </div>
-              <div className="category-right">
-                <div className="progress-container">
-                  <div className="progress-fill purple" style={{width: '42%'}}></div>
-                </div>
-                <span className="category-amount">Bs. 4,800</span>
-                <span className="category-percentage">19%</span>
-              </div>
-            </div>
-
-            <div className="category-item">
-              <div className="category-left">
-                <div className="category-dot orange"></div>
-                <span className="category-name">Extracciones</span>
-              </div>
-              <div className="category-right">
-                <div className="progress-container">
-                  <div className="progress-fill orange" style={{width: '33%'}}></div>
-                </div>
-                <span className="category-amount">Bs. 3,400</span>
-                <span className="category-percentage">13%</span>
-              </div>
-            </div>
-
-            <div className="category-item">
-              <div className="category-left">
-                <div className="category-dot red"></div>
-                <span className="category-name">Implantes</span>
-              </div>
-              <div className="category-right">
-                <div className="progress-container">
-                  <div className="progress-fill red" style={{width: '25%'}}></div>
-                </div>
-                <span className="category-amount">Bs. 2,300</span>
-                <span className="category-percentage">9%</span>
-              </div>
-            </div>
-
-            <div className="category-item">
-              <div className="category-left">
-                <div className="category-dot gray"></div>
-                <span className="category-name">Otros</span>
-              </div>
-              <div className="category-right">
-                <div className="progress-container">
-                  <div className="progress-fill gray" style={{width: '17%'}}></div>
-                </div>
-                <span className="category-amount">Bs. 1,120</span>
-                <span className="category-percentage">5%</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="total-section">
-            <div className="total-content">
-              <span className="total-label">Total de Ingresos</span>
-              <span className="total-amount">Bs. 25,320</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Functionality Cards */}
-        <div className="functionality-section">
-          <h2 className="functionality-title">Funcionalidades de Pago</h2>
-          
-          <div className="basic-functionalities">
-            <h3 className="subsection-title">
-              <span className="title-dot"></span>
-              Funcionalidades básicas
-            </h3>
-            <div className="function-cards-basic">
-              <div className="function-card">
-                <div className="function-content">
-                  <div className="function-icon-container blue">
-                    <FaCreditCard className="function-icon" />
-                  </div>
-                  <div className="function-info">
-                    <h4 className="function-title">Registro de pagos manuales en caja</h4>
-                    <ul className="function-list">
-                      <li>• Registrar efectivo, transferencia o tarjeta desde la recepción</li>
-                      <li>• Generar comprobante/factura digital automáticamente</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="function-card">
-                <div className="function-content">
-                  <div className="function-icon-container green">
-                    <FaFileAlt className="function-icon" />
-                  </div>
-                  <div className="function-info">
-                    <h4 className="function-title">Historial de pagos por paciente</h4>
-                    <ul className="function-list">
-                      <li>• Pagos realizados, deudas pendientes, planes de pago</li>
-                      <li>• Descarga de facturas en PDF</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="payment-options">
-            <h3 className="subsection-title">
-              <span className="title-dot"></span>
-              Opciones de pago para pacientes
-            </h3>
-            <div className="function-cards-grid">
-              <div className="function-card">
-                <div className="function-content">
-                  <div className="function-icon-container purple">
-                    <FaMobileAlt className="function-icon" />
-                  </div>
-                  <div className="function-info">
-                    <h4 className="function-title">Pago online desde la app</h4>
-                    <ul className="function-list">
-                      <li>• Integrar pasarelas como Stripe, PayPal, MercadoPago, Square</li>
-                      <li>• Pago con QR o billeteras móviles (Yape, Tigo Money, etc.)</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="function-card">
-                <div className="function-content">
-                  <div className="function-icon-container orange">
-                    <FaCalendarAlt className="function-icon" />
-                  </div>
-                  <div className="function-info">
-                    <h4 className="function-title">Planes de pago y financiamiento</h4>
-                    <ul className="function-list">
-                      <li>• Fraccionar tratamientos costosos (ortodoncia, implantes)</li>
-                      <li>• Recordatorios de cuotas</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="function-card">
-                <div className="function-content">
-                  <div className="function-icon-container teal">
-                    <FaBolt className="function-icon" />
-                  </div>
-                  <div className="function-info">
-                    <h4 className="function-title">Señales/adelantos online</h4>
-                    <ul className="function-list">
-                      <li>• Paciente paga una reserva antes de la cita</li>
-                      <li>• Confirmación automática de citas</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    </section>
+  )
+}
 
-export default Cuentas;
-
+export default Cuentas

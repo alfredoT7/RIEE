@@ -1,138 +1,158 @@
-import React, { useEffect, useState } from 'react';
-import CardPaciente from '../../components/cardPaciente/CardPaciente';
-import SearchBar from '../../components/searchBar/SearchBar';
-import PacienteHeader from '../../components/pacienteHeader/PacienteHeader';
-import Pagination from '../../components/pagination/Pagination';
-import { getPatientWithPagination, getAllPatients } from '../../api/Api';
-import TopInfoHome from '../../components/topInfoHome/TopInfoHome';
-import PacienteCard from '../../components/pacientescard/PacienteCard';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import CardPaciente from '../../components/cardPaciente/CardPaciente'
+import SearchBar from '../../components/searchBar/SearchBar'
+import PacienteHeader from '../../components/pacienteHeader/PacienteHeader'
+import Pagination from '../../components/pagination/Pagination'
+import { getAllPatients } from '../../api/Api'
+import PacienteCard from '../../components/pacientescard/PacienteCard'
 
 const Patient = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [patients, setPatients] = useState([]);
-  const [filteredPatients, setFilteredPatients] = useState([]);
-  const [totalPatients, setTotalPatients] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const itemsPerPage = 15;
+  const [currentPage, setCurrentPage] = useState(1)
+  const [patients, setPatients] = useState([])
+  const [filteredPatients, setFilteredPatients] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const itemsPerPage = 15
 
   useEffect(() => {
     const fetchAllPatients = async () => {
       try {
-        const response = await getAllPatients();
-        console.log('Response completo:', response);
-        console.log('Response.data:', response.data);
-        console.log('Tipo de response.data:', typeof response.data);
-        console.log('Es array response.data:', Array.isArray(response.data));
-        
-        const allPatients = Array.isArray(response.data) ? response.data : []; // Asegurar que sea un array
-        console.log('AllPatients procesado:', allPatients);
-        
-        setPatients(allPatients);
-        setFilteredPatients(allPatients);
-        setTotalPatients(allPatients.length);
-      } catch (error) {
-        console.error('Error fetching patients:', error);
-        // En caso de error, establecer arrays vacíos
-        setPatients([]);
-        setFilteredPatients([]);
-        setTotalPatients(0);
-      }
-    };
+        const response = await getAllPatients()
+        const allPatients = Array.isArray(response.data) ? response.data : []
 
-    fetchAllPatients();
-    window.scrollTo(0, 0);
-  }, []);
+        setPatients(allPatients)
+        setFilteredPatients(allPatients)
+      } catch (error) {
+        console.error('Error fetching patients:', error)
+        setPatients([])
+        setFilteredPatients([])
+      }
+    }
+
+    fetchAllPatients()
+    window.scrollTo(0, 0)
+  }, [])
 
   const handleSearch = (searchValue) => {
-    setSearchTerm(searchValue);
-    // Asegurar que patients sea un array antes de filtrar
+    setSearchTerm(searchValue)
+
     if (!Array.isArray(patients)) {
-      console.warn('Patients is not an array:', patients);
-      return;
+      return
     }
-    
-    const filtered = patients.filter(patient => 
-      patient.nombre.toLowerCase().includes(searchValue.toLowerCase()) ||
-      patient.apellido.toLowerCase().includes(searchValue.toLowerCase()) ||
-      patient.ciPaciente.toString().includes(searchValue)
-    );
-    setFilteredPatients(filtered);
-    setCurrentPage(1);
-  };
+
+    const normalizedValue = searchValue.toLowerCase()
+    const filtered = patients.filter((patient) => {
+      const fullName = `${patient.nombre || ''} ${patient.apellido || ''}`.toLowerCase()
+      const ci = patient.ciPaciente?.toString() || ''
+
+      return fullName.includes(normalizedValue) || ci.includes(searchValue)
+    })
+
+    setFilteredPatients(filtered)
+    setCurrentPage(1)
+  }
 
   const getCurrentPageData = () => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    window.scrollTo(0, 0);
-    // Asegurar que filteredPatients sea un array
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    window.scrollTo(0, 0)
+
     if (!Array.isArray(filteredPatients)) {
-      return [];
+      return []
     }
-    return filteredPatients.slice(startIndex, endIndex);
-  };
+
+    return filteredPatients.slice(startIndex, endIndex)
+  }
 
   return (
-  <>
-    <SearchBar onSearch={handleSearch} />
-    {!searchTerm && (
-      <>
-        <h3>Pacientes Recientes</h3>
-        <motion.div className='pat-card-cont'
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-        >
-          <PacienteCard />
-          <PacienteCard />
-          <PacienteCard />
-          <PacienteCard />
-          <PacienteCard />
-          <PacienteCard />
-        </motion.div>
-      </>
-    )}
+    <section className="px-2 pb-6 pt-3">
+      <SearchBar onSearch={handleSearch} />
 
-    {searchTerm && (
-      <>
-        <PacienteHeader />
-        <motion.div  className="card-paciente-container"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-        >
-          <AnimatePresence>
-            {getCurrentPageData().map((paciente) => (
-              <motion.div
-                key={paciente.ciPaciente}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                className="card-item" // Agregar clase para el item individual
-              >
-                <CardPaciente
-                  ci={paciente.ciPaciente}
-                  imagen={paciente.imagen}
-                  nombre={`${paciente.nombre} ${paciente.apellido}`}
-                  direccion={paciente.direccion}
-                  fechaNacimiento={paciente.fechaNacimiento}
-                  numeroTelefonico={paciente.phonesNumbers && paciente.phonesNumbers.length > 0 ? paciente.phonesNumbers[0].numero : 'N/A'}
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-        <Pagination
-          totalItems={filteredPatients.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
-      </>
-    )}
-  </>
-);
-};
+      {!searchTerm && (
+        <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none">
+          <div className="mb-5">
+            <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">Pacientes recientes</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Accesos rápidos a pacientes frecuentes y seguimiento reciente.
+            </p>
+          </div>
 
-export default Patient;
+          <motion.div
+            className="grid gap-4 xl:grid-cols-2"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <PacienteCard />
+            <PacienteCard />
+            <PacienteCard />
+            <PacienteCard />
+            <PacienteCard />
+            <PacienteCard />
+          </motion.div>
+        </div>
+      )}
+
+      {searchTerm && (
+        <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+          <div className="mb-5">
+            <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">Resultados de búsqueda</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {filteredPatients.length} paciente{filteredPatients.length === 1 ? '' : 's'} encontrado
+              {filteredPatients.length === 1 ? '' : 's'} para "{searchTerm}".
+            </p>
+          </div>
+
+          <PacienteHeader />
+
+          <motion.div
+            className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50/70 p-2 dark:border-slate-800 dark:bg-slate-900/60"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <AnimatePresence>
+              {getCurrentPageData().map((paciente) => (
+                <motion.div
+                  key={paciente.ciPaciente}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <CardPaciente
+                    ci={paciente.ciPaciente}
+                    imagen={paciente.imagen}
+                    nombre={`${paciente.nombre} ${paciente.apellido}`}
+                    direccion={paciente.direccion}
+                    fechaNacimiento={paciente.fechaNacimiento}
+                    numeroTelefonico={
+                      paciente.phonesNumbers && paciente.phonesNumbers.length > 0
+                        ? paciente.phonesNumbers[0].numero
+                        : 'N/A'
+                    }
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+
+            {filteredPatients.length === 0 && (
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
+                No se encontraron pacientes con ese criterio.
+              </div>
+            )}
+          </motion.div>
+
+          <Pagination
+            totalItems={filteredPatients.length}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
+    </section>
+  )
+}
+
+export default Patient

@@ -1,11 +1,37 @@
 import React from 'react'
-import { FaPlus, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import { useTreatment } from './useTreatment';
+import { FaChevronLeft, FaChevronRight, FaPlus, FaSearch } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
+import { useTreatment } from './useTreatment'
+
+const featuredData = [
+  {
+    id: 1,
+    name: 'Ortodoncia Brackets',
+    description: 'Tratamiento para corregir la alineacion dental.',
+    price: 'Bs. 3500',
+    duration: '18 meses',
+    popularity: 95
+  },
+  {
+    id: 2,
+    name: 'Implante Dental',
+    description: 'Implante de titanio para piezas perdidas.',
+    price: 'Bs. 3000',
+    duration: '3-6 meses',
+    popularity: 85
+  },
+  {
+    id: 3,
+    name: 'Blanqueamiento LED',
+    description: 'Sesion avanzada de blanqueamiento dental.',
+    price: 'Bs. 800',
+    duration: '2 sesiones',
+    popularity: 78
+  }
+]
 
 const Treatment = () => {
-  const navigate = useNavigate();
-  
+  const navigate = useNavigate()
   const {
     loading,
     error,
@@ -21,239 +47,159 @@ const Treatment = () => {
     handleSearchChange,
     refreshTreatments,
     stats
-  } = useTreatment();
-
-  const FeaturedTreatments = () => {
-    const featuredData = [
-      {
-        id: 1,
-        name: 'Ortodoncia Brackets',
-        description: 'Tratamiento de ortodoncia con brackets metálicos para corregir la alineación dental.',
-        category: 'Ortodoncia',
-        price: 'Bs. 3500',
-        duration: '18 meses',
-        popularity: 95
-      },
-      {
-        id: 2,
-        name: 'Implante Dental',
-        description: 'Colocación de implante de titanio para reemplazar piezas dentales perdidas.',
-        category: 'Implante',
-        price: 'Bs. 3000',
-        duration: '3-6 meses',
-        popularity: 85
-      },
-      {
-        id: 3,
-        name: 'Blanqueamiento LED',
-        description: 'Sistema avanzado de blanqueamiento dental con tecnología LED para resultados óptimos.',
-        category: 'Blanqueamiento',
-        price: 'Bs. 800',
-        duration: '2 sesiones',
-        popularity: 78
-      }
-    ];
-
-    return (
-      <div className="featured-treatments-container">
-        <div className="featured-header">
-          <h2>Tratamientos Destacados</h2>
-          <p>Tratamientos más solicitados en el último mes</p>
-        </div>
-
-        <div className="featured-treatments-grid">
-          {featuredData.map((treatment) => (
-            <div key={treatment.id} className={`featured-treatment-card ${treatment.category.toLowerCase()}`}>
-              <div className="featured-card-header">
-                <h3 className="featured-treatment-title">{treatment.name}</h3>
-              </div>
-              <p className="featured-treatment-description">
-                {treatment.description}
-              </p>
-              
-              <div className="featured-treatment-details">
-                <div className="featured-detail-group">
-                  <div className="featured-detail-label">Precio</div>
-                  <div className="featured-detail-value featured-price">{treatment.price}</div>
-                </div>
-                <div className="featured-detail-group">
-                  <div className="featured-detail-label">Duración</div>
-                  <div className="featured-detail-value">{treatment.duration}</div>
-                </div>
-              </div>
-
-              <div className="featured-popularity-section">
-                <div className="featured-popularity-label">
-                  <span>Popularidad</span>
-                  <span className="featured-popularity-percentage">{treatment.popularity}%</span>
-                </div>
-                <div className="featured-progress-bar">
-                  <div 
-                    className="featured-progress-fill" 
-                    style={{ width: `${treatment.popularity}%` }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-
-
+  } = useTreatment()
 
   return (
-    <main className='main-cont-treatment'>
-      <div className='treatment-header'>
-        <div className='treatment-header-left'>
-          <h4>Tratamientos</h4>
-          <p>Gestione los tratamientos y procedimientos dentales</p>
+    <section className="px-2 pb-6 pt-3">
+      <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">Tratamientos</h1>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Gestiona tratamientos y procedimientos dentales.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/new-treatment')}
+            className="inline-flex w-fit items-center gap-2 rounded-2xl bg-[#00b09b] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)]"
+          >
+            <FaPlus />
+            Nuevo tratamiento
+          </button>
         </div>
-        <button 
-          className='base-button'
-          onClick={() => navigate('/new-treatment')}
-        >
-          <p>Nuevo tratamiento</p>
-          <FaPlus className='button-icon'/>
-        </button>
-      </div>
-      <div className='search-container'>
-        <div className='search-input-wrapper'>
-          <FaSearch className='search-icon' />
+
+        <div className="mt-6 relative w-full lg:max-w-xl">
+          <FaSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-slate-500" />
           <input
-            type='text'
-            placeholder='Buscar por nombre, descripción o procedimiento...'
+            type="text"
+            placeholder="Buscar por nombre, descripcion o procedimiento..."
             value={searchTerm}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className='search-input'
+            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
           />
         </div>
-        <div className='search-results-info'>
-          {searchTerm && (
-            <span>
-              {stats.filtered} resultado{stats.filtered !== 1 ? 's' : ''} encontrado{stats.filtered !== 1 ? 's' : ''}
-            </span>
+      </div>
+
+      <div className="mt-8 overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+        <div className="hidden grid-cols-[1.4fr_2fr_140px_150px_1.2fr] gap-4 bg-slate-50 px-5 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 md:grid dark:bg-slate-900 dark:text-slate-400">
+          <span>Tratamiento</span>
+          <span>Descripcion</span>
+          <span>Semanas</span>
+          <span>Costo base</span>
+          <span>Notas</span>
+        </div>
+
+        <div className="divide-y divide-slate-200 dark:divide-slate-800">
+          {loading && (
+            <div className="px-5 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+              Cargando tratamientos...
+            </div>
+          )}
+
+          {error && !loading && (
+            <div className="px-5 py-10 text-center">
+              <p className="text-sm text-rose-500">{error}</p>
+              <button
+                type="button"
+                onClick={refreshTreatments}
+                className="mt-4 rounded-2xl bg-[#00b09b] px-4 py-2 text-sm font-semibold text-white"
+              >
+                Reintentar
+              </button>
+            </div>
+          )}
+
+          {!loading &&
+            !error &&
+            currentTreatments.map((treatment, index) => (
+              <div
+                key={treatment.id || index}
+                className="grid gap-3 px-5 py-4 md:grid-cols-[1.4fr_2fr_140px_150px_1.2fr]"
+              >
+                <div>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                    {treatment.nombreTratamiento}
+                  </p>
+                </div>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {treatment.descripcion || 'Sin descripcion'}
+                </p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">
+                  {treatment.semanasEstimadas} semana{treatment.semanasEstimadas === 1 ? '' : 's'}
+                </p>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  Bs. {treatment.costoBaseTratamiento?.toLocaleString()}
+                </p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {treatment.notasAdicionales || 'Sin notas adicionales'}
+                </p>
+              </div>
+            ))}
+
+          {!loading && !error && currentTreatments.length === 0 && (
+            <div className="px-5 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
+              {searchTerm
+                ? 'No se encontraron tratamientos para esa busqueda.'
+                : 'No hay tratamientos registrados.'}
+            </div>
           )}
         </div>
       </div>
-      
-      <div className='treatment-table-container'>
-        <table className='treatment-table'>
-          <thead>
-            <tr>
-              <th>TRATAMIENTO</th>
-              <th>DESCRIPCIÓN</th>
-              <th>SEMANAS ESTIMADAS</th>
-              <th>COSTO BASE (Bs.)</th>
-              <th>NOTAS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="5" className='loading-cell'>
-                  <div className="loading-content">
-                    <div className="loading-spinner"></div>
-                    <span>Cargando tratamientos...</span>
-                  </div>
-                </td>
-              </tr>
-            ) : error ? (
-              <tr>
-                <td colSpan="5" className='error-cell'>
-                  <div className="error-content">
-                    <span>❌ {error}</span>
-                    <button 
-                      className="retry-btn"
-                      onClick={refreshTreatments}
-                    >
-                      Reintentar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ) : currentTreatments.length > 0 ? (
-              currentTreatments.map((treatment, index) => (
-                <tr key={treatment.id || index}>
-                  <td className='treatment-cell'>
-                    <span className='treatment-icon'>🦷</span>
-                    <div className='treatment-info'>
-                      <div className='treatment-name'>{treatment.nombreTratamiento}</div>
-                    </div>
-                  </td>
-                  <td className='description-cell'>
-                    <div className='description-text'>
-                      {treatment.descripcion || 'Sin descripción'}
-                    </div>
-                  </td>
-                  <td className='weeks-cell'>
-                    <span className='weeks-badge'>
-                      {treatment.semanasEstimadas} {treatment.semanasEstimadas === 1 ? 'semana' : 'semanas'}
-                    </span>
-                  </td>
-                  <td className='price-cell'>
-                    <span className='price-amount'>Bs. {treatment.costoBaseTratamiento?.toLocaleString()}</span>
-                  </td>
-                  <td className='notes-cell'>
-                    <div className='notes-text'>
-                      {treatment.notasAdicionales || 'Sin notas adicionales'}
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className='no-results'>
-                  {searchTerm 
-                    ? 'No se encontraron tratamientos que coincidan con tu búsqueda'
-                    : 'No hay tratamientos registrados'
-                  }
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+
       {!loading && !error && stats.showPagination && (
-        <div className='pagination-container'>
-          <div className='pagination-info'>
+        <div className="mt-4 flex flex-col gap-3 rounded-[22px] border border-slate-200 bg-white px-4 py-4 shadow-[0_14px_34px_rgba(15,23,42,0.05)] sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             Mostrando {startIndex + 1}-{Math.min(endIndex, stats.filtered)} de {stats.filtered} tratamientos
-          </div>
-          <div className='pagination-controls'>
-            <button 
-              onClick={handlePreviousPage}
-              disabled={!stats.hasPreviousPage}
-              className='pagination-btn'
-            >
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" onClick={handlePreviousPage} disabled={!stats.hasPreviousPage} className="rounded-xl border border-slate-200 px-3 py-2 text-slate-600 disabled:opacity-40 dark:border-slate-800 dark:text-slate-300">
               <FaChevronLeft />
             </button>
-            
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
+                type="button"
                 onClick={() => handlePageChange(page)}
-                className={`pagination-btn ${currentPage === page ? 'active' : ''}`}
+                className={`h-10 min-w-10 rounded-xl px-3 text-sm font-semibold ${
+                  currentPage === page
+                    ? 'bg-[#00b09b] text-white'
+                    : 'border border-slate-200 text-slate-600 dark:border-slate-800 dark:text-slate-300'
+                }`}
               >
                 {page}
               </button>
             ))}
-            
-            <button 
-              onClick={handleNextPage}
-              disabled={!stats.hasNextPage}
-              className='pagination-btn'
-            >
+            <button type="button" onClick={handleNextPage} disabled={!stats.hasNextPage} className="rounded-xl border border-slate-200 px-3 py-2 text-slate-600 disabled:opacity-40 dark:border-slate-800 dark:text-slate-300">
               <FaChevronRight />
             </button>
           </div>
         </div>
       )}
-      <FeaturedTreatments />
 
-    </main>
+      <div className="mt-8 grid gap-4 xl:grid-cols-3">
+        {featuredData.map((treatment) => (
+          <article key={treatment.id} className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_14px_34px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">{treatment.name}</h3>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{treatment.description}</p>
+            <div className="mt-4 flex items-center justify-between text-sm">
+              <span className="font-semibold text-emerald-600">{treatment.price}</span>
+              <span className="text-slate-500 dark:text-slate-400">{treatment.duration}</span>
+            </div>
+            <div className="mt-4">
+              <div className="mb-2 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+                <span>Popularidad</span>
+                <span>{treatment.popularity}%</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                <div className="h-full rounded-full bg-gradient-to-r from-[#00b09b] to-[#5ce1d4]" style={{ width: `${treatment.popularity}%` }} />
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   )
-};
+}
 
 export default Treatment
