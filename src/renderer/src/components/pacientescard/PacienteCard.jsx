@@ -1,5 +1,5 @@
 import React from 'react'
-import { FileText, Mail, MapPin, Phone, SquarePen, Trash } from 'lucide-react'
+import { Eye, FileText, Mail, MapPin, Phone, SquarePen, Trash } from 'lucide-react'
 import ImagesApp from '../../assets/ImagesApp'
 
 const PacienteCard = () => {
@@ -21,15 +21,22 @@ const PacienteCard = () => {
         <div className="flex items-center gap-2">
           <button
             type="button"
+            title="Ver detalles del paciente"
+            className="cursor-pointer rounded-xl border border-slate-200 p-2 text-slate-500 transition-colors hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
+          >
+            <Eye size={16} />
+          </button>
+          <button
+            type="button"
             title="Editar paciente"
-            className="rounded-xl border border-slate-200 p-2 text-slate-500 transition-colors hover:border-[#00b09b]/30 hover:bg-[#00b09b]/8 hover:text-[#0f766e]"
+            className="cursor-pointer rounded-xl border border-slate-200 p-2 text-slate-500 transition-colors hover:border-[#00b09b]/30 hover:bg-[#00b09b]/8 hover:text-[#0f766e]"
           >
             <SquarePen size={16} />
           </button>
           <button
             type="button"
             title="Eliminar paciente"
-            className="rounded-xl border border-slate-200 p-2 text-slate-500 transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
+            className="cursor-pointer rounded-xl border border-slate-200 p-2 text-slate-500 transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
           >
             <Trash size={16} />
           </button>
@@ -59,7 +66,7 @@ const PacienteCard = () => {
           <p className="mt-2 text-sm font-semibold text-slate-700">12/12/2024</p>
           <button
             type="button"
-            className="mt-3 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:border-[#00b09b]/30 hover:bg-[#00b09b]/8 hover:text-[#0f766e]"
+            className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:border-[#00b09b]/30 hover:bg-[#00b09b]/8 hover:text-[#0f766e]"
           >
             <FileText size={16} />
             Historia
@@ -73,7 +80,7 @@ const PacienteCard = () => {
           <p className="mt-2 text-sm font-semibold text-slate-700">15/12/2024</p>
           <button
             type="button"
-            className="mt-3 inline-flex items-center rounded-xl bg-[#00b09b] px-3 py-2 text-sm font-semibold text-white shadow-[0_10px_20px_rgba(0,176,155,0.22)] transition-transform hover:-translate-y-0.5"
+            className="mt-3 inline-flex cursor-pointer items-center rounded-xl bg-[#00b09b] px-3 py-2 text-sm font-semibold text-white shadow-[0_10px_20px_rgba(0,176,155,0.22)] transition-transform hover:-translate-y-0.5"
           >
             Agendar
           </button>

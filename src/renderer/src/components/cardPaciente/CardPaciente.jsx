@@ -57,7 +57,7 @@ const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTe
 
       {isImageExpanded && (
         <div
-          className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/75 p-5 backdrop-blur-sm"
+          className="fixed inset-0 z-[1000] flex cursor-pointer items-center justify-center bg-black/75 p-5 backdrop-blur-sm"
           onClick={() => setIsImageExpanded(false)}
         >
           <div
@@ -66,7 +66,7 @@ const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTe
           >
             <button
               type="button"
-              className="absolute -right-4 -top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/70 text-xl text-white transition-colors hover:bg-white hover:text-slate-800"
+              className="absolute -right-4 -top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 text-xl text-white transition-colors hover:bg-white hover:text-slate-800"
               onClick={() => setIsImageExpanded(false)}
             >
               ×

@@ -11,7 +11,7 @@ const columns = [
 
 const PacienteHeader = () => {
   return (
-    <div className="mb-2 hidden items-center rounded-2xl border border-slate-200 bg-white px-3 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.12em] text-slate-500 md:flex dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
+    <div className="hidden items-center rounded-2xl border border-slate-200 bg-white px-3 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.12em] text-slate-500 md:flex dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
       {columns.map((column) => (
         <div key={column.label} className={column.className}>
           {column.label}
