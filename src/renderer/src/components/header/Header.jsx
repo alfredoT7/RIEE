@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { FaBars, FaSignOutAlt, FaSlidersH } from 'react-icons/fa'
+import { FaBars, FaSignOutAlt, FaSlidersH, FaUserMd } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useSidebar } from '../../context/SidebarContext'
@@ -12,6 +12,7 @@ const Header = () => {
   const navigate = useNavigate()
   const [showMenu, setShowMenu] = useState(false)
   const menuRef = useRef(null)
+  const fullName = [user?.nombres, user?.apellidos].filter(Boolean).join(' ').trim() || user?.username || 'Doctora'
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -53,9 +54,22 @@ const Header = () => {
 
       <div className="flex items-center gap-3">
         <ThemeToggle />
-        <div className="hidden text-right sm:block">
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">{user?.name || 'Dra. Luzgarda'}</p>
-          <p className="text-xs text-slate-400 dark:text-slate-500">Panel principal</p>
+        <div className="hidden items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm sm:flex dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
+          {user?.imagenUrl ? (
+            <img
+              src={user.imagenUrl}
+              alt={fullName}
+              className="h-11 w-11 rounded-2xl object-cover ring-2 ring-[#00b09b]/10"
+            />
+          ) : (
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#00b09b]/12 text-[#0f766e]">
+              <FaUserMd />
+            </div>
+          )}
+          <div className="text-right">
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-100">{fullName}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">Panel principal</p>
+          </div>
         </div>
         <div className="relative" ref={menuRef}>
           <button

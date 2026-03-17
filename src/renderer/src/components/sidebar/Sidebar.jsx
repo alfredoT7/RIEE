@@ -1,26 +1,14 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import {
-  FaHome,
-  FaUsers,
-  FaBookMedical,
-  FaCalendarAlt,
-  FaToolbox,
-  FaMoneyCheckAlt,
-  FaUserMd
-} from 'react-icons/fa'
+import { FaHome, FaUsers, FaBookMedical, FaCalendarAlt, FaToolbox, FaMoneyCheckAlt, FaUserMd } from 'react-icons/fa'
 import { useSidebar } from '../../context/SidebarContext'
-import { useAuth } from '../../context/AuthContext'
+import ImagesApp from '../../assets/ImagesApp'
 
 const Sidebar = () => {
   const [selected, setSelected] = useState('Inicio')
   const { isCollapsed, updateCurrentPage } = useSidebar()
-  const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-
-  const doctorFirstName = user?.nombres?.trim()?.split(' ')[0] || user?.username || 'Doctora'
-  const doctorName = `Dra. ${doctorFirstName}`
 
   const routeToPageName = useMemo(
     () => ({
@@ -77,30 +65,15 @@ const Sidebar = () => {
       }`}
     >
       <div
-        className={`mb-6 flex items-center rounded-[24px] border border-white/70 bg-white/80 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none ${
-          isCollapsed ? 'justify-center' : 'gap-3'
+        className={`mb-6 flex items-center justify-center rounded-[24px] border border-white/70 bg-white/80 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none ${
+          isCollapsed ? 'min-h-[84px]' : 'min-h-[92px]'
         }`}
-        title={isCollapsed ? doctorName : ''}
       >
-        {user?.imagenUrl ? (
-          <img
-            className="h-12 w-12 rounded-2xl object-cover ring-2 ring-[#00b09b]/10"
-            src={user.imagenUrl}
-            alt={doctorName}
-          />
-        ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#00b09b]/12 text-lg text-[#0f766e]">
-            <FaUserMd />
-          </div>
-        )}
-        {!isCollapsed && (
-          <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
-              Especialista
-            </p>
-            <h4 className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{doctorName}</h4>
-          </div>
-        )}
+        <img
+          src={isCollapsed ? ImagesApp.rieeCompactLogo : ImagesApp.rieeLogo}
+          alt="RIEE"
+          className={isCollapsed ? 'h-12 w-12 object-contain' : 'h-14 w-full object-contain'}
+        />
       </div>
 
       <div className="flex flex-1 flex-col gap-1.5">

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Calendar, Clock, TrendingUp, Users } from 'lucide-react'
 import TopInfoHome from '../../components/topInfoHome/TopInfoHome'
 import CardPaciente from '../../components/cardPaciente/CardPaciente'
+import ImagesApp from '../../assets/ImagesApp'
 
 const metricCards = [
   { title: 'Calendario', quantity: '10', porcentaje: '20%', icon: Calendar },
@@ -74,15 +75,23 @@ const recentPatients = [
 
 const Home = () => {
   return (
-    <section className="px-2 pb-6 pt-3">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <section className="grid gap-y-6 px-2 pb-6 pt-4 lg:gap-y-7">
+      <div className="flex justify-center rounded-[28px] border border-white/60 bg-gradient-to-r from-[#f9fffd] via-white to-[#eef8f6] px-4 py-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none">
+        <img
+          src={ImagesApp.rieeLogo}
+          alt="RIEE"
+          className="h-20 w-full max-w-[340px] object-contain sm:h-24 sm:max-w-[420px]"
+        />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:gap-5">
         {metricCards.map((card) => (
           <TopInfoHome key={card.title} {...card} />
         ))}
       </div>
 
-      <div className="mt-8 rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none">
-        <div className="mb-5 flex items-end justify-between gap-4">
+      <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none sm:p-6">
+        <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">Novedades</h3>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -94,11 +103,11 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 lg:gap-5 md:grid-cols-3">
           {newsItems.map((item) => (
             <article
               key={item.title}
-            className="rounded-2xl border border-[#d9ece8] bg-white p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
+              className="rounded-2xl border border-[#d9ece8] bg-white p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
             >
               <div className="mb-4 h-1.5 w-14 rounded-full bg-gradient-to-r from-[#00b09b] to-[#5ce1d4]" />
               <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100">{item.title}</h4>
@@ -108,8 +117,8 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="mt-8 rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
-        <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+      <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none sm:p-6">
+        <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">Pacientes recientes</h3>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
