@@ -7,12 +7,64 @@ import Pagination from '../../components/pagination/Pagination'
 import { getAllPatients } from '../../api/Api'
 import PacienteCard from '../../components/pacientescard/PacienteCard'
 
+const demoRecentPatients = [
+  {
+    id: 'demo-1',
+    ciPaciente: '12345678',
+    nombre: 'Laura',
+    apellido: 'Torrico',
+    direccion: 'Av. América, Cochabamba',
+    fechaNacimiento: '1994-08-12',
+    email: 'laura.torrico@demo.com',
+    telefono: '+591 76424923',
+    ultimaVisita: '12/03/2026',
+    proximaCita: '22/03/2026'
+  },
+  {
+    id: 'demo-2',
+    ciPaciente: '87654321',
+    nombre: 'Mateo',
+    apellido: 'Rivera',
+    direccion: 'Zona Norte, La Paz',
+    fechaNacimiento: '1988-11-02',
+    email: 'mateo.rivera@demo.com',
+    telefono: '+591 71543210',
+    ultimaVisita: '05/03/2026',
+    proximaCita: '25/03/2026'
+  },
+  {
+    id: 'demo-3',
+    ciPaciente: '45678912',
+    nombre: 'Camila',
+    apellido: 'Arce',
+    direccion: 'Equipetrol, Santa Cruz',
+    fechaNacimiento: '1999-01-17',
+    email: 'camila.arce@demo.com',
+    telefono: '+591 70223344',
+    ultimaVisita: '01/03/2026',
+    proximaCita: 'Sin cita programada'
+  },
+  {
+    id: 'demo-4',
+    ciPaciente: '32165498',
+    nombre: 'Diego',
+    apellido: 'Salvatierra',
+    direccion: 'Sopocachi, La Paz',
+    fechaNacimiento: '1991-05-28',
+    email: 'diego.salvatierra@demo.com',
+    telefono: '+591 73334455',
+    ultimaVisita: '10/03/2026',
+    proximaCita: '18/03/2026'
+  }
+]
+
 const Patient = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [patients, setPatients] = useState([])
   const [filteredPatients, setFilteredPatients] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const itemsPerPage = 15
+  const recentPatients = patients.length > 0 ? patients.slice(0, 6) : demoRecentPatients
 
   useEffect(() => {
     const fetchAllPatients = async () => {
@@ -83,13 +135,16 @@ const Patient = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <PacienteCard />
-            <PacienteCard />
-            <PacienteCard />
-            <PacienteCard />
-            <PacienteCard />
-            <PacienteCard />
+            {recentPatients.map((patient) => (
+              <PacienteCard key={patient.id || patient.ciPaciente} patient={patient} />
+            ))}
           </motion.div>
+
+          {recentPatients.length === 0 && (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
+              No hay pacientes recientes para mostrar.
+            </div>
+          )}
         </div>
       )}
 
@@ -127,6 +182,7 @@ const Patient = () => {
                       nombre={`${paciente.nombre} ${paciente.apellido}`}
                       direccion={paciente.direccion}
                       fechaNacimiento={paciente.fechaNacimiento}
+                      patient={paciente}
                       numeroTelefonico={
                         paciente.phonesNumbers && paciente.phonesNumbers.length > 0
                           ? paciente.phonesNumbers[0].numero

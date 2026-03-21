@@ -19,6 +19,7 @@ import Cuentas from './pages/cuentas/Cuentas'
 import Login from './pages/login/Login'
 import Register from './pages/register/Register'
 import AuthShell from './components/auth/AuthShell'
+import PatientDetails from './pages/patientDetails/PatientDetails'
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth()
@@ -81,6 +82,7 @@ const AppContent = () => {
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/patient" element={<Patient />} />
+                    <Route path="/patient/:patientId" element={<PatientDetails />} />
                     <Route path="/new-patient" element={<NewPatient />} />
                     <Route path="/treatment" element={<Treatment />} />
                     <Route path="/new-treatment" element={<NewTreatment />} />

@@ -7,12 +7,20 @@ import CardPaciente from '../../components/cardPaciente/CardPaciente'
 import ImagesApp from '../../assets/ImagesApp'
 import VideosApp from '../../assets/VideosApp'
 
-const metricCards = [
+const baseMetricCards = [
   { title: 'Calendario', quantity: '10', porcentaje: '20%', icon: Calendar },
   { title: 'Reloj', quantity: '5', porcentaje: '10%', icon: Clock },
   { title: 'Tendencias', quantity: '15', porcentaje: '30%', icon: TrendingUp },
   { title: 'Usuarios', quantity: '50', porcentaje: '40%', icon: Users }
 ]
+
+const boliviaTimeFormatter = new Intl.DateTimeFormat('es-BO', {
+  timeZone: 'America/La_Paz',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false
+})
 
 const newsItems = [
   {
@@ -78,6 +86,7 @@ const recentPatients = [
 
 const Home = () => {
   const [showVideo, setShowVideo] = useState(false)
+  const [boliviaTime, setBoliviaTime] = useState(() => boliviaTimeFormatter.format(new Date()))
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -86,6 +95,19 @@ const Home = () => {
 
     return () => window.clearInterval(timer)
   }, [])
+
+  useEffect(() => {
+    const clockTimer = window.setInterval(() => {
+      setBoliviaTime(boliviaTimeFormatter.format(new Date()))
+    }, 1000)
+
+    return () => window.clearInterval(clockTimer)
+  }, [])
+
+  const metricCards = [
+    { title: 'Reloj Bolivia', quantity: boliviaTime, porcentaje: 'UTC-4', icon: Clock, note: 'America/La Paz' },
+    ...baseMetricCards
+  ]
 
   return (
     <section className="grid gap-y-6 px-2 pb-6 pt-4 lg:gap-y-7">
@@ -149,7 +171,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:gap-5">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5 2xl:gap-5">
         {metricCards.map((card) => (
           <TopInfoHome key={card.title} {...card} />
         ))}

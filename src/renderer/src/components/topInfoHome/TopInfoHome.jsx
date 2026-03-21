@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TopInfoHome = ({ title, quantity, porcentaje, icon }) => {
+const TopInfoHome = ({ title, quantity, porcentaje, icon, note }) => {
   const IconComponent = icon
 
   return (
@@ -14,6 +14,11 @@ const TopInfoHome = ({ title, quantity, porcentaje, icon }) => {
           <h4 className="mt-1 text-2xl font-semibold text-slate-800 dark:text-slate-100">
             {quantity}
           </h4>
+          {note ? (
+            <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+              {note}
+            </p>
+          ) : null}
         </div>
       </div>
       <div className="mt-5">

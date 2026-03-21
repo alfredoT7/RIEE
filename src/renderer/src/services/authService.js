@@ -1,6 +1,34 @@
 import { publicApi } from '../api/Api';
 
 const AUTH_BASE_PATH = '/api/v1/riee/auth';
+const STATUS_PATH = '/api/v1/riee/status';
+
+const clearStoredAuth = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+};
+
+const notifyAuthLogout = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('auth:logout'));
+  }
+};
+
+export const checkBackendStatus = async () => {
+  try {
+    const response = await publicApi.get(STATUS_PATH, {
+      timeout: 3000,
+      headers: {
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache'
+      }
+    });
+
+    return response.status === 200;
+  } catch (error) {
+    return false;
+  }
+};
 
 // Función para hacer login
 export const login = async (username, password) => {
@@ -91,8 +119,8 @@ export const register = async (dentistData) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  clearStoredAuth();
+  notifyAuthLogout();
 };
 export const getToken = () => {
   return localStorage.getItem('token');

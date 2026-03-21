@@ -8,6 +8,15 @@ const RETRY_DELAY_MS = 1000;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const clearAuthSession = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('auth:logout'));
+    }
+};
+
 const shouldRetryRequest = (error) => {
     const status = error.response?.status;
     const isTimeout = error.code === 'ECONNABORTED';
@@ -68,12 +77,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            // Token expirado o inválido
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            // Puedes redirigir al login aquí si usas react-router
-            console.log('Sesión expirada');
+        const status = error.response?.status;
+        const backendUnavailable = !error.response || [502, 503, 504].includes(status);
+
+        if (status === 401) {
+            clearAuthSession();
+            console.log('Sesion expirada');
+        } else if (backendUnavailable) {
+            clearAuthSession();
+            console.log('Backend no disponible, cerrando sesion');
         }
         return Promise.reject(error);
     }

@@ -9,7 +9,7 @@ function createWindow() {
     height: 670,
     minWidth: 1000,
     minHeight: 670,
-    fullscreen: true,
+    fullscreen: false,
     resizable: true,
     maximizable: true,
     show: false,
@@ -22,6 +22,8 @@ function createWindow() {
   })
 
   mainWindow.on('ready-to-show', () => {
+    // Use normal maximized window (not fullscreen) so title bar controls stay visible.
+    mainWindow.maximize()
     mainWindow.show()
   })
 

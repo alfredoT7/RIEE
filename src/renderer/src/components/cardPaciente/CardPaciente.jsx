@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Eye } from 'lucide-react'
 import ImagesApp from '../../assets/ImagesApp'
 
-const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTelefonico }) => {
+const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTelefonico, patient }) => {
   const [isImageExpanded, setIsImageExpanded] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleEscape = (event) => {
@@ -23,6 +26,18 @@ const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTe
   }, [isImageExpanded])
 
   const imageSrc = imagen?.startsWith('http') ? imagen : ImagesApp.defaultImage
+
+  const handleOpenDetails = () => {
+    const patientId = patient?.id || patient?.ciPaciente || ci
+
+    if (!patientId) {
+      return
+    }
+
+    navigate(`/patient/${patientId}`, {
+      state: { patient }
+    })
+  }
 
   return (
     <>
@@ -53,6 +68,16 @@ const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTe
         <p className="basis-[90px] shrink-0 text-sm text-slate-500" title="Número de contacto">
           {numeroTelefonico}
         </p>
+        <div className="ml-auto flex shrink-0 items-center justify-end">
+          <button
+            type="button"
+            onClick={handleOpenDetails}
+            title="Ver detalles del paciente"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
+          >
+            <Eye size={16} />
+          </button>
+        </div>
       </div>
 
       {isImageExpanded && (

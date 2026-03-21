@@ -18,14 +18,54 @@ export const AuthProvider = ({ children }) => {
 
   // Verificar si hay una sesión guardada al cargar
   useEffect(() => {
-    const token = authService.getToken();
-    const storedUser = authService.getCurrentUser();
-    
-    if (token && storedUser) {
-      setUser(storedUser);
-      setIsAuthenticated(true);
-    }
-    setIsLoading(false);
+    let isMounted = true;
+
+    const restoreSession = async () => {
+      const token = authService.getToken();
+      const storedUser = authService.getCurrentUser();
+
+      if (!token || !storedUser) {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      const backendAvailable = await authService.checkBackendStatus();
+
+      if (!isMounted) {
+        return;
+      }
+
+      if (backendAvailable) {
+        setUser(storedUser);
+        setIsAuthenticated(true);
+      } else {
+        authService.logout();
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+
+      setIsLoading(false);
+    };
+
+    const handleForcedLogout = () => {
+      if (!isMounted) {
+        return;
+      }
+
+      setUser(null);
+      setIsAuthenticated(false);
+      setIsLoading(false);
+    };
+
+    restoreSession();
+    window.addEventListener('auth:logout', handleForcedLogout);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('auth:logout', handleForcedLogout);
+    };
   }, []);
 
   const login = async (username, password) => {
