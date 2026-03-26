@@ -1,20 +1,35 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, nativeImage } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png'
 
+function getAppIcon() {
+  try {
+    const iconPath = is.dev
+      ? join(app.getAppPath(), 'src/renderer/src/assets/riee-muela-logo-HD.ico')
+      : join(process.resourcesPath, 'assets', 'riee-muela-logo-HD.ico')
+
+    return nativeImage.createFromPath(iconPath)
+  } catch {
+    return nativeImage.createFromPath(icon)
+  }
+}
+
 function createWindow() {
+  const appIcon = getAppIcon()
+
   const mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 670,
-    minWidth: 1000,
-    minHeight: 670,
+    width: 1280,
+    height: 720,
+    minWidth: 1280,
+    minHeight: 720,
     fullscreen: false,
     resizable: true,
     maximizable: true,
+    movable: true,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon: appIcon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -22,8 +37,11 @@ function createWindow() {
   })
 
   mainWindow.on('ready-to-show', () => {
-    // Use normal maximized window (not fullscreen) so title bar controls stay visible.
     mainWindow.maximize()
+    mainWindow.setIcon(appIcon)
+    mainWindow.setResizable(false)
+    mainWindow.setMaximizable(false)
+    mainWindow.setMovable(false)
     mainWindow.show()
   })
 

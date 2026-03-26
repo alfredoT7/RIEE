@@ -41,8 +41,11 @@ const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTe
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-3 transition-colors hover:border-[#00b09b]/20 hover:bg-[#fcfffe] md:flex-nowrap">
-        <div className="basis-[80px] shrink-0 text-sm font-medium text-slate-600" title="Carnet de identidad">
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-3 transition-colors hover:border-[#00b09b]/20 hover:bg-[#fcfffe] dark:border-slate-800 dark:bg-slate-950 dark:hover:border-[#5ce1d4]/20 dark:hover:bg-slate-900 md:grid md:grid-cols-[80px_36px_minmax(170px,1fr)_minmax(180px,1fr)_120px_130px_36px] md:items-center md:gap-2">
+        <div
+          className="basis-[80px] shrink-0 text-sm font-medium text-slate-600 dark:text-slate-300"
+          title="Carnet de identidad"
+        >
           {ci}
         </div>
 
@@ -55,25 +58,36 @@ const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTe
           }}
           alt={nombre || 'Imagen no disponible'}
           onClick={() => setIsImageExpanded(true)}
-          className="h-9 w-9 shrink-0 cursor-pointer rounded-full object-cover ring-2 ring-slate-100 transition-transform hover:scale-105"
+          className="h-9 w-9 shrink-0 cursor-pointer rounded-full object-cover ring-2 ring-slate-100 transition-transform hover:scale-105 dark:ring-slate-800"
         />
 
-        <p className="min-w-[170px] flex-1 truncate text-sm font-medium text-slate-700">{nombre}</p>
-        <p className="min-w-[180px] flex-1 truncate text-sm text-slate-500" title="Último tratamiento">
+        <p className="min-w-[170px] flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-100 md:min-w-0">
+          {nombre}
+        </p>
+        <p
+          className="min-w-[180px] flex-1 truncate text-sm text-slate-500 dark:text-slate-400 md:min-w-0"
+          title="Último tratamiento"
+        >
           {direccion}
         </p>
-        <p className="basis-[90px] shrink-0 text-sm text-slate-500" title="Fecha nacimiento">
+        <p
+          className="basis-[120px] shrink-0 text-sm text-slate-500 dark:text-slate-400"
+          title="Fecha nacimiento"
+        >
           {fechaNacimiento}
         </p>
-        <p className="basis-[90px] shrink-0 text-sm text-slate-500" title="Número de contacto">
+        <p
+          className="basis-[130px] shrink-0 text-sm text-slate-500 dark:text-slate-400"
+          title="Número de contacto"
+        >
           {numeroTelefonico}
         </p>
-        <div className="ml-auto flex shrink-0 items-center justify-end">
+        <div className="flex basis-[36px] shrink-0 items-center justify-end">
           <button
             type="button"
             onClick={handleOpenDetails}
             title="Ver detalles del paciente"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:border-sky-200 hover:bg-sky-50 hover:text-sky-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-sky-500/40 dark:hover:bg-sky-500/10 dark:hover:text-sky-300"
           >
             <Eye size={16} />
           </button>

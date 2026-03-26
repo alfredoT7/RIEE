@@ -10,8 +10,12 @@ files:
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
 asarUnpack:
   - resources/**
+extraResources:
+  - from: src/renderer/src/assets/riee-muela-logo-HD.ico
+    to: assets/riee-muela-logo-HD.ico
 win:
   executableName: riee
+  icon: src/renderer/src/assets/riee-muela-logo-HD.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
