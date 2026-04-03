@@ -26,7 +26,7 @@ function createWindow() {
     fullscreen: false,
     resizable: true,
     maximizable: true,
-    movable: true,
+    movable: false,
     show: false,
     autoHideMenuBar: true,
     icon: appIcon,

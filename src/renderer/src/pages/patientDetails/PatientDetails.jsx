@@ -137,7 +137,7 @@ const PatientDetails = () => {
     const fetchPatient = async () => {
       try {
         const response = await getAllPatients()
-        const patientList = Array.isArray(response.data) ? response.data : []
+        const patientList = Array.isArray(response.data?.data) ? response.data.data : []
         const selectedPatient = patientList.find(
           (item) => `${item.id || item.ciPaciente}` === `${patientId}`
         )

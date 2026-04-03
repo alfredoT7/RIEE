@@ -98,7 +98,7 @@ const Register = () => {
       <button
         type="button"
         onClick={() => navigate('/login')}
-        className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-[#0f766e] transition-colors hover:text-[#0b5f59] dark:text-[#5ce1d4] dark:hover:text-[#8ce9dd]"
+        className="mb-6 inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-[#0f766e] transition-colors hover:text-[#0b5f59] dark:text-[#5ce1d4] dark:hover:text-[#8ce9dd]"
       >
         <FaArrowLeft className="text-base" />
         Volver al inicio de sesion
@@ -167,7 +167,7 @@ const Register = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} noValidate className="space-y-10">
+      <form onSubmit={(event) => handleSubmit(event, selectedImage)} noValidate className="space-y-10">
         {currentStep === 1 && (
           <div className="grid gap-6">
             {renderInput({
@@ -336,7 +336,7 @@ const Register = () => {
                 </div>
               </div>
               <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
-                Por ahora esta imagen solo se muestra en frontend y aun no se envia al backend.
+                La imagen seleccionada se enviará junto con el registro.
               </p>
             </div>
           </div>
@@ -362,7 +362,7 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 dark:text-slate-500"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
@@ -388,7 +388,7 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 dark:text-slate-500"
                 >
                   {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
@@ -419,7 +419,7 @@ const Register = () => {
             <button
               type="button"
               onClick={handlePrev}
-              className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-white dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-950"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-white dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-950"
             >
               <FaArrowLeft />
               Anterior
@@ -432,7 +432,7 @@ const Register = () => {
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex items-center gap-2 rounded-2xl bg-[#00b09b] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)] transition-transform hover:-translate-y-0.5"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#00b09b] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)] transition-transform hover:-translate-y-0.5"
             >
               Siguiente
               <FaArrowRight />
@@ -441,7 +441,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex items-center gap-2 rounded-2xl bg-[#00b09b] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)] transition-transform hover:-translate-y-0.5 disabled:opacity-70"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-[#00b09b] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
               {!isLoading && <FaCheck />}
@@ -454,7 +454,7 @@ const Register = () => {
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="font-semibold text-[#0f766e] transition-colors hover:text-[#0b5f59] dark:text-[#5ce1d4] dark:hover:text-[#8ce9dd]"
+            className="cursor-pointer font-semibold text-[#0f766e] transition-colors hover:text-[#0b5f59] dark:text-[#5ce1d4] dark:hover:text-[#8ce9dd]"
           >
             Inicia sesion aqui
           </button>

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import * as authService from '../services/authService';
+import { syncApiAuthToken } from '../api/Api';
 
 const AuthContext = createContext();
 
@@ -20,32 +21,21 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     let isMounted = true;
 
-    const restoreSession = async () => {
+    const restoreSession = () => {
       const token = authService.getToken();
       const storedUser = authService.getCurrentUser();
 
       if (!token || !storedUser) {
         if (isMounted) {
+          syncApiAuthToken();
           setIsLoading(false);
         }
         return;
       }
 
-      const backendAvailable = await authService.checkBackendStatus();
-
-      if (!isMounted) {
-        return;
-      }
-
-      if (backendAvailable) {
-        setUser(storedUser);
-        setIsAuthenticated(true);
-      } else {
-        authService.logout();
-        setUser(null);
-        setIsAuthenticated(false);
-      }
-
+      syncApiAuthToken();
+      setUser(storedUser);
+      setIsAuthenticated(true);
       setIsLoading(false);
     };
 

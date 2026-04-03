@@ -1,516 +1,343 @@
-import React, { useState, useRef } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import ImagesApp from '../../assets/ImagesApp';
-import { 
-  FaCamera, 
-  FaUser, 
-  FaIdCard, 
-  FaCalendar, 
-  FaMapMarker, 
-  FaPhone, 
-  FaHeart, 
-  FaBriefcase, 
-  FaEnvelope, 
-  FaUserFriends, 
-  FaSave, 
-  FaTrash,
-  FaUserPlus,
+import React from 'react'
+import { Formik, Form } from 'formik'
+import {
   FaAddressCard,
-  FaPhoneAlt,
+  FaArrowLeft,
+  FaBriefcase,
+  FaCalendar,
+  FaCamera,
+  FaEnvelope,
+  FaHeart,
+  FaIdCard,
   FaInfoCircle,
-  FaArrowLeft
-} from 'react-icons/fa';
-import axios from 'axios';
-import { registerPatient } from '../../api/Api';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+  FaMapMarker,
+  FaPhone,
+  FaPhoneAlt,
+  FaSave,
+  FaTrash,
+  FaUser,
+  FaUserFriends,
+  FaUserPlus
+} from 'react-icons/fa'
+import { registerPatient } from '../../api/Api'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import { initialValues, validationSchema, CIVIL_STATUS_OPTIONS } from './formConfig'
+import { buildPatientFormData } from './patientFormUtils'
+import { usePatientImage } from './usePatientImage'
+import { sectionClass } from './formStyles'
+import FieldBlock, { SectionTitle } from './components/FieldBlock'
+import PatientPhotoSection from './components/PatientPhotoSection'
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    .matches(/^[a-zA-Z\s]+$/, 'Nombre no debe contener números')
-    .required('Nombre es obligatorio'),
-  lastname: Yup.string()
-    .matches(/^[a-zA-Z\s]+$/, 'Apellido no debe contener números')
-    .required('Apellido es obligatorio'),
-  ci: Yup.string().required('Carnet de identidad es obligatorio'),
-  birthDate: Yup.date().required('Fecha de nacimiento es obligatoria'),
-  phone: Yup.string().required('Teléfono es obligatorio'),
-  secondPhone: Yup.string(),
-  civilStatus: Yup.string().required('Estado civil es obligatorio'),
-  occupation: Yup.string()
-    .matches(/^[a-zA-Z\s]+$/, 'Ocupación no debe contener números')
-    .required('Ocupación es obligatoria'),
-  email: Yup.string().email('Email no es válido').required('Email es obligatorio'),
-  referencePerson: Yup.string()
-    .matches(/^[a-zA-Z\s]+$/, 'Nombre de persona de referencia no debe contener números')
-    .required('Persona de referencia es obligatoria'),
-  referencePhone: Yup.string().required('Teléfono de referencia es obligatorio'),
-});
+const FIELD_KEYWORDS = {
+  ci: ['ci', 'carnet', 'identidad', 'ciPaciente'],
+  email: ['email', 'correo'],
+  phone: ['telefono principal', 'telefono', 'phone'],
+  secondPhone: ['telefono secundario', 'secondPhone'],
+  birthDate: ['fecha de nacimiento', 'birthDate'],
+  civilStatus: ['estado civil', 'civilStatus'],
+  occupation: ['ocupacion', 'ocupación'],
+  referencePerson: ['persona de referencia', 'referencePerson'],
+  referencePhone: ['telefono de referencia', 'referencePhone'],
+  address: ['direccion', 'dirección', 'address'],
+  name: ['nombre', 'nombres'],
+  lastname: ['apellido', 'apellidos']
+}
+
+const extractBackendMessage = (error) => {
+  const data = error.response?.data
+
+  if (typeof data?.message === 'string') {
+    return data.message
+  }
+
+  if (typeof data?.error === 'string') {
+    return data.error
+  }
+
+  if (Array.isArray(data?.errors) && data.errors.length > 0) {
+    return data.errors.join(' | ')
+  }
+
+  return ''
+}
+
+const applyBackendFieldErrors = (error, setFieldError, fallbackMessage) => {
+  const data = error.response?.data
+
+  if (data && typeof data === 'object') {
+    const fieldErrors = data.fieldErrors || data.errorsByField || data.validationErrors
+
+    if (fieldErrors && typeof fieldErrors === 'object' && !Array.isArray(fieldErrors)) {
+      let applied = false
+      Object.entries(fieldErrors).forEach(([field, message]) => {
+        if (typeof message === 'string') {
+          setFieldError(field, message)
+          applied = true
+        }
+      })
+
+      if (applied) {
+        return true
+      }
+    }
+  }
+
+  const normalizedMessage = fallbackMessage.toLowerCase()
+  let hasMatch = false
+
+  Object.entries(FIELD_KEYWORDS).forEach(([field, keywords]) => {
+    if (keywords.some((keyword) => normalizedMessage.includes(keyword.toLowerCase()))) {
+      setFieldError(field, fallbackMessage)
+      hasMatch = true
+    }
+  })
+
+  return hasMatch
+}
 
 const NewPatient = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const fileInputRef = useRef(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const {
+    fileInputRef,
+    selectedFile,
+    previewUrl,
+    handleFileChange,
+    handleFileButtonClick,
+    clearImageSelection
+  } = usePatientImage()
 
-  const initialValues = {
-    name: '',
-    lastname: '',
-    ci: '',
-    birthDate: '',
-    address: '',
-    phone: '',
-    secondPhone: '',
-    civilStatus: '',
-    occupation: '',
-    email: '',
-    referencePerson: '',
-    referencePhone: '',
-  };
-
-  const resizeImage = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const maxWidth = 550;
-          const maxHeight = 550;
-
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > maxWidth) {
-              height = (height * maxWidth) / width;
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width = (width * maxHeight) / height;
-              height = maxHeight;
-            }
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          canvas.toBlob((blob) => {
-            const resizedFile = new File([blob], file.name, { type: file.type });
-            resolve(resizedFile);
-          }, 'image/jpeg', 0.7);
-        };
-        img.onerror = (error) => reject(error);
-        img.src = e.target.result;
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      try {
-        const resizedFile = await resizeImage(file);
-        setSelectedFile(resizedFile);
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setPreviewUrl(e.target.result);
-        };
-        reader.readAsDataURL(resizedFile);
-      } catch (error) {
-        console.error('Error resizing the image:', error);
-      }
-    }
-  };
-
-  const uploadImageToCloudinary = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'riee-consultorio');
+  const handleSubmit = async (values, { setSubmitting, setTouched, setFieldError, setStatus }) => {
+    setStatus(null)
 
     try {
-      const response = await axios.post(
-        'https://api.cloudinary.com/v1_1/dzizafv5s/image/upload',
-        formData
-      );
-      return response.data.secure_url;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      throw new Error('Error al subir la imagen');
-    }
-  };
+      const patientData = buildPatientFormData(values, selectedFile)
 
-  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
-    try {
-      let imageUrl = ImagesApp.defaultImage;
+      const response = await registerPatient(patientData)
+      console.log('Respuesta del servidor al crear paciente:', response?.data)
+      const patientId = response?.data?.id || response?.data?.patientId
 
-      if (selectedFile) {
-        imageUrl = await uploadImageToCloudinary(selectedFile);
-      }
-
-      
-
-      const phoneNumbers = [{ numero: values.phone }];
-      if (values.secondPhone && values.secondPhone.trim() !== '') {
-        phoneNumbers.push({ numero: values.secondPhone });
-      }
-
-      const patientData = {
-        ciPaciente: parseInt(values.ci),
-        email: values.email,
-        estadoCivil: {
-          id: parseInt(values.civilStatus)
-        },
-        fechaNacimiento: values.birthDate,
-        direccion: values.address,
-        ocupacion: values.occupation,
-        personaDeReferencia: values.referencePerson,
-        numeroPersonaRef: parseInt(values.referencePhone),
-        imagen: imageUrl,
-        nombre: values.name,
-        apellido: values.lastname,
-        phonesNumbers: phoneNumbers
-      };
-
-      await registerPatient(patientData);
-      console.log('Form submitted:', patientData);
-      
       toast.success('¡Paciente registrado exitosamente!', {
         description: `${values.name} ${values.lastname} ha sido agregado al sistema`,
-        duration: 4000,
-      });
-      
-      setSelectedFile(null);
-      setPreviewUrl(null);
-      navigate('/patient');
+        duration: 4000
+      })
+
+      clearImageSelection()
+      navigate('/new-patient/questionnaire', {
+        state: {
+          patientId,
+          patientName: `${values.name} ${values.lastname}`.trim()
+        }
+      })
     } catch (error) {
-      console.error('Error submitting form:', error);
-      
+      console.error('Error submitting form:', error)
+      const backendMessage = extractBackendMessage(error)
+      const fallbackError = backendMessage || 'No se pudo registrar al paciente. Revisa los campos e intenta nuevamente.'
+
+      setStatus({
+        type: 'error',
+        message: fallbackError
+      })
+
+      setTouched(
+        Object.keys(values).reduce((acc, key) => {
+          acc[key] = true
+          return acc
+        }, {}),
+        true
+      )
+
+      applyBackendFieldErrors(error, setFieldError, fallbackError)
+
       toast.error('Error al registrar el paciente', {
-        description: 'Revisa el formato de las entradas o posiblemente el carnet de identidad ya existe',
-        duration: 5000,
-      });
+        description: fallbackError,
+        duration: 5000
+      })
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
-
-  const handleFileButtonClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleRemoveImage = () => {
-    setSelectedFile(null);
-    setPreviewUrl(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
+  }
 
   return (
-    <div className="new-patient-container">
-      <div className="page-header">
-        <h1 className="page-title">
-          <FaUserPlus className="title-icon" />
-          Registro de Nuevo Paciente
-        </h1>
-        <p className="page-subtitle">Complete toda la información del paciente para crear su perfil médico</p>
-      </div>
-
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting, errors, touched }) => (
-          <Form className="patient-form">
-            {/* Sección de Imagen */}
-            <div className="form-section image-section">
-              <div className="section-header">
-                <h3><FaCamera /> Fotografía del Paciente</h3>
-              </div>
-              
-              <div className="image-upload-container">
-                <div className="image-preview">
-                  <img
-                    src={previewUrl || ImagesApp.defaultImage}
-                    alt="Vista previa del paciente"
-                    className="preview-image"
-                  />
-                  <div className="image-overlay">
-                    <FaCamera className="camera-icon" />
-                  </div>
-                </div>
-                
-                <div className="image-controls">
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                  />
-                  <button
-                    type="button"
-                    className="upload-btn"
-                    onClick={handleFileButtonClick}
-                    disabled={isSubmitting}
-                  >
-                    <FaCamera />
-                    Subir Foto
-                  </button>
-                  {previewUrl && (
-                    <button
-                      type="button"
-                      className="remove-btn"
-                      onClick={handleRemoveImage}
-                      disabled={isSubmitting}
-                    >
-                      <FaTrash />
-                      Quitar
-                    </button>
-                  )}
-                </div>
-              </div>
+    <section className="grid w-full place-items-center px-4 pb-8 pt-5 sm:px-6">
+      <div className="flex w-full max-w-[880px] flex-col gap-7">
+        <div className="w-full overflow-hidden rounded-[30px] border border-[#00b09b]/20 bg-gradient-to-r from-[#0f766e] via-[#11b6a1] to-[#19d3bc] px-6 py-7 text-white shadow-[0_24px_60px_rgba(15,118,110,0.22)] sm:px-8">
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-white/18 ring-1 ring-white/20">
+              <FaUserPlus size={28} />
             </div>
+            <h1 className="text-3xl font-semibold tracking-tight">Registro de Nuevo Paciente</h1>
+            <p className="mt-3 max-w-2xl text-sm text-white/90 sm:text-base">
+              Complete toda la información del paciente para crear su perfil médico.
+            </p>
+          </div>
+        </div>
 
-            {/* Información Personal */}
-            <div className="form-section">
-              <div className="section-header">
-                <h3><FaAddressCard /> Información Personal</h3>
-              </div>
-              
-              <div className="form-grid">
-                <div className="input-group">
-                  <label htmlFor="name">
-                    <FaUser className="input-icon" />
-                    Nombres *
-                  </label>
-                  <Field 
-                    name="name" 
-                    type="text" 
-                    className={`form-input ${errors.name && touched.name ? 'error' : ''}`}
-                    placeholder="Ingrese los nombres"
-                  />
-                  <ErrorMessage name="name" component="div" className="error-message" />
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+          {({ isSubmitting, errors, touched, status }) => (
+            <Form className="flex w-full flex-col gap-7">
+              {status?.type === 'error' && (
+                <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700 shadow-sm dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-200">
+                  {status.message}
                 </div>
+              )}
 
-                <div className="input-group">
-                  <label htmlFor="lastname">
-                    <FaUser className="input-icon" />
-                    Apellidos *
-                  </label>
-                  <Field 
-                    name="lastname" 
-                    type="text" 
-                    className={`form-input ${errors.lastname && touched.lastname ? 'error' : ''}`}
+              <PatientPhotoSection
+                fileInputRef={fileInputRef}
+                isSubmitting={isSubmitting}
+                onFileChange={handleFileChange}
+                onFileButtonClick={handleFileButtonClick}
+                onRemoveImage={clearImageSelection}
+                previewUrl={previewUrl}
+              />
+
+              <div className={sectionClass}>
+                <SectionTitle icon={FaAddressCard}>Información Personal</SectionTitle>
+                <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
+                  <FieldBlock name="name" label="Nombres *" icon={FaUser} error={errors.name} touched={touched.name} placeholder="Ingrese los nombres" />
+                  <FieldBlock
+                    name="lastname"
+                    label="Apellidos *"
+                    icon={FaUser}
+                    error={errors.lastname}
+                    touched={touched.lastname}
                     placeholder="Ingrese los apellidos"
                   />
-                  <ErrorMessage name="lastname" component="div" className="error-message" />
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="ci">
-                    <FaIdCard className="input-icon" />
-                    Carnet de Identidad *
-                  </label>
-                  <Field 
-                    name="ci" 
-                    type="text" 
-                    className={`form-input ${errors.ci && touched.ci ? 'error' : ''}`}
-                    placeholder="Ej: 1234567 LP"
+                  <FieldBlock name="ci" label="Carnet de Identidad *" icon={FaIdCard} error={errors.ci} touched={touched.ci} placeholder="Ej: 1234567 LP" />
+                  <FieldBlock
+                    name="birthDate"
+                    label="Fecha de Nacimiento *"
+                    icon={FaCalendar}
+                    type="date"
+                    error={errors.birthDate}
+                    touched={touched.birthDate}
                   />
-                  <ErrorMessage name="ci" component="div" className="error-message" />
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="birthDate">
-                    <FaCalendar className="input-icon" />
-                    Fecha de Nacimiento *
-                  </label>
-                  <Field 
-                    name="birthDate" 
-                    type="date" 
-                    className={`form-input ${errors.birthDate && touched.birthDate ? 'error' : ''}`}
-                  />
-                  <ErrorMessage name="birthDate" component="div" className="error-message" />
-                </div>
-
-                <div className="input-group full-width">
-                  <label htmlFor="address">
-                    <FaMapMarker className="input-icon" />
-                    Dirección
-                  </label>
-                  <Field 
-                    name="address" 
-                    type="text" 
-                    className="form-input"
-                    placeholder="Ingrese la dirección completa"
-                  />
+                  <div className="md:col-span-2">
+                    <FieldBlock
+                      name="address"
+                      label="Dirección"
+                      icon={FaMapMarker}
+                      error={errors.address}
+                      touched={touched.address}
+                      placeholder="Ingrese la dirección completa"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Información de Contacto */}
-            <div className="form-section">
-              <div className="section-header">
-                <h3><FaPhoneAlt /> Información de Contacto</h3>
-              </div>
-              
-              <div className="form-grid">
-                <div className="input-group">
-                  <label htmlFor="phone">
-                    <FaPhone className="input-icon" />
-                    Teléfono Principal *
-                  </label>
-                  <Field 
-                    name="phone" 
-                    type="tel" 
-                    className={`form-input ${errors.phone && touched.phone ? 'error' : ''}`}
+              <div className={sectionClass}>
+                <SectionTitle icon={FaPhoneAlt}>Información de Contacto</SectionTitle>
+                <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
+                  <FieldBlock
+                    name="phone"
+                    label="Teléfono Principal *"
+                    icon={FaPhone}
+                    type="tel"
+                    error={errors.phone}
+                    touched={touched.phone}
                     placeholder="70123456"
                   />
-                  <ErrorMessage name="phone" component="div" className="error-message" />
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="secondPhone">
-                    <FaPhone className="input-icon" />
-                    Teléfono Secundario
-                  </label>
-                  <Field 
-                    name="secondPhone" 
-                    type="tel" 
-                    className="form-input"
+                  <FieldBlock
+                    name="secondPhone"
+                    label="Teléfono Secundario"
+                    icon={FaPhone}
+                    type="tel"
+                    error={errors.secondPhone}
+                    touched={touched.secondPhone}
                     placeholder="22334455 (Opcional)"
                   />
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="email">
-                    <FaEnvelope className="input-icon" />
-                    Correo Electrónico *
-                  </label>
-                  <Field 
-                    name="email" 
-                    type="email" 
-                    className={`form-input ${errors.email && touched.email ? 'error' : ''}`}
-                    placeholder="ejemplo@correo.com"
-                  />
-                  <ErrorMessage name="email" component="div" className="error-message" />
+                  <div className="md:col-span-2">
+                    <FieldBlock
+                      name="email"
+                      label="Correo Electrónico *"
+                      icon={FaEnvelope}
+                      type="email"
+                      error={errors.email}
+                      touched={touched.email}
+                      placeholder="ejemplo@correo.com"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Información Adicional */}
-            <div className="form-section">
-              <div className="section-header">
-                <h3><FaInfoCircle /> Información Adicional</h3>
-              </div>
-              
-              <div className="form-grid">
-                <div className="input-group">
-                  <label htmlFor="civilStatus">
-                    <FaHeart className="input-icon" />
-                    Estado Civil *
-                  </label>
-                  <Field 
-                    as="select" 
-                    name="civilStatus" 
-                    className={`form-select ${errors.civilStatus && touched.civilStatus ? 'error' : ''}`}
+              <div className={sectionClass}>
+                <SectionTitle icon={FaInfoCircle}>Información Adicional</SectionTitle>
+                <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
+                  <FieldBlock
+                    name="civilStatus"
+                    label="Estado Civil *"
+                    icon={FaHeart}
+                    as="select"
+                    error={errors.civilStatus}
+                    touched={touched.civilStatus}
                   >
                     <option value="">Seleccione estado civil</option>
-                    <option value="1">Soltero(a)</option>
-                    <option value="2">Casado(a)</option>
-                    <option value="3">Divorciado(a)</option>
-                    <option value="4">Viudo(a)</option>
-                    <option value="5">Unión Libre</option>
-                  </Field>
-                  <ErrorMessage name="civilStatus" component="div" className="error-message" />
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="occupation">
-                    <FaBriefcase className="input-icon" />
-                    Ocupación *
-                  </label>
-                  <Field 
-                    name="occupation" 
-                    type="text" 
-                    className={`form-input ${errors.occupation && touched.occupation ? 'error' : ''}`}
+                    {CIVIL_STATUS_OPTIONS.map((status) => (
+                      <option key={status.value} value={status.value}>
+                        {status.label}
+                      </option>
+                    ))}
+                  </FieldBlock>
+                  <FieldBlock
+                    name="occupation"
+                    label="Ocupación *"
+                    icon={FaBriefcase}
+                    error={errors.occupation}
+                    touched={touched.occupation}
                     placeholder="Ej: Ingeniero, Estudiante, etc."
                   />
-                  <ErrorMessage name="occupation" component="div" className="error-message" />
                 </div>
               </div>
-            </div>
 
-            {/* Persona de Referencia */}
-            <div className="form-section">
-              <div className="section-header">
-                <h3>Persona de Referencia</h3>
-              </div>
-              
-              <div className="form-grid">
-                <div className="input-group">
-                  <label htmlFor="referencePerson">
-                    <FaUserFriends className="input-icon" />
-                    Nombre Completo *
-                  </label>
-                  <Field 
-                    name="referencePerson" 
-                    type="text" 
-                    className={`form-input ${errors.referencePerson && touched.referencePerson ? 'error' : ''}`}
+              <div className={sectionClass}>
+                <SectionTitle icon={FaUserFriends}>Persona de Referencia</SectionTitle>
+                <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
+                  <FieldBlock
+                    name="referencePerson"
+                    label="Nombre Completo *"
+                    icon={FaUserFriends}
+                    error={errors.referencePerson}
+                    touched={touched.referencePerson}
                     placeholder="Nombre de la persona de contacto"
                   />
-                  <ErrorMessage name="referencePerson" component="div" className="error-message" />
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="referencePhone">
-                    <FaPhone className="input-icon" />
-                    Teléfono de Referencia *
-                  </label>
-                  <Field 
-                    name="referencePhone" 
-                    type="tel" 
-                    className={`form-input ${errors.referencePhone && touched.referencePhone ? 'error' : ''}`}
+                  <FieldBlock
+                    name="referencePhone"
+                    label="Teléfono de Referencia *"
+                    icon={FaPhone}
+                    type="tel"
+                    error={errors.referencePhone}
+                    touched={touched.referencePhone}
                     placeholder="Teléfono de contacto"
                   />
-                  <ErrorMessage name="referencePhone" component="div" className="error-message" />
                 </div>
               </div>
-            </div>
 
-            {/* Botones de Acción */}
-            <div className="form-actions">
-              <button 
-                type="button" 
-                className="btn-secondary"
-                onClick={() => navigate('/patient')}
-                disabled={isSubmitting}
-              >
-                <FaArrowLeft className="btn-icon" />
-                Cancelar
-              </button>
-              <button 
-                type="submit" 
-                className="btn-primary"
-                disabled={isSubmitting}
-              >
-                <FaSave className="btn-icon" />
-                {isSubmitting ? 'Guardando...' : 'Registrar Paciente'}
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
-};
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => navigate('/patient')}
+                  disabled={isSubmitting}
+                  className="inline-flex h-12 min-w-[170px] items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                >
+                  <FaArrowLeft />
+                  Cancelar
+                </button>
 
-export default NewPatient;
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex h-12 min-w-[220px] items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-6 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <FaSave />
+                  {isSubmitting ? 'Guardando...' : 'Registrar Paciente'}
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </section>
+  )
+}
+
+export default NewPatient

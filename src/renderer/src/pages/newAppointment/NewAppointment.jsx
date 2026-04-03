@@ -24,7 +24,7 @@ const NewAppointment = () => {
     const fetchPatients = async () => {
       try {
         const response = await getAllPatients()
-        setPatients(Array.isArray(response.data) ? response.data : [])
+        setPatients(Array.isArray(response.data?.data) ? response.data.data : [])
       } catch (error) {
         console.error('Error fetching patients:', error)
         setPatients([])

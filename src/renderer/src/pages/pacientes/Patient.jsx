@@ -70,7 +70,7 @@ const Patient = () => {
     const fetchAllPatients = async () => {
       try {
         const response = await getAllPatients()
-        const allPatients = Array.isArray(response.data) ? response.data : []
+        const allPatients = Array.isArray(response.data?.data) ? response.data.data : []
 
         setPatients(allPatients)
         setFilteredPatients(allPatients)

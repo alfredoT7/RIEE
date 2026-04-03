@@ -1,11 +1,17 @@
-import { publicApi } from '../api/Api';
+import { api, publicApi, syncApiAuthToken } from '../api/Api';
+import {
+  clearStoredSession,
+  getStoredToken,
+  getStoredUser,
+  setStoredSession
+} from './authStorage';
 
 const AUTH_BASE_PATH = '/api/v1/riee/auth';
 const STATUS_PATH = '/api/v1/riee/status';
 
 const clearStoredAuth = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  clearStoredSession();
+  syncApiAuthToken();
 };
 
 const notifyAuthLogout = () => {
@@ -16,7 +22,7 @@ const notifyAuthLogout = () => {
 
 export const checkBackendStatus = async () => {
   try {
-    const response = await publicApi.get(STATUS_PATH, {
+    const response = await api.get(STATUS_PATH, {
       timeout: 3000,
       headers: {
         'Cache-Control': 'no-cache',
@@ -48,12 +54,15 @@ export const login = async (username, password) => {
         imagenUrl: userData.imagenUrl || ''
       };
 
-      // Guardar el token en localStorage
-      localStorage.setItem('token', userData.token);
-      localStorage.setItem('user', JSON.stringify(user));
+      const token = setStoredSession({
+        token: userData.token,
+        user
+      });
+      syncApiAuthToken();
+
       return {
         success: true,
-        token: userData.token,
+        token,
         user,
         message: response.data.message
       };
@@ -90,12 +99,15 @@ export const register = async (dentistData) => {
         imagenUrl: userData.imagenUrl || dentistData.imagenUrl || ''
       };
 
-      // Guardar el token en localStorage
-      localStorage.setItem('token', userData.token);
-      localStorage.setItem('user', JSON.stringify(user));
+      const token = setStoredSession({
+        token: userData.token,
+        user
+      });
+      syncApiAuthToken();
+
       return {
         success: true,
-        token: userData.token,
+        token,
         user,
         message: response.data.message
       };
@@ -123,19 +135,11 @@ export const logout = () => {
   notifyAuthLogout();
 };
 export const getToken = () => {
-  return localStorage.getItem('token');
+  return getStoredToken();
 };
 export const isAuthenticated = () => {
   return !!getToken();
 };
 export const getCurrentUser = () => {
-  const storedUser = localStorage.getItem('user');
-  if (!storedUser) return null;
-
-  try {
-    return JSON.parse(storedUser);
-  } catch (error) {
-    // Compatibilidad con formato antiguo donde solo se guardaba username
-    return { username: storedUser };
-  }
+  return getStoredUser();
 };

@@ -29,10 +29,10 @@ const AuthShell = () => {
   }, [location.pathname])
 
   return (
-    <section className="min-h-screen bg-slate-100 dark:bg-slate-950">
-      <div className="grid min-h-screen w-full lg:grid-cols-[1.12fr_0.88fr]">
+    <section className="h-screen overflow-hidden bg-slate-100 dark:bg-slate-950">
+      <div className="grid h-full w-full lg:grid-cols-[1.12fr_0.88fr]">
         <div
-          className="relative hidden min-h-screen overflow-hidden lg:block"
+          className="relative hidden h-full overflow-hidden lg:block"
           style={{
             backgroundImage: `url(${ImagesApp.imglogin})`,
             backgroundSize: 'cover',
@@ -71,7 +71,8 @@ const AuthShell = () => {
           </div>
         </div>
 
-        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-10 py-18 dark:bg-slate-950 sm:px-14 lg:px-20 xl:px-24">
+        <div className="relative h-full overflow-y-auto bg-white px-10 py-18 dark:bg-slate-950 sm:px-14 lg:px-20 xl:px-24">
+          <div className="flex min-h-full items-center justify-center">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={location.pathname}
@@ -84,6 +85,7 @@ const AuthShell = () => {
               <Outlet />
             </motion.div>
           </AnimatePresence>
+          </div>
         </div>
       </div>
     </section>

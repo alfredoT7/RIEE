@@ -1,4 +1,9 @@
 import axios from 'axios';
+import {
+    clearStoredSession,
+    getAuthorizationHeader,
+    setAuthNotice
+} from '../services/authStorage';
 
 // URL directa al backend
 const baseURL = "http://localhost:8080";
@@ -8,11 +13,42 @@ const RETRY_DELAY_MS = 1000;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const clearAuthSession = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+const AUTH_ERROR_MESSAGES = {
+    TOKEN_EXPIRED: 'Tu sesion expiro. Inicia sesion nuevamente.',
+    TOKEN_INVALID: 'Tu sesion ya no es valida. Inicia sesion nuevamente.',
+    TOKEN_MISSING: 'Debes iniciar sesion para continuar.'
+};
+
+const attachAuthorizationHeader = (config) => {
+    const authorizationHeader = getAuthorizationHeader();
+
+    if (authorizationHeader) {
+        config.headers = config.headers ?? {};
+        config.headers.Authorization = authorizationHeader;
+    }
+
+    return config;
+};
+
+const resolveAuthNotice = (error) => {
+    const authErrorCode = error.response?.data?.errors?.[0];
+
+    if (authErrorCode && AUTH_ERROR_MESSAGES[authErrorCode]) {
+        return AUTH_ERROR_MESSAGES[authErrorCode];
+    }
+
+    return 'Tu sesion expiro. Inicia sesion nuevamente.';
+};
+
+const clearAuthSession = (noticeMessage) => {
+    clearStoredSession();
+    delete api.defaults.headers.common.Authorization;
 
     if (typeof window !== 'undefined') {
+        if (noticeMessage) {
+            setAuthNotice(noticeMessage);
+        }
+
         window.dispatchEvent(new Event('auth:logout'));
     }
 };
@@ -52,21 +88,15 @@ const attachRetryInterceptor = (client) => {
     );
 };
 
-// Crear instancia de axios con configuración base
 const api = axios.create({
     baseURL: baseURL,
     responseType: 'json',
     timeout: REQUEST_TIMEOUT
 });
 
-// Interceptor para agregar el token JWT a todas las peticiones
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
+        return attachAuthorizationHeader(config);
     },
     (error) => {
         return Promise.reject(error);
@@ -81,8 +111,9 @@ api.interceptors.response.use(
         const backendUnavailable = !error.response || [502, 503, 504].includes(status);
 
         if (status === 401) {
-            clearAuthSession();
-            console.log('Sesion expirada');
+            const authNotice = resolveAuthNotice(error);
+            clearAuthSession(authNotice);
+            console.log(authNotice);
         } else if (backendUnavailable) {
             clearAuthSession();
             console.log('Backend no disponible, cerrando sesion');
@@ -91,7 +122,6 @@ api.interceptors.response.use(
     }
 );
 
-// API pública sin autenticación
 const publicApi = axios.create({
     baseURL: baseURL,
     responseType: 'json',
@@ -101,13 +131,36 @@ const publicApi = axios.create({
 attachRetryInterceptor(api);
 attachRetryInterceptor(publicApi);
 
-export const registerPatient = (data) => api.post('/api/v1/riee/patients', data);
-export const getPatientWithPagination = (pageNumber) => api.get(`/api/pacientes/all/${pageNumber}`);
-export const getAllPatients = () => api.get('/api/v1/riee/patients');
-export const getAllTreatments = () => api.get('/api/v1/riee/treatments');
-export const registerTreatment = (data) => api.post('/api/v1/riee/treatments', data);
-export const registerAppointment = (data) => api.post('/api/v1/riee/appointments', data);
-export const getAllAppointments = () => api.get('/api/v1/riee/appointments');
+export const syncApiAuthToken = () => {
+    const authorizationHeader = getAuthorizationHeader();
+
+    if (authorizationHeader) {
+        api.defaults.headers.common.Authorization = authorizationHeader;
+    } else {
+        delete api.defaults.headers.common.Authorization;
+    }
+};
+
+syncApiAuthToken();
+
+export const getAuthConfig = () => {
+    const authorizationHeader = getAuthorizationHeader();
+    const headers = {};
+
+    if (authorizationHeader) {
+        headers.Authorization = authorizationHeader;
+    }
+
+    return Object.keys(headers).length > 0 ? { headers } : {};
+};
+
+export const registerPatient = (data) => api.post('/api/v1/riee/patients', data, getAuthConfig());
+export const getPatientWithPagination = (pageNumber) => api.get(`/api/pacientes/all/${pageNumber}`, getAuthConfig());
+export const getAllPatients = () => api.get('/api/v1/riee/patients', getAuthConfig());
+export const getAllTreatments = () => api.get('/api/v1/riee/treatments', getAuthConfig());
+export const registerTreatment = (data) => api.post('/api/v1/riee/treatments', data, getAuthConfig());
+export const registerAppointment = (data) => api.post('/api/v1/riee/appointments', data, getAuthConfig());
+export const getAllAppointments = () => api.get('/api/v1/riee/appointments', getAuthConfig());
 export const getAllSpecialities = () => publicApi.get('/api/v1/riee/specialities');
 export const registerDentist = (data) => publicApi.post('/api/v1/riee/dentists', data);
 export { api, publicApi };

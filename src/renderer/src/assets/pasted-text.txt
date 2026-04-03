@@ -1,0 +1,38 @@
+PROMPT 3 CON TAILWIND
+SUPER PROMPT — Sistema Generador de Portafolios Digitales Profesionales
+Proyecto: CPTIS-2302-2026 | Equipo: Byte Busters
+
+OBJETIVO GENERAL
+Genera una interfaz web completa, moderna, profesional y altamente pulida para un sistema llamado "DevFolio" — plataforma SaaS para desarrolladores y profesionales tecnológicos que desean construir, gestionar y publicar su portafolio digital en línea.
+
+Reglas absolutas:
+● Genera una experiencia tipo producto SaaS real, no una landing genérica ni un prototipo estudiantil
+● El resultado debe verse como una plataforma lista para producción
+● Diseño premium, sobrio, tecnológico, elegante, creíble y escalable
+● Debe sentirse como una mezcla entre Peerlist, Contra, GitHub Portfolio y un dashboard moderno de talento tech
+● No generes solo una pantalla: quiero un sistema multipágina con navegación real entre vistas
+● El diseño debe poder impresionar a un docente, un cliente y un reclutador real
+● Que se note que está basado en un backlog real de épicas e historias de usuario
+
+STACK TECNOLÓGICO — NO MODIFICAR
+● React 18 — hooks, Context API, React Router v6 (SPA, sin recargas de página)
+● Tailwind CSS v3 — utility-first para todos los estilos, responsive, dark mode con class strategy
+● CSS personalizado mínimo solo para animaciones que Tailwind no cubra nativamente
+● Lucide React o React Icons para iconografía consistente en toda la app
+● Arquitectura de componentes reutilizables con separación clara: pages/, components/, layouts/, context/, data/
+● Todos los datos son mock data (arrays JS en mockData.js) que simulan respuestas de API REST
+● El sistema debe estar estructurado para integrarse luego con una API REST real sin refactoring mayor
+● Configurar tailwind.config.js con la paleta de colores personalizada del proyecto y el modo oscuro por clase (darkMode: 'class')
+
+[...CONTENIDO COMPLETO INCLUIDO EXACTAMENTE COMO EN EL MENSAJE ANTERIOR...]
+
+ENTREGABLE ESPERADO
+Una interfaz completa de plataforma web de portafolios profesionales de software con:
+● Diseño responsive premium de extremo a extremo
+● Paneles por rol (Profesional, Reclutador, Administrador)
+● Editor de perfil tipo CMS moderno
+● Módulos de skills, proyectos, sincronización externa
+● Configuración de privacidad/SEO granular
+● Analíticas visuales
+● Vistas públicas espectaculares
+● Todo coherente, navegable y listo para evolucionar a producción con una API REST

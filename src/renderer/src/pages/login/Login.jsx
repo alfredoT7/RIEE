@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaEye, FaEyeSlash, FaLock, FaUser } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import { toast } from 'sonner'
 import { useAuth } from '../../context/AuthContext'
+import { consumeAuthNotice } from '../../services/authStorage'
 
 const inputClassName =
   'w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-12 text-sm text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-[#00b09b]/40 focus:bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500'
@@ -17,6 +18,14 @@ const Login = () => {
     emailOrUsername: '',
     password: ''
   })
+
+  useEffect(() => {
+    const authNotice = consumeAuthNotice()
+
+    if (authNotice) {
+      toast.error(authNotice)
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -35,6 +44,8 @@ const Login = () => {
         toast.success(result.message || 'Bienvenido a RIEE')
         navigate('/')
       } else {
+        setFormData((prev) => ({ ...prev, password: '' }))
+        setShowPassword(false)
         toast.error(result.error || 'Credenciales incorrectas')
       }
     } catch (error) {
@@ -93,7 +104,7 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-slate-400 transition-colors hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -107,7 +118,7 @@ const Login = () => {
           </label>
           <button
             type="button"
-            className="font-medium text-[#0f766e] transition-colors hover:text-[#0b5f59] dark:text-[#5ce1d4] dark:hover:text-[#8ce9dd]"
+            className="cursor-pointer font-medium text-[#0f766e] transition-colors hover:text-[#0b5f59] dark:text-[#5ce1d4] dark:hover:text-[#8ce9dd]"
           >
             Olvidaste tu contrasena?
           </button>
@@ -117,7 +128,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-2xl bg-[#00b09b] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full cursor-pointer rounded-2xl bg-[#00b09b] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)] transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isLoading ? 'Ingresando...' : 'Iniciar sesion'}
           </button>
@@ -132,7 +143,7 @@ const Login = () => {
         <button
           type="button"
           onClick={() => toast.info('Inicio de sesion con Google proximamente')}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+          className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
         >
           <FcGoogle className="text-lg" />
           Google
@@ -143,7 +154,7 @@ const Login = () => {
           <button
             type="button"
             onClick={() => navigate('/register')}
-            className="font-semibold text-[#0f766e] transition-colors hover:text-[#0b5f59] dark:text-[#5ce1d4] dark:hover:text-[#8ce9dd]"
+            className="cursor-pointer font-semibold text-[#0f766e] transition-colors hover:text-[#0b5f59] dark:text-[#5ce1d4] dark:hover:text-[#8ce9dd]"
           >
             Registrate aqui
           </button>

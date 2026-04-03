@@ -112,7 +112,7 @@ const NewTreatment = () => {
           <Form className="treatment-form">
             {/* Sección de Imagen */}
             <div className="form-section image-section">
-              <div className="section-header">
+              <div className="section-header" style={{ marginBottom: '28px', paddingBottom: '20px' }}>
                 <h3>Imagen Referencial del Tratamiento</h3>
               </div>
               
@@ -162,7 +162,7 @@ const NewTreatment = () => {
 
             {/* Información Básica del Tratamiento */}
             <div className="form-section">
-              <div className="section-header">
+              <div className="section-header" style={{ marginBottom: '28px', paddingBottom: '20px' }}>
                 <h3>Información Básica</h3>
               </div>
               
@@ -203,7 +203,7 @@ const NewTreatment = () => {
 
             {/* Procedimiento */}
             <div className="form-section">
-              <div className="section-header">
+              <div className="section-header" style={{ marginBottom: '28px', paddingBottom: '20px' }}>
                 <h3>Procedimiento Detallado</h3>
               </div>
               
@@ -230,7 +230,7 @@ const NewTreatment = () => {
 
             {/* Información de Tiempo y Costo */}
             <div className="form-section">
-              <div className="section-header">
+              <div className="section-header" style={{ marginBottom: '28px', paddingBottom: '20px' }}>
                 <h3>Tiempo y Costo</h3>
               </div>
               
@@ -271,7 +271,7 @@ const NewTreatment = () => {
 
             {/* Notas Adicionales */}
             <div className="form-section">
-              <div className="section-header">
+              <div className="section-header" style={{ marginBottom: '28px', paddingBottom: '20px' }}>
                 <h3>Notas Adicionales</h3>
               </div>
               

@@ -197,7 +197,7 @@ export const useRegister = () => {
     setCurrentStep(prev => Math.max(prev - 1, 1));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, imageFile = null) => {
     e.preventDefault();
 
     if (!validateStep(currentStep)) {
@@ -208,20 +208,25 @@ export const useRegister = () => {
     setIsLoading(true);
 
     try {
-      // Preparar datos para enviar (sin confirmPassword)
-      const dataToSend = {
-        nombres: formData.nombres.trim(),
-        apellidos: formData.apellidos.trim(),
-        email: formData.email.trim(),
-        username: formData.username.trim(),
-        telefono: parseInt(formData.telefono),
-        ciDentista: parseInt(formData.ciDentista),
-        universidad: formData.universidad.trim(),
-        promocion: parseInt(formData.promocion),
-        especialidadIds: formData.especialidadIds,
-        imagenUrl: formData.imagenUrl.trim() || 'https://example.com/default-dentist.jpg',
-        password: formData.password
-      };
+      const dataToSend = new FormData();
+
+      dataToSend.append('nombres', formData.nombres.trim());
+      dataToSend.append('apellidos', formData.apellidos.trim());
+      dataToSend.append('email', formData.email.trim());
+      dataToSend.append('username', formData.username.trim());
+      dataToSend.append('telefono', formData.telefono.trim());
+      dataToSend.append('ciDentista', formData.ciDentista.trim());
+      dataToSend.append('universidad', formData.universidad.trim());
+      dataToSend.append('promocion', formData.promocion.trim());
+      dataToSend.append('password', formData.password);
+
+      formData.especialidadIds.forEach((id) => {
+        dataToSend.append('especialidadIds', String(id));
+      });
+
+      if (imageFile) {
+        dataToSend.append('imagen', imageFile);
+      }
 
       console.log('Enviando datos de registro:', dataToSend);
 

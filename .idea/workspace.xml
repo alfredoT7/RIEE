@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="7ffa7c00-406a-4886-8219-0d236fdc96df" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/api/Api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/api/Api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/assets/tailwind.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/assets/tailwind.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/components/auth/AuthShell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/components/auth/AuthShell.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/components/pacientescard/PacienteCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/components/pacientescard/PacienteCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/context/AuthContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/context/AuthContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/login/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/newAppointment/NewAppointment.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/newAppointment/NewAppointment.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/newPatient/NewPatient.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/newPatient/NewPatient.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/newTreatment/NewTreatment.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/newTreatment/NewTreatment.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/pacientes/Patient.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/pacientes/Patient.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/patientDetails/PatientDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/patientDetails/PatientDetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/register/Register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/register/Register.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/register/useRegister.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/register/useRegister.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/services/authService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/services/authService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_E:/projects/node/React/consultorio/RIEE" value="2r5jHzcQv5lMBlL8ikE3YMo7Lk8" />
+    </persistenceIdMap>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="93" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -24,6 +52,10 @@
     &quot;accountId&quot;: &quot;90768080-bf60-4a76-93c6-2acd720455fa&quot;
   }
 }</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -34,17 +66,27 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Node.js.authService.js.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/media/fredodev/atge/proyectos/React/RIEE",
+    "last_opened_file_path": "E:/projects/node/React/consultorio/RIEE",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.javascript.linters.eslint",
+    "npm.dev.executor": "Run",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -56,11 +98,23 @@
       </map>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
-        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -74,6 +128,10 @@
       <updated>1735855746952</updated>
       <workItem from="1735855748318" duration="219000" />
       <workItem from="1735855978361" duration="180000" />
+      <workItem from="1774842511150" duration="1585000" />
+      <workItem from="1775184792190" duration="604000" />
+      <workItem from="1775230459957" duration="11000" />
+      <workItem from="1775230620171" duration="5560000" />
     </task>
     <servers />
   </component>
@@ -83,5 +141,13 @@
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>
