@@ -65,7 +65,7 @@ const Sidebar = () => {
       }`}
     >
       <div
-        className={`mb-6 flex items-center justify-center rounded-[24px] border border-white/70 bg-white/80 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none ${
+        className={`mb-12 flex items-center justify-center rounded-[24px] border border-white/70 bg-white/80 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none ${
           isCollapsed ? 'min-h-[84px]' : 'min-h-[92px]'
         }`}
       >
@@ -76,7 +76,7 @@ const Sidebar = () => {
         />
       </div>
 
-      <div className="flex flex-1 flex-col gap-1.5">
+      <div className="flex flex-1 flex-col gap-1.5 pt-3">
         {menuItems.map((item) => {
           const IconComponent = item.icon
           const isActive = selected === item.key
@@ -85,7 +85,7 @@ const Sidebar = () => {
             <button
               key={item.key}
               type="button"
-              className={`flex items-center rounded-2xl px-3 py-3 text-left transition-all duration-200 ${
+              className={`flex cursor-pointer items-center rounded-2xl px-3 py-3 text-left transition-all duration-200 ${
                 isCollapsed ? 'justify-center' : 'gap-3'
               } ${
                 isActive

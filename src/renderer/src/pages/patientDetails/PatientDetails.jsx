@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { getAllPatients } from '../../api/Api'
 import ImagesApp from '../../assets/ImagesApp'
+import LoadingState from '../../components/loading/LoadingState'
 
 const sideMenuItems = [
   { label: 'Ficha', icon: ClipboardList, href: '#datos-personales' },
@@ -187,12 +188,11 @@ const PatientDetails = () => {
   if (isLoading) {
     return (
       <section className="grid gap-y-6 px-2 pb-6 pt-4 lg:gap-y-7">
-        <div className="rounded-[28px] border border-slate-200 bg-white p-10 text-center shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
-          <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-[#00b09b]/20 border-t-[#00b09b]" />
-          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-            Cargando ficha del paciente...
-          </p>
-        </div>
+        <LoadingState
+          title="Cargando ficha del paciente"
+          description="Estamos recuperando la información clínica desde el backend."
+          rows={4}
+        />
       </section>
     )
   }

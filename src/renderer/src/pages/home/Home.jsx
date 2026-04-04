@@ -6,6 +6,8 @@ import TopInfoHome from '../../components/topInfoHome/TopInfoHome'
 import CardPaciente from '../../components/cardPaciente/CardPaciente'
 import ImagesApp from '../../assets/ImagesApp'
 import VideosApp from '../../assets/VideosApp'
+import { getAllPatients } from '../../api/Api'
+import LoadingState from '../../components/loading/LoadingState'
 
 const baseMetricCards = [
   { title: 'Calendario', quantity: '10', porcentaje: '20%', icon: Calendar },
@@ -47,47 +49,29 @@ const patientHeaderCells = [
   { label: '', className: '' }
 ]
 
-const recentPatients = [
-  {
-    ci: '12345600',
-    nombre: 'Juan Perez',
-    direccion: 'Ortodoncia',
-    fechaNacimiento: '12/12/2021',
-    numeroTelefonico: 70774739
-  },
-  {
-    ci: '1231',
-    nombre: 'Juan Perez',
-    direccion: 'Ortodoncia',
-    fechaNacimiento: '12/12/2021',
-    numeroTelefonico: 70774739
-  },
-  {
-    ci: '12345600',
-    nombre: 'Juan Perez',
-    direccion: 'Ortodoncia',
-    fechaNacimiento: '12/12/2021',
-    numeroTelefonico: 70774739
-  },
-  {
-    ci: '12345600',
-    nombre: 'Juan Perez',
-    direccion: 'Ortodoncia',
-    fechaNacimiento: '12/12/2021',
-    numeroTelefonico: 70774739
-  },
-  {
-    ci: '12345600',
-    nombre: 'Juan Perez',
-    direccion: 'Ortodoncia',
-    fechaNacimiento: '12/12/2021',
-    numeroTelefonico: 70774739
+const formatBirthDate = (value) => {
+  if (!value) {
+    return 'Sin fecha'
   }
-]
+
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
+  return new Intl.DateTimeFormat('es-BO', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).format(date)
+}
 
 const Home = () => {
   const [showVideo, setShowVideo] = useState(false)
   const [boliviaTime, setBoliviaTime] = useState(() => boliviaTimeFormatter.format(new Date()))
+  const [recentPatients, setRecentPatients] = useState([])
+  const [isLoadingPatients, setIsLoadingPatients] = useState(true)
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -103,6 +87,35 @@ const Home = () => {
     }, 1000)
 
     return () => window.clearInterval(clockTimer)
+  }, [])
+
+  useEffect(() => {
+    const fetchRecentPatients = async () => {
+      setIsLoadingPatients(true)
+
+      try {
+        const response = await getAllPatients()
+        const patients = Array.isArray(response.data?.data) ? response.data.data : []
+        const normalizedPatients = patients.slice(0, 5).map((patient) => ({
+          ci: patient.ciPaciente,
+          imagen: patient.imagen,
+          nombre: `${patient.nombre || ''} ${patient.apellido || ''}`.trim() || 'Paciente sin nombre',
+          direccion: patient.ultimaVisita || patient.ocupacion || 'Sin seguimiento registrado',
+          fechaNacimiento: formatBirthDate(patient.fechaNacimiento),
+          numeroTelefonico: patient.phonesNumbers?.[0]?.numero || 'N/A',
+          patient
+        }))
+
+        setRecentPatients(normalizedPatients)
+      } catch (error) {
+        console.error('Error fetching recent patients:', error)
+        setRecentPatients([])
+      } finally {
+        setIsLoadingPatients(false)
+      }
+    }
+
+    fetchRecentPatients()
   }, [])
 
   const metricCards = [
@@ -231,16 +244,34 @@ const Home = () => {
           </div>
 
           <div className="space-y-2">
-            {recentPatients.map((patient, index) => (
-              <CardPaciente
-                key={`${patient.ci}-${index}`}
-                ci={patient.ci}
-                nombre={patient.nombre}
-                direccion={patient.direccion}
-                fechaNacimiento={patient.fechaNacimiento}
-                numeroTelefonico={patient.numeroTelefonico}
+            {isLoadingPatients && (
+              <LoadingState
+                title="Cargando pacientes recientes"
+                description="Estamos preparando los últimos registros atendidos."
+                rows={3}
+                className="border-none p-0 shadow-none"
               />
-            ))}
+            )}
+
+            {!isLoadingPatients &&
+              recentPatients.map((patient, index) => (
+                <CardPaciente
+                  key={`${patient.ci}-${index}`}
+                  ci={patient.ci}
+                  imagen={patient.imagen}
+                  nombre={patient.nombre}
+                  direccion={patient.direccion}
+                  fechaNacimiento={patient.fechaNacimiento}
+                  numeroTelefonico={patient.numeroTelefonico}
+                  patient={patient.patient}
+                />
+              ))}
+
+            {!isLoadingPatients && recentPatients.length === 0 && (
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
+                No hay pacientes recientes para mostrar.
+              </div>
+            )}
           </div>
         </div>
       </div>

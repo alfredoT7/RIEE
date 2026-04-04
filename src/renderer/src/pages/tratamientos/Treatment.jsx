@@ -2,6 +2,7 @@ import React from 'react'
 import { FaChevronLeft, FaChevronRight, FaPlus, FaSearch } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { useTreatment } from './useTreatment'
+import LoadingState from '../../components/loading/LoadingState'
 
 const featuredData = [
   {
@@ -92,8 +93,13 @@ const Treatment = () => {
 
         <div className="divide-y divide-slate-200 dark:divide-slate-800">
           {loading && (
-            <div className="px-5 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
-              Cargando tratamientos...
+            <div className="p-5">
+              <LoadingState
+                title="Cargando tratamientos"
+                description="Estamos consultando los procedimientos registrados."
+                rows={5}
+                className="border-none p-0 shadow-none"
+              />
             </div>
           )}
 

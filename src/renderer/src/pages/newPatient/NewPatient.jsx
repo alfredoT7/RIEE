@@ -115,7 +115,7 @@ const NewPatient = () => {
 
       const response = await registerPatient(patientData)
       console.log('Respuesta del servidor al crear paciente:', response?.data)
-      const patientId = response?.data?.id || response?.data?.patientId
+      const patientId = response?.data?.data?.id || response?.data?.id || response?.data?.patientId
 
       toast.success('¡Paciente registrado exitosamente!', {
         description: `${values.name} ${values.lastname} ha sido agregado al sistema`,

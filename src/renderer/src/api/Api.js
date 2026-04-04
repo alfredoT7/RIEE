@@ -155,6 +155,8 @@ export const getAuthConfig = () => {
 };
 
 export const registerPatient = (data) => api.post('/api/v1/riee/patients', data, getAuthConfig());
+export const registerPatientQuestionnaire = (patientId, data) =>
+    api.post(`/api/v1/riee/patients/${patientId}/questionnaire`, data, getAuthConfig());
 export const getPatientWithPagination = (pageNumber) => api.get(`/api/pacientes/all/${pageNumber}`, getAuthConfig());
 export const getAllPatients = () => api.get('/api/v1/riee/patients', getAuthConfig());
 export const getAllTreatments = () => api.get('/api/v1/riee/treatments', getAuthConfig());

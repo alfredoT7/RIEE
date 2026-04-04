@@ -6,68 +6,21 @@ import PacienteHeader from '../../components/pacienteHeader/PacienteHeader'
 import Pagination from '../../components/pagination/Pagination'
 import { getAllPatients } from '../../api/Api'
 import PacienteCard from '../../components/pacientescard/PacienteCard'
-
-const demoRecentPatients = [
-  {
-    id: 'demo-1',
-    ciPaciente: '12345678',
-    nombre: 'Laura',
-    apellido: 'Torrico',
-    direccion: 'Av. América, Cochabamba',
-    fechaNacimiento: '1994-08-12',
-    email: 'laura.torrico@demo.com',
-    telefono: '+591 76424923',
-    ultimaVisita: '12/03/2026',
-    proximaCita: '22/03/2026'
-  },
-  {
-    id: 'demo-2',
-    ciPaciente: '87654321',
-    nombre: 'Mateo',
-    apellido: 'Rivera',
-    direccion: 'Zona Norte, La Paz',
-    fechaNacimiento: '1988-11-02',
-    email: 'mateo.rivera@demo.com',
-    telefono: '+591 71543210',
-    ultimaVisita: '05/03/2026',
-    proximaCita: '25/03/2026'
-  },
-  {
-    id: 'demo-3',
-    ciPaciente: '45678912',
-    nombre: 'Camila',
-    apellido: 'Arce',
-    direccion: 'Equipetrol, Santa Cruz',
-    fechaNacimiento: '1999-01-17',
-    email: 'camila.arce@demo.com',
-    telefono: '+591 70223344',
-    ultimaVisita: '01/03/2026',
-    proximaCita: 'Sin cita programada'
-  },
-  {
-    id: 'demo-4',
-    ciPaciente: '32165498',
-    nombre: 'Diego',
-    apellido: 'Salvatierra',
-    direccion: 'Sopocachi, La Paz',
-    fechaNacimiento: '1991-05-28',
-    email: 'diego.salvatierra@demo.com',
-    telefono: '+591 73334455',
-    ultimaVisita: '10/03/2026',
-    proximaCita: '18/03/2026'
-  }
-]
+import LoadingState from '../../components/loading/LoadingState'
 
 const Patient = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [patients, setPatients] = useState([])
   const [filteredPatients, setFilteredPatients] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
   const itemsPerPage = 15
-  const recentPatients = patients.length > 0 ? patients.slice(0, 6) : demoRecentPatients
+  const recentPatients = patients.slice(0, 6)
 
   useEffect(() => {
     const fetchAllPatients = async () => {
+      setIsLoading(true)
+
       try {
         const response = await getAllPatients()
         const allPatients = Array.isArray(response.data?.data) ? response.data.data : []
@@ -78,6 +31,8 @@ const Patient = () => {
         console.error('Error fetching patients:', error)
         setPatients([])
         setFilteredPatients([])
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -120,7 +75,15 @@ const Patient = () => {
     <section className="grid gap-y-6 px-2 pb-6 pt-4 lg:gap-y-7">
       <SearchBar onSearch={handleSearch} />
 
-      {!searchTerm && (
+      {isLoading && (
+        <LoadingState
+          variant="cards"
+          title="Cargando pacientes"
+          description="Estamos trayendo la información más reciente del backend."
+        />
+      )}
+
+      {!isLoading && !searchTerm && (
         <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none sm:p-6">
           <div className="mb-10 space-y-2">
             <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">Pacientes recientes</h3>
@@ -148,7 +111,7 @@ const Patient = () => {
         </div>
       )}
 
-      {searchTerm && (
+      {!isLoading && searchTerm && (
         <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none sm:p-6">
           <div className="mb-6">
             <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">Resultados de búsqueda</h3>

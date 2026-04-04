@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FaArrowLeft, FaCheckCircle, FaClipboardList, FaHospitalUser, FaSave } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { registerPatientQuestionnaire } from '../../api/Api'
 
 const QUESTION_SECTIONS = [
   {
@@ -79,12 +80,37 @@ const AnswerSwitch = ({ checked, onChange, id }) => (
   </button>
 )
 
+const buildQuestionnairePayload = (answers) => ({
+  estaBajoTratamientoMedicoActualmente: answers['¿Esta bajo tratamiento medico actualmente?'],
+  tomaMedicamentosRegularmente: answers['¿Toma medicamentos de forma regular?'],
+  haTenidoCirugiasImportantes: answers['¿Ha tenido cirugias importantes?'],
+  esHipertenso: answers['¿Es hipertenso?'],
+  esDiabetico: answers['¿Es diabetico?'],
+  tieneProblemasCardiacos: answers['¿Tiene problemas cardiacos?'],
+  tieneProblemasCoagulacionOSangraFacilmente: answers['¿Tiene problemas de coagulacion o sangra facilmente?'],
+  esAlergicoAMedicamentosOAnestesia: answers['¿Es alergico a medicamentos o anestesia?'],
+  haTenidoHepatitisOEnfermedadInfecciosaImportante: answers['¿Ha tenido hepatitis u otra enfermedad infecciosa importante?'],
+  padeceAsmaOProblemasRespiratorios: answers['¿Padece asma o problemas respiratorios?'],
+  fuma: answers['¿Fuma?'],
+  consumeAlcoholFrecuentemente: answers['¿Consume alcohol frecuentemente?'],
+  leSangranLasEncias: answers['¿Le sangran las encias?'],
+  tieneDolorOSensibilidadDental: answers['¿Tiene dolor o sensibilidad dental?'],
+  haTenidoProblemasConTratamientosDentalesAnteriores: answers['¿Ha tenido problemas con tratamientos dentales anteriores?'],
+  estaEmbarazadaOLactancia: answers['¿Esta embarazada o en lactancia?']
+})
+
 const NewPatientQuestionnaire = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [answers, setAnswers] = useState(() => createInitialAnswers())
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const patientId = location.state?.patientId
   const patientName = location.state?.patientName || 'Paciente registrado'
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
 
   const yesCount = useMemo(() => Object.values(answers).filter(Boolean).length, [answers])
 
@@ -95,13 +121,42 @@ const NewPatientQuestionnaire = () => {
     }))
   }
 
-  const handleContinue = () => {
-    toast.success('Cuestionario guardado localmente', {
-      description: 'Por ahora esta vista es estatica. Luego conectamos el backend.',
-      duration: 3500
-    })
+  const handleContinue = async () => {
+    if (!patientId) {
+      toast.error('No se encontró el paciente', {
+        description: 'Primero debes registrar al paciente antes de guardar el cuestionario.',
+        duration: 4000
+      })
+      return
+    }
 
-    navigate('/patient')
+    setIsSubmitting(true)
+
+    try {
+      const payload = buildQuestionnairePayload(answers)
+      const response = await registerPatientQuestionnaire(patientId, payload)
+
+      console.log('Respuesta del servidor al guardar cuestionario:', response?.data)
+
+      toast.success('Cuestionario guardado correctamente', {
+        description: `Se registró el cuestionario de ${patientName}.`,
+        duration: 3500
+      })
+
+      navigate('/patient')
+    } catch (error) {
+      console.error('Error al guardar cuestionario:', error)
+
+      const backendMessage =
+        error.response?.data?.message || error.response?.data?.error || 'No se pudo guardar el cuestionario.'
+
+      toast.error('Error al guardar cuestionario', {
+        description: backendMessage,
+        duration: 4500
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -170,6 +225,7 @@ const NewPatientQuestionnaire = () => {
           <button
             type="button"
             onClick={() => navigate('/patient')}
+            disabled={isSubmitting}
             className="inline-flex h-12 min-w-[170px] items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             <FaArrowLeft />
@@ -179,10 +235,11 @@ const NewPatientQuestionnaire = () => {
           <button
             type="button"
             onClick={handleContinue}
+            disabled={isSubmitting}
             className="inline-flex h-12 min-w-[220px] items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-6 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e]"
           >
             <FaSave />
-            Guardar y finalizar
+            {isSubmitting ? 'Guardando...' : 'Guardar y finalizar'}
           </button>
         </div>
       </div>
