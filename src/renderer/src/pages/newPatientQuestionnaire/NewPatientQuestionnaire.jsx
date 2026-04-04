@@ -143,7 +143,12 @@ const NewPatientQuestionnaire = () => {
         duration: 3500
       })
 
-      navigate('/patient')
+      navigate('/new-patient/clinical-info', {
+        state: {
+          patientId,
+          patientName
+        }
+      })
     } catch (error) {
       console.error('Error al guardar cuestionario:', error)
 

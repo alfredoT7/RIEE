@@ -5,7 +5,6 @@ import {
     setAuthNotice
 } from '../services/authStorage';
 
-// URL directa al backend
 const baseURL = "http://localhost:8080";
 const REQUEST_TIMEOUT = 10000;
 const MAX_RETRIES = 3;
@@ -103,7 +102,6 @@ api.interceptors.request.use(
     }
 );
 
-// Interceptor para manejar errores de autenticación
 api.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -157,6 +155,8 @@ export const getAuthConfig = () => {
 export const registerPatient = (data) => api.post('/api/v1/riee/patients', data, getAuthConfig());
 export const registerPatientQuestionnaire = (patientId, data) =>
     api.post(`/api/v1/riee/patients/${patientId}/questionnaire`, data, getAuthConfig());
+export const registerPatientClinicalInfo = (patientId, data) =>
+    api.post(`/api/v1/riee/patients/${patientId}/clinical-info`, data, getAuthConfig());
 export const getPatientWithPagination = (pageNumber) => api.get(`/api/pacientes/all/${pageNumber}`, getAuthConfig());
 export const getAllPatients = () => api.get('/api/v1/riee/patients', getAuthConfig());
 export const getAllTreatments = () => api.get('/api/v1/riee/treatments', getAuthConfig());

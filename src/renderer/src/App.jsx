@@ -10,6 +10,7 @@ import Home from './pages/home/Home'
 import Patient from './pages/pacientes/Patient'
 import NewPatient from './pages/newPatient/NewPatient'
 import NewPatientQuestionnaire from './pages/newPatientQuestionnaire/NewPatientQuestionnaire'
+import NewPatientClinicalInfo from './pages/newPatientClinicalInfo/NewPatientClinicalInfo'
 import Treatment from './pages/tratamientos/Treatment'
 import NewTreatment from './pages/newTreatment/NewTreatment'
 import Appointments from './pages/citas/Appointments'
@@ -86,6 +87,7 @@ const AppContent = () => {
                     <Route path="/patient/:patientId" element={<PatientDetails />} />
                     <Route path="/new-patient" element={<NewPatient />} />
                     <Route path="/new-patient/questionnaire" element={<NewPatientQuestionnaire />} />
+                    <Route path="/new-patient/clinical-info" element={<NewPatientClinicalInfo />} />
                     <Route path="/treatment" element={<Treatment />} />
                     <Route path="/new-treatment" element={<NewTreatment />} />
                     <Route path="/appointments" element={<Appointments />} />

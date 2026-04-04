@@ -6,14 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="7ffa7c00-406a-4886-8219-0d236fdc96df" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/renderer/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/App.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/renderer/src/api/Api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/api/Api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderer/src/components/sidebar/Sidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/components/sidebar/Sidebar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/home/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/newPatient/NewPatient.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/newPatient/NewPatient.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/newPatientQuestionnaire/NewPatientQuestionnaire.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/newPatientQuestionnaire/NewPatientQuestionnaire.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/pacientes/Patient.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/pacientes/Patient.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/patientDetails/PatientDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/patientDetails/PatientDetails.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/renderer/src/pages/tratamientos/Treatment.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/renderer/src/pages/tratamientos/Treatment.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +118,7 @@
       <workItem from="1774842511150" duration="1585000" />
       <workItem from="1775184792190" duration="604000" />
       <workItem from="1775230459957" duration="11000" />
-      <workItem from="1775230620171" duration="11833000" />
+      <workItem from="1775230620171" duration="15637000" />
     </task>
     <servers />
   </component>
