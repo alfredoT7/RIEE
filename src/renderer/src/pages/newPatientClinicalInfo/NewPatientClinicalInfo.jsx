@@ -84,7 +84,7 @@ const NewPatientClinicalInfo = () => {
     const payload = {
       motivoConsulta: form.motivoConsulta,
       alergias: form.alergias.join(', '),
-      observaciones: form.observaciones
+      observaciones: form.observaciones.trim() || 'Sin observaciones'
     }
 
     setIsSubmitting(true)
