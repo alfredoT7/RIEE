@@ -62,7 +62,7 @@ const AnswerSwitch = ({ checked, onChange, id }) => (
     role="switch"
     aria-checked={checked}
     onClick={onChange}
-    className={`group relative inline-flex h-9 w-[74px] items-center rounded-full border px-1.5 transition-all ${
+    className={`group relative inline-flex h-9 w-[74px] cursor-pointer items-center rounded-full border px-1.5 transition-all ${
       checked
         ? 'border-[#0f766e] bg-[#00b09b]/20 shadow-[0_10px_24px_rgba(0,176,155,0.18)]'
         : 'border-slate-300 bg-slate-200/70 dark:border-slate-700 dark:bg-slate-800'
@@ -107,10 +107,17 @@ const NewPatientQuestionnaire = () => {
 
   const patientId = location.state?.patientId
   const patientName = location.state?.patientName || 'Paciente registrado'
+  const returnToPatientDetails = Boolean(location.state?.returnToPatientDetails)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
+
+  useEffect(() => {
+    if (!patientId) {
+      navigate('/patient', { replace: true })
+    }
+  }, [navigate, patientId])
 
   const yesCount = useMemo(() => Object.values(answers).filter(Boolean).length, [answers])
 
@@ -143,12 +150,17 @@ const NewPatientQuestionnaire = () => {
         duration: 3500
       })
 
-      navigate('/new-patient/clinical-info', {
-        state: {
-          patientId,
-          patientName
-        }
-      })
+      if (returnToPatientDetails) {
+        navigate(`/patient/${patientId}`, { replace: true })
+      } else {
+        navigate('/new-patient/clinical-info', {
+          replace: true,
+          state: {
+            patientId,
+            patientName
+          }
+        })
+      }
     } catch (error) {
       console.error('Error al guardar cuestionario:', error)
 
@@ -229,19 +241,19 @@ const NewPatientQuestionnaire = () => {
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button
             type="button"
-            onClick={() => navigate('/patient')}
+            onClick={() => navigate(returnToPatientDetails ? `/patient/${patientId}` : '/patient')}
             disabled={isSubmitting}
-            className="inline-flex h-12 min-w-[170px] items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            className="inline-flex h-12 min-w-[170px] cursor-pointer items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             <FaArrowLeft />
-            Omitir por ahora
+            {returnToPatientDetails ? 'Volver a la ficha' : 'Omitir por ahora'}
           </button>
 
           <button
             type="button"
             onClick={handleContinue}
             disabled={isSubmitting}
-            className="inline-flex h-12 min-w-[220px] items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-6 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e]"
+            className="inline-flex h-12 min-w-[220px] cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-6 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <FaSave />
             {isSubmitting ? 'Guardando...' : 'Guardar y finalizar'}

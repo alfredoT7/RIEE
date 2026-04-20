@@ -34,7 +34,7 @@ const PatientPhotoSection = ({
           type="button"
           onClick={onFileButtonClick}
           disabled={isSubmitting}
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-5 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e] disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-5 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <FaCamera />
           Subir Foto
@@ -45,7 +45,7 @@ const PatientPhotoSection = ({
             type="button"
             onClick={onRemoveImage}
             disabled={isSubmitting}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-5 text-sm font-semibold text-rose-600 transition-colors hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300 dark:hover:bg-rose-950/70"
+            className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-5 text-sm font-semibold text-rose-600 transition-colors hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300 dark:hover:bg-rose-950/70"
           >
             <FaTrash />
             Quitar

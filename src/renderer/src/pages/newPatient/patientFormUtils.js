@@ -72,3 +72,19 @@ export const buildPatientFormData = (values, selectedFile) => {
 
   return patientData
 }
+
+export const mapPatientToInitialValues = (patient) => ({
+  name: patient?.nombre || '',
+  lastname: patient?.apellido || '',
+  ci: patient?.ciPaciente || patient?.cedula || '',
+  birthDate: patient?.fechaNacimiento ? `${patient.fechaNacimiento}`.slice(0, 10) : '',
+  address: patient?.direccion || '',
+  phone: patient?.telefono || patient?.phonesNumbers?.[0]?.numero || '',
+  secondPhone: patient?.phonesNumbers?.[1]?.numero || '',
+  civilStatus: patient?.estadoCivil || '',
+  occupation: patient?.ocupacion || '',
+  email: patient?.email || '',
+  referencePerson:
+    patient?.personaDeReferencia || patient?.contactoEmergencia || patient?.emergencyContact || '',
+  referencePhone: patient?.numeroPersonaRef || ''
+})

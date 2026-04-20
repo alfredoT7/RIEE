@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { resizeImage } from './patientFormUtils'
 
 export const usePatientImage = () => {
@@ -31,14 +31,23 @@ export const usePatientImage = () => {
     fileInputRef.current?.click()
   }
 
-  const clearImageSelection = () => {
+  const clearImageSelection = useCallback(() => {
     setSelectedFile(null)
     setPreviewUrl(null)
 
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
-  }
+  }, [])
+
+  const initializePreview = useCallback((url) => {
+    setSelectedFile(null)
+    setPreviewUrl(url || null)
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }, [])
 
   return {
     fileInputRef,
@@ -46,6 +55,7 @@ export const usePatientImage = () => {
     previewUrl,
     handleFileChange,
     handleFileButtonClick,
-    clearImageSelection
+    clearImageSelection,
+    initializePreview
   }
 }

@@ -39,6 +39,12 @@ const resolveAuthNotice = (error) => {
     return 'Tu sesion expiro. Inicia sesion nuevamente.';
 };
 
+const isBackendUnavailable = (error) => {
+    const status = error.response?.status;
+
+    return !error.response || [502, 503, 504].includes(status);
+};
+
 const clearAuthSession = (noticeMessage) => {
     clearStoredSession();
     delete api.defaults.headers.common.Authorization;
@@ -106,15 +112,13 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         const status = error.response?.status;
-        const backendUnavailable = !error.response || [502, 503, 504].includes(status);
 
         if (status === 401) {
             const authNotice = resolveAuthNotice(error);
             clearAuthSession(authNotice);
             console.log(authNotice);
-        } else if (backendUnavailable) {
-            clearAuthSession();
-            console.log('Backend no disponible, cerrando sesion');
+        } else if (isBackendUnavailable(error)) {
+            console.log('Backend no disponible, se mantiene la sesion activa');
         }
         return Promise.reject(error);
     }
@@ -153,6 +157,8 @@ export const getAuthConfig = () => {
 };
 
 export const registerPatient = (data) => api.post('/api/v1/riee/patients', data, getAuthConfig());
+export const updatePatient = (patientId, data) => api.put(`/api/v1/riee/patients/${patientId}`, data, getAuthConfig());
+export const getCompletePatient = (patientId) => api.get(`/api/v1/riee/patients/${patientId}/complete`, getAuthConfig());
 export const registerPatientQuestionnaire = (patientId, data) =>
     api.post(`/api/v1/riee/patients/${patientId}/questionnaire`, data, getAuthConfig());
 export const registerPatientClinicalInfo = (patientId, data) =>

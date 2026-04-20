@@ -10,7 +10,7 @@ const ThemeToggle = () => {
       type="button"
       onClick={toggleTheme}
       aria-label="Cambiar tema"
-      className={`flex h-11 w-[72px] items-center rounded-full border px-1.5 transition-colors ${
+      className={`flex h-11 w-[72px] cursor-pointer items-center rounded-full border px-1.5 transition-colors ${
         isDarkMode
           ? 'border-slate-700 bg-slate-900'
           : 'border-slate-200 bg-slate-100'

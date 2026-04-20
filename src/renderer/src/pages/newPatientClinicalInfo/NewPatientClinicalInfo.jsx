@@ -40,6 +40,7 @@ const NewPatientClinicalInfo = () => {
   const location = useLocation()
   const patientId = location.state?.patientId
   const patientName = location.state?.patientName || 'Paciente registrado'
+  const returnToPatientDetails = Boolean(location.state?.returnToPatientDetails)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [form, setForm] = useState({
@@ -51,6 +52,12 @@ const NewPatientClinicalInfo = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
+
+  useEffect(() => {
+    if (!patientId) {
+      navigate('/patient', { replace: true })
+    }
+  }, [navigate, patientId])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -99,7 +106,7 @@ const NewPatientClinicalInfo = () => {
         duration: 3500
       })
 
-      navigate('/patient')
+      navigate(returnToPatientDetails ? `/patient/${patientId}` : '/patient', { replace: true })
     } catch (error) {
       console.error('Error al guardar clinical-info:', error)
 
@@ -157,7 +164,7 @@ const NewPatientClinicalInfo = () => {
                 name="motivoConsulta"
                 value={form.motivoConsulta}
                 onChange={handleChange}
-                className="h-14 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-sm text-slate-700 outline-none transition-colors focus:border-[#00b09b] focus:bg-white dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
+                className="h-14 cursor-pointer rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-sm text-slate-700 outline-none transition-colors focus:border-[#00b09b] focus:bg-white dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
               >
                 {CONSULTATION_REASONS.map((reason) => (
                   <option key={reason} value={reason}>
@@ -181,7 +188,7 @@ const NewPatientClinicalInfo = () => {
                         key={allergy}
                         type="button"
                         onClick={() => handleAllergyToggle(allergy)}
-                        className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                        className={`cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                           isSelected
                             ? 'border-[#00b09b] bg-[#00b09b] text-white'
                             : 'border-slate-200 bg-white text-slate-600 hover:border-[#00b09b]/40 hover:text-[#0f766e] dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300'
@@ -219,19 +226,24 @@ const NewPatientClinicalInfo = () => {
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button
             type="button"
-            onClick={() => navigate('/new-patient/questionnaire', { state: location.state })}
+            onClick={() =>
+              navigate(
+                returnToPatientDetails ? `/patient/${patientId}` : '/new-patient/questionnaire',
+                returnToPatientDetails ? undefined : { state: location.state }
+              )
+            }
             disabled={isSubmitting}
-            className="inline-flex h-12 min-w-[170px] items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+            className="inline-flex h-12 min-w-[170px] cursor-pointer items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             <FaArrowLeft />
-            Volver
+            {returnToPatientDetails ? 'Volver a la ficha' : 'Volver'}
           </button>
 
           <button
             type="button"
             onClick={handleContinue}
             disabled={isSubmitting}
-            className="inline-flex h-12 min-w-[220px] items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-6 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e]"
+            className="inline-flex h-12 min-w-[220px] cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-6 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <FaSave />
             {isSubmitting ? 'Guardando...' : 'Guardar y finalizar'}

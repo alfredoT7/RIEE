@@ -23,6 +23,16 @@ const PacienteCard = ({ patient }) => {
     })
   }
 
+  const handleEditPatient = () => {
+    if (!patientId) {
+      return
+    }
+
+    navigate(`/patient/${patientId}/edit`, {
+      state: { patient }
+    })
+  }
+
   return (
     <article className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_14px_34px_rgba(15,23,42,0.06)] transition-transform duration-200 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950">
       <div className="flex flex-col gap-3">
@@ -57,6 +67,7 @@ const PacienteCard = ({ patient }) => {
             <button
               type="button"
               title="Editar paciente"
+              onClick={handleEditPatient}
               className="cursor-pointer rounded-xl border border-slate-200 p-2 text-slate-500 transition-colors hover:border-[#00b09b]/30 hover:bg-[#00b09b]/8 hover:text-[#0f766e] dark:border-slate-700 dark:text-slate-400 dark:hover:border-[#00b09b]/40 dark:hover:bg-[#00b09b]/15 dark:hover:text-[#4dd0c1]"
             >
               <SquarePen size={16} />

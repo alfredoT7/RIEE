@@ -101,7 +101,7 @@ const PatientSearch = ({
           <button
             type="button"
             onClick={clearSelection}
-            className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-slate-200 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+            className="absolute right-3 top-1/2 flex h-7 w-7 cursor-pointer -translate-y-1/2 items-center justify-center rounded-full bg-slate-200 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300"
           >
             ×
           </button>
@@ -115,7 +115,7 @@ const PatientSearch = ({
               <button
                 key={patient.id || patient.ciPaciente}
                 type="button"
-                className="flex w-full items-center gap-3 border-b border-slate-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
+                className="flex w-full cursor-pointer items-center gap-3 border-b border-slate-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-900"
                 onClick={() => {
                   setSelectedPatient(patient)
                   setSearchTerm(`${patient.nombre} ${patient.apellido}`)

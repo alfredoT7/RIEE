@@ -1,5 +1,5 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import React, { useLayoutEffect } from 'react'
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { SidebarProvider, useSidebar } from './context/SidebarContext'
 import { ThemeProvider } from './context/ThemeContext'
@@ -9,6 +9,7 @@ import Header from './components/header/Header'
 import Home from './pages/home/Home'
 import Patient from './pages/pacientes/Patient'
 import NewPatient from './pages/newPatient/NewPatient'
+import EditPatient from './pages/editPatient/EditPatient'
 import NewPatientQuestionnaire from './pages/newPatientQuestionnaire/NewPatientQuestionnaire'
 import NewPatientClinicalInfo from './pages/newPatientClinicalInfo/NewPatientClinicalInfo'
 import Treatment from './pages/tratamientos/Treatment'
@@ -57,11 +58,22 @@ const GuestRoute = ({ children }) => {
   return isAuthenticated ? <Navigate to="/" replace /> : children
 }
 
+const ScrollToTop = () => {
+  const location = useLocation()
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [location.pathname])
+
+  return null
+}
+
 const AppContent = () => {
   const { isCollapsed } = useSidebar()
 
   return (
     <>
+      <ScrollToTop />
       <Routes>
         <Route
           element={
@@ -86,6 +98,7 @@ const AppContent = () => {
                     <Route path="/patient" element={<Patient />} />
                     <Route path="/patient/:patientId" element={<PatientDetails />} />
                     <Route path="/new-patient" element={<NewPatient />} />
+                    <Route path="/patient/:patientId/edit" element={<EditPatient />} />
                     <Route path="/new-patient/questionnaire" element={<NewPatientQuestionnaire />} />
                     <Route path="/new-patient/clinical-info" element={<NewPatientClinicalInfo />} />
                     <Route path="/treatment" element={<Treatment />} />
