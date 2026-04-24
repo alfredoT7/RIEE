@@ -165,7 +165,7 @@ const PatientTreatmentTab = () => {
                     <span className="font-semibold text-slate-700 dark:text-slate-200">Bs. 180</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span>Restauración resina</span>
+                    <span>Restauración resina </span>
                     <span className="font-semibold text-slate-700 dark:text-slate-200">Bs. 350</span>
                   </div>
                   <div className="flex items-center justify-between">

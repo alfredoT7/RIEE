@@ -9,6 +9,7 @@ const   PatientFichaTab = ({
   patient,
   questionnairePreviewItems,
   onEditPatient,
+  onOpenBudgetsTab,
   onRegisterClinicalInfo,
   onRegisterQuestionnaire,
   onOpenQuestionnaireModal
@@ -58,6 +59,7 @@ const   PatientFichaTab = ({
             <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100">Balance actual</h3>
             <button
               type="button"
+              onClick={onOpenBudgetsTab}
               className="cursor-pointer text-sm font-medium text-sky-600 transition-colors hover:text-sky-500"
             >
               Visualizar
@@ -264,4 +266,3 @@ const   PatientFichaTab = ({
 )
 
 export default PatientFichaTab
-

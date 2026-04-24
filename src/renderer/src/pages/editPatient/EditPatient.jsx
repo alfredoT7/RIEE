@@ -5,7 +5,12 @@ import { toast } from 'sonner'
 import { getAllPatients, getCompletePatient, updatePatient } from '../../api/Api'
 import LoadingState from '../../components/loading/LoadingState'
 import PatientForm from '../newPatient/components/PatientForm'
-import { buildPatientFormData, mapPatientToInitialValues, normalizeTextValue } from '../newPatient/patientFormUtils'
+import {
+  buildPatientFormData,
+  mapPatientToInitialValues,
+  normalizeCivilStatusValue,
+  normalizeTextValue
+} from '../newPatient/patientFormUtils'
 import { applyBackendFieldErrors, extractBackendMessage } from '../newPatient/submitHelpers'
 
 const EditPatient = () => {
@@ -100,7 +105,7 @@ const EditPatient = () => {
         direccion: normalizeTextValue(values.address),
         email: normalizeTextValue(values.email),
         ocupacion: normalizeTextValue(values.occupation),
-        estadoCivil: values.civilStatus,
+        estadoCivil: normalizeCivilStatusValue(values.civilStatus),
         personaDeReferencia: normalizeTextValue(values.referencePerson),
         numeroPersonaRef: normalizeTextValue(values.referencePhone),
         phonesNumbers: [

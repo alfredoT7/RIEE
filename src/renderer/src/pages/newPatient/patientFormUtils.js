@@ -55,6 +55,15 @@ export const normalizeTextValue = (value) => {
   return String(value).trim()
 }
 
+export const normalizeCivilStatusValue = (value) => {
+  const rawValue =
+    value && typeof value === 'object'
+      ? value.status || value.value || value.label || ''
+      : value
+
+  return normalizeTextValue(rawValue).replace(/^"+|"+$/g, '')
+}
+
 export const buildPatientFormData = (values, selectedFile) => {
   const patientData = new FormData()
   const ci = normalizeTextValue(values.ci)
@@ -67,10 +76,11 @@ export const buildPatientFormData = (values, selectedFile) => {
   const lastname = normalizeTextValue(values.lastname)
   const phone = normalizeTextValue(values.phone)
   const secondPhone = normalizeTextValue(values.secondPhone)
+  const civilStatus = normalizeCivilStatusValue(values.civilStatus)
 
   patientData.append('ciPaciente', ci)
   patientData.append('email', email)
-  patientData.append('estadoCivil', values.civilStatus)
+  patientData.append('estadoCivil', civilStatus)
   patientData.append('fechaNacimiento', values.birthDate)
   patientData.append('direccion', address)
   patientData.append('ocupacion', occupation)
@@ -99,7 +109,7 @@ export const mapPatientToInitialValues = (patient) => ({
   address: patient?.direccion || '',
   phone: patient?.telefono || patient?.phonesNumbers?.[0]?.numero || '',
   secondPhone: patient?.phonesNumbers?.[1]?.numero || '',
-  civilStatus: patient?.estadoCivil || '',
+  civilStatus: normalizeCivilStatusValue(patient?.estadoCivil),
   occupation: patient?.ocupacion || '',
   email: patient?.email || '',
   referencePerson:
