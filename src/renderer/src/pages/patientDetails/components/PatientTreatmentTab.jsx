@@ -119,22 +119,22 @@ const PatientTreatmentTab = () => {
                 </span>
               </div>
 
-              <div className="mt-5 space-y-4">
+              <div className="mt-5 flex flex-col gap-4">
                 {treatmentPlanItems.map((item, index) => (
                   <article
                     key={item.title}
                     className="rounded-2xl border border-white bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:shadow-none"
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
+                      <div className="flex flex-col gap-2.5">
                         <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
                           <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#00b09b]/10 text-[#0f766e]">
                             {index + 1}
                           </span>
                           Prioridad {item.priority}
                         </div>
-                        <h5 className="mt-2 text-base font-semibold text-slate-800 dark:text-slate-100">{item.title}</h5>
-                        <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{item.detail}</p>
+                        <h5 className="text-base font-semibold text-slate-800 dark:text-slate-100">{item.title}</h5>
+                        <p className="text-sm leading-6 text-slate-500 dark:text-slate-400">{item.detail}</p>
                       </div>
                       <div className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                         {item.time}
