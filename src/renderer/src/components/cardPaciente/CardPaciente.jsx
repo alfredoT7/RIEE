@@ -61,9 +61,14 @@ const CardPaciente = ({ ci, imagen, nombre, direccion, fechaNacimiento, numeroTe
           className="h-9 w-9 shrink-0 cursor-pointer rounded-full object-cover ring-2 ring-slate-100 transition-transform hover:scale-105 dark:ring-slate-800"
         />
 
-        <p className="min-w-[170px] flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-100 md:min-w-0">
+        <button
+          type="button"
+          onClick={handleOpenDetails}
+          title="Ver ficha del paciente"
+          className="min-w-[170px] flex-1 truncate text-left text-sm font-medium text-slate-700 transition hover:cursor-pointer hover:underline dark:text-slate-100 md:min-w-0"
+        >
           {nombre}
-        </p>
+        </button>
         <p
           className="min-w-[180px] flex-1 truncate text-sm text-slate-500 dark:text-slate-400 md:min-w-0"
           title="Último tratamiento"
