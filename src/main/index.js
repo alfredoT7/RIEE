@@ -4,14 +4,30 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png'
 
 function getAppIcon() {
-  try {
-    const iconPath = is.dev
-      ? join(app.getAppPath(), 'src/renderer/src/assets/riee-muela-logo-HD.ico')
-      : join(process.resourcesPath, 'assets', 'riee-muela-logo-HD.ico')
+  const appIcon = nativeImage.createFromPath(icon)
 
-    return nativeImage.createFromPath(iconPath)
-  } catch {
-    return nativeImage.createFromPath(icon)
+  if (!appIcon.isEmpty()) {
+    return appIcon
+  }
+
+  if (is.dev) {
+    return nativeImage.createFromPath(join(app.getAppPath(), 'resources', 'icon.png'))
+  }
+
+  return nativeImage.createFromPath(join(process.resourcesPath, 'icon.png'))
+}
+
+function configureMacAppAppearance() {
+  if (process.platform !== 'darwin') {
+    return
+  }
+
+  const appIcon = getAppIcon()
+
+  app.setName('RIEE')
+
+  if (!appIcon.isEmpty()) {
+    app.dock.setIcon(appIcon)
   }
 }
 
@@ -64,7 +80,8 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId('com.consultorio.riee')
+  configureMacAppAppearance()
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

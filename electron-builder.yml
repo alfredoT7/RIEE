@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.consultorio.riee
 productName: riee
 directories:
   buildResources: build
@@ -10,18 +10,16 @@ files:
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
 asarUnpack:
   - resources/**
-extraResources:
-  - from: src/renderer/src/assets/riee-muela-logo-HD.ico
-    to: assets/riee-muela-logo-HD.ico
 win:
   executableName: riee
-  icon: src/renderer/src/assets/riee-muela-logo-HD.ico
+  icon: build/icon.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
 mac:
+  icon: build/icon.icns
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
@@ -32,6 +30,7 @@ mac:
 dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
+  icon: build/icon.png
   target:
     - AppImage
     - snap
