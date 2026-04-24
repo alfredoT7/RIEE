@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { FaUserEdit } from 'react-icons/fa'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { getAllPatients, updatePatient } from '../../api/Api'
+import { getAllPatients, getCompletePatient, updatePatient } from '../../api/Api'
 import LoadingState from '../../components/loading/LoadingState'
 import PatientForm from '../newPatient/components/PatientForm'
-import { buildPatientFormData, mapPatientToInitialValues } from '../newPatient/patientFormUtils'
+import { buildPatientFormData, mapPatientToInitialValues, normalizeTextValue } from '../newPatient/patientFormUtils'
 import { applyBackendFieldErrors, extractBackendMessage } from '../newPatient/submitHelpers'
 
 const EditPatient = () => {
@@ -26,9 +26,8 @@ const EditPatient = () => {
 
     const fetchPatient = async () => {
       try {
-        const response = await getAllPatients()
-        const patientList = Array.isArray(response.data?.data) ? response.data.data : []
-        const selectedPatient = patientList.find((item) => `${item.id || item.ciPaciente}` === `${patientId}`)
+        const response = await getCompletePatient(patientId)
+        const selectedPatient = response.data?.data || null
 
         if (!isMounted) {
           return
@@ -36,8 +35,20 @@ const EditPatient = () => {
 
         setPatient(selectedPatient || null)
       } catch (error) {
-        if (isMounted) {
-          setPatient(null)
+        try {
+          const response = await getAllPatients()
+          const patientList = Array.isArray(response.data?.data) ? response.data.data : []
+          const selectedPatient = patientList.find((item) => `${item.id || item.ciPaciente}` === `${patientId}`)
+
+          if (!isMounted) {
+            return
+          }
+
+          setPatient(selectedPatient || null)
+        } catch (fallbackError) {
+          if (isMounted) {
+            setPatient(null)
+          }
         }
       } finally {
         if (isMounted) {
@@ -68,23 +79,33 @@ const EditPatient = () => {
 
     try {
       const patientData = buildPatientFormData(values, imageControls.selectedFile)
+      console.log('[EditPatient] Enviando actualización de paciente', {
+        patientId,
+        payload: Object.fromEntries(patientData.entries())
+      })
+
       const response = await updatePatient(patientId, patientData)
+      console.log('[EditPatient] Respuesta del servidor', {
+        status: response?.status,
+        data: response?.data
+      })
+
       const updatedPatient = response?.data?.data || {
         ...patient,
         id: patient?.id || patientId,
-        nombre: values.name.trim(),
-        apellido: values.lastname.trim(),
-        ciPaciente: values.ci.trim(),
+        nombre: normalizeTextValue(values.name),
+        apellido: normalizeTextValue(values.lastname),
+        ciPaciente: normalizeTextValue(values.ci),
         fechaNacimiento: values.birthDate,
-        direccion: values.address.trim(),
-        email: values.email.trim(),
-        ocupacion: values.occupation.trim(),
+        direccion: normalizeTextValue(values.address),
+        email: normalizeTextValue(values.email),
+        ocupacion: normalizeTextValue(values.occupation),
         estadoCivil: values.civilStatus,
-        personaDeReferencia: values.referencePerson.trim(),
-        numeroPersonaRef: values.referencePhone.trim(),
+        personaDeReferencia: normalizeTextValue(values.referencePerson),
+        numeroPersonaRef: normalizeTextValue(values.referencePhone),
         phonesNumbers: [
-          { numero: values.phone.trim() },
-          ...(values.secondPhone?.trim() ? [{ numero: values.secondPhone.trim() }] : [])
+          { numero: normalizeTextValue(values.phone) },
+          ...(normalizeTextValue(values.secondPhone) ? [{ numero: normalizeTextValue(values.secondPhone) }] : [])
         ]
       }
 
@@ -98,6 +119,15 @@ const EditPatient = () => {
         state: { patient: updatedPatient }
       })
     } catch (error) {
+      console.error('[EditPatient] Error al actualizar paciente', {
+        message: error.message,
+        code: error.code,
+        url: error.config?.url,
+        method: error.config?.method,
+        status: error.response?.status,
+        data: error.response?.data
+      })
+
       const backendMessage = extractBackendMessage(error)
       const fallbackError = backendMessage || 'No se pudo actualizar al paciente. Revisa los campos e intenta nuevamente.'
 

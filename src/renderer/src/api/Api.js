@@ -156,8 +156,21 @@ export const getAuthConfig = () => {
     return Object.keys(headers).length > 0 ? { headers } : {};
 };
 
-export const registerPatient = (data) => api.post('/api/v1/riee/patients', data, getAuthConfig());
-export const updatePatient = (patientId, data) => api.put(`/api/v1/riee/patients/${patientId}`, data, getAuthConfig());
+export const getMultipartAuthConfig = () => {
+    const authorizationHeader = getAuthorizationHeader();
+    const headers = {
+        'Content-Type': 'multipart/form-data'
+    };
+
+    if (authorizationHeader) {
+        headers.Authorization = authorizationHeader;
+    }
+
+    return { headers };
+};
+
+export const registerPatient = (data) => api.post('/api/v1/riee/patients', data, getMultipartAuthConfig());
+export const updatePatient = (patientId, data) => api.put(`/api/v1/riee/patients/${patientId}`, data, getMultipartAuthConfig());
 export const getCompletePatient = (patientId) => api.get(`/api/v1/riee/patients/${patientId}/complete`, getAuthConfig());
 export const registerPatientQuestionnaire = (patientId, data) =>
     api.post(`/api/v1/riee/patients/${patientId}/questionnaire`, data, getAuthConfig());

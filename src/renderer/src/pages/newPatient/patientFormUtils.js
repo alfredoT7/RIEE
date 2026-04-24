@@ -47,23 +47,41 @@ export const resizeImage = (file) => {
   })
 }
 
+export const normalizeTextValue = (value) => {
+  if (value === null || value === undefined) {
+    return ''
+  }
+
+  return String(value).trim()
+}
+
 export const buildPatientFormData = (values, selectedFile) => {
   const patientData = new FormData()
+  const ci = normalizeTextValue(values.ci)
+  const email = normalizeTextValue(values.email)
+  const address = normalizeTextValue(values.address)
+  const occupation = normalizeTextValue(values.occupation)
+  const referencePerson = normalizeTextValue(values.referencePerson)
+  const referencePhone = normalizeTextValue(values.referencePhone)
+  const name = normalizeTextValue(values.name)
+  const lastname = normalizeTextValue(values.lastname)
+  const phone = normalizeTextValue(values.phone)
+  const secondPhone = normalizeTextValue(values.secondPhone)
 
-  patientData.append('ciPaciente', values.ci.trim())
-  patientData.append('email', values.email.trim())
+  patientData.append('ciPaciente', ci)
+  patientData.append('email', email)
   patientData.append('estadoCivil', values.civilStatus)
   patientData.append('fechaNacimiento', values.birthDate)
-  patientData.append('direccion', values.address.trim())
-  patientData.append('ocupacion', values.occupation.trim())
-  patientData.append('personaDeReferencia', values.referencePerson.trim())
-  patientData.append('numeroPersonaRef', values.referencePhone.trim())
-  patientData.append('nombre', values.name.trim())
-  patientData.append('apellido', values.lastname.trim())
-  patientData.append('phonesNumbers[0].numero', values.phone.trim())
+  patientData.append('direccion', address)
+  patientData.append('ocupacion', occupation)
+  patientData.append('personaDeReferencia', referencePerson)
+  patientData.append('numeroPersonaRef', referencePhone)
+  patientData.append('nombre', name)
+  patientData.append('apellido', lastname)
+  patientData.append('phonesNumbers[0].numero', phone)
 
-  if (values.secondPhone?.trim()) {
-    patientData.append('phonesNumbers[1].numero', values.secondPhone.trim())
+  if (secondPhone) {
+    patientData.append('phonesNumbers[1].numero', secondPhone)
   }
 
   if (selectedFile) {

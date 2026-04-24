@@ -13,6 +13,22 @@ const FIELD_KEYWORDS = {
   lastname: ['apellido', 'apellidos']
 }
 
+const BACKEND_FIELD_MAP = {
+  ciPaciente: 'ci',
+  email: 'email',
+  estadoCivil: 'civilStatus',
+  fechaNacimiento: 'birthDate',
+  direccion: 'address',
+  ocupacion: 'occupation',
+  personaDeReferencia: 'referencePerson',
+  numeroPersonaRef: 'referencePhone',
+  nombre: 'name',
+  apellido: 'lastname',
+  'phonesNumbers[0].numero': 'phone',
+  'phonesNumbers[1].numero': 'secondPhone',
+  phonesNumbers: 'phone'
+}
+
 export const extractBackendMessage = (error) => {
   const data = error.response?.data
 
@@ -42,7 +58,9 @@ export const applyBackendFieldErrors = (error, setFieldError, fallbackMessage) =
 
       Object.entries(fieldErrors).forEach(([field, message]) => {
         if (typeof message === 'string') {
-          setFieldError(field, message)
+          const mappedField = BACKEND_FIELD_MAP[field] || field
+
+          setFieldError(mappedField, message)
           applied = true
         }
       })
