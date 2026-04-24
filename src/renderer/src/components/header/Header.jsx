@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { FaBars, FaSignOutAlt, FaSlidersH, FaUserMd } from 'react-icons/fa'
+import { FaBars, FaPowerOff, FaSignOutAlt, FaUserMd } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useSidebar } from '../../context/SidebarContext'
@@ -12,7 +12,8 @@ const Header = () => {
   const navigate = useNavigate()
   const [showMenu, setShowMenu] = useState(false)
   const menuRef = useRef(null)
-  const fullName = [user?.nombres, user?.apellidos].filter(Boolean).join(' ').trim() || user?.username || 'Doctora'
+  const fullName =
+    [user?.nombres, user?.apellidos].filter(Boolean).join(' ').trim() || user?.username || 'Doctora'
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -34,6 +35,14 @@ const Header = () => {
     navigate('/login')
   }
 
+  const handleQuitApp = () => {
+    if (window.api?.quitApp) {
+      window.api.quitApp()
+      return
+    }
+    window.electron?.ipcRenderer?.send('app:quit')
+  }
+
   return (
     <header className="sticky top-0 z-30 flex h-[76px] items-center justify-between border-b border-slate-200/80 bg-white/88 px-6 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/85">
       <div className="flex items-center gap-4">
@@ -48,7 +57,9 @@ const Header = () => {
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
             RIEE / {currentPage}
           </span>
-          <h1 className="text-xl font-semibold text-slate-800 dark:text-slate-100">{currentPage}</h1>
+          <h1 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+            {currentPage}
+          </h1>
         </div>
       </div>
 
@@ -74,10 +85,10 @@ const Header = () => {
         <div className="relative" ref={menuRef}>
           <button
             type="button"
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-[#00b09b]/30 hover:bg-[#00b09b]/8 hover:text-[#0f766e] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:shadow-none"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-2xl border border-rose-200 bg-white text-rose-600 shadow-sm transition-colors hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600 dark:border-rose-500/30 dark:bg-slate-900 dark:text-rose-400 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 dark:shadow-none"
             onClick={() => setShowMenu((value) => !value)}
           >
-            <FaSlidersH />
+            <FaPowerOff />
           </button>
           {showMenu && (
             <div className="absolute right-0 top-[calc(100%+12px)] min-w-[190px] rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_18px_40px_rgba(15,23,42,0.12)] dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
@@ -86,8 +97,20 @@ const Header = () => {
                 className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-rose-50 hover:text-rose-600 dark:text-slate-300 dark:hover:bg-rose-500/10"
                 onClick={handleLogout}
               >
-                <FaSignOutAlt />
+                <span className="flex h-6 w-6 items-center justify-center rounded-md bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400">
+                  <FaSignOutAlt />
+                </span>
                 <span>Cerrar sesión</span>
+              </button>
+              <button
+                type="button"
+                className="mt-1 flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-50 hover:text-rose-600 dark:text-rose-400 dark:hover:bg-rose-500/10"
+                onClick={handleQuitApp}
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-md bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400">
+                  <FaPowerOff />
+                </span>
+                <span>Apagar aplicación</span>
               </button>
             </div>
           )}
