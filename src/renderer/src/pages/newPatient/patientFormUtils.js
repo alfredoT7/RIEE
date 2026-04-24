@@ -28,14 +28,18 @@ export const resizeImage = (file) => {
         const context = canvas.getContext('2d')
         context.drawImage(img, 0, 0, width, height)
 
-        canvas.toBlob((blob) => {
-          if (!blob) {
-            reject(new Error('No se pudo procesar la imagen'))
-            return
-          }
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error('No se pudo procesar la imagen'))
+              return
+            }
 
-          resolve(new File([blob], file.name, { type: file.type }))
-        }, 'image/jpeg', 0.7)
+            resolve(new File([blob], file.name, { type: file.type }))
+          },
+          'image/jpeg',
+          0.7
+        )
       }
 
       img.onerror = (error) => reject(error)
@@ -57,11 +61,61 @@ export const normalizeTextValue = (value) => {
 
 export const normalizeCivilStatusValue = (value) => {
   const rawValue =
-    value && typeof value === 'object'
-      ? value.status || value.value || value.label || ''
-      : value
+    value && typeof value === 'object' ? value.status || value.value || value.label || '' : value
 
   return normalizeTextValue(rawValue).replace(/^"+|"+$/g, '')
+}
+
+const padTwoDigits = (value) => String(value).padStart(2, '0')
+
+const toDisplayDate = (value) => {
+  const rawValue = normalizeTextValue(value)
+  if (!rawValue) {
+    return ''
+  }
+
+  const ddmmyyyyMatch = rawValue.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  if (ddmmyyyyMatch) {
+    return rawValue
+  }
+
+  const yyyymmddMatch = rawValue.match(/^(\d{4})-(\d{2})-(\d{2})/)
+  if (yyyymmddMatch) {
+    const [, year, month, day] = yyyymmddMatch
+    return `${day}/${month}/${year}`
+  }
+
+  const parsed = new Date(rawValue)
+  if (!Number.isNaN(parsed.getTime())) {
+    return `${padTwoDigits(parsed.getDate())}/${padTwoDigits(parsed.getMonth() + 1)}/${parsed.getFullYear()}`
+  }
+
+  return rawValue
+}
+
+export const toApiDate = (value) => {
+  const rawValue = normalizeTextValue(value)
+  if (!rawValue) {
+    return ''
+  }
+
+  const ddmmyyyyMatch = rawValue.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+  if (ddmmyyyyMatch) {
+    const [, day, month, year] = ddmmyyyyMatch
+    return `${year}-${month}-${day}`
+  }
+
+  const yyyymmddMatch = rawValue.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (yyyymmddMatch) {
+    return rawValue
+  }
+
+  const parsed = new Date(rawValue)
+  if (!Number.isNaN(parsed.getTime())) {
+    return `${parsed.getFullYear()}-${padTwoDigits(parsed.getMonth() + 1)}-${padTwoDigits(parsed.getDate())}`
+  }
+
+  return rawValue
 }
 
 export const buildPatientFormData = (values, selectedFile) => {
@@ -81,7 +135,7 @@ export const buildPatientFormData = (values, selectedFile) => {
   patientData.append('ciPaciente', ci)
   patientData.append('email', email)
   patientData.append('estadoCivil', civilStatus)
-  patientData.append('fechaNacimiento', values.birthDate)
+  patientData.append('fechaNacimiento', toApiDate(values.birthDate))
   patientData.append('direccion', address)
   patientData.append('ocupacion', occupation)
   patientData.append('personaDeReferencia', referencePerson)
@@ -105,7 +159,7 @@ export const mapPatientToInitialValues = (patient) => ({
   name: patient?.nombre || '',
   lastname: patient?.apellido || '',
   ci: patient?.ciPaciente || patient?.cedula || '',
-  birthDate: patient?.fechaNacimiento ? `${patient.fechaNacimiento}`.slice(0, 10) : '',
+  birthDate: toDisplayDate(patient?.fechaNacimiento),
   address: patient?.direccion || '',
   phone: patient?.telefono || patient?.phonesNumbers?.[0]?.numero || '',
   secondPhone: patient?.phonesNumbers?.[1]?.numero || '',

@@ -4,7 +4,6 @@ import {
   FaAddressCard,
   FaArrowLeft,
   FaBriefcase,
-  FaCalendar,
   FaEnvelope,
   FaHeart,
   FaIdCard,
@@ -20,6 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import { CIVIL_STATUS_OPTIONS, validationSchema } from '../formConfig'
 import { usePatientImage } from '../usePatientImage'
 import { sectionClass } from '../formStyles'
+import BirthDatePickerField from './BirthDatePickerField'
 import FieldBlock, { SectionTitle } from './FieldBlock'
 import PatientPhotoSection from './PatientPhotoSection'
 
@@ -67,7 +67,9 @@ const PatientForm = ({
           initialValues={initialValues}
           validationSchema={validationSchema}
           enableReinitialize
-          onSubmit={(values, helpers) => onSubmit(values, helpers, { selectedFile, clearImageSelection })}
+          onSubmit={(values, helpers) =>
+            onSubmit(values, helpers, { selectedFile, clearImageSelection })
+          }
         >
           {({ isSubmitting, errors, touched, status }) => (
             <Form className="flex w-full flex-col gap-7">
@@ -89,12 +91,40 @@ const PatientForm = ({
               <div className={sectionClass}>
                 <SectionTitle icon={FaAddressCard}>Información Personal</SectionTitle>
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
-                  <FieldBlock name="name" label="Nombres *" icon={FaUser} error={errors.name} touched={touched.name} placeholder="Ingrese los nombres" />
-                  <FieldBlock name="lastname" label="Apellidos *" icon={FaUser} error={errors.lastname} touched={touched.lastname} placeholder="Ingrese los apellidos" />
-                  <FieldBlock name="ci" label="Carnet de Identidad *" icon={FaIdCard} error={errors.ci} touched={touched.ci} placeholder="Ej: 1234567 LP" />
-                  <FieldBlock name="birthDate" label="Fecha de Nacimiento *" icon={FaCalendar} type="date" error={errors.birthDate} touched={touched.birthDate} />
+                  <FieldBlock
+                    name="name"
+                    label="Nombres *"
+                    icon={FaUser}
+                    error={errors.name}
+                    touched={touched.name}
+                    placeholder="Ingrese los nombres"
+                  />
+                  <FieldBlock
+                    name="lastname"
+                    label="Apellidos *"
+                    icon={FaUser}
+                    error={errors.lastname}
+                    touched={touched.lastname}
+                    placeholder="Ingrese los apellidos"
+                  />
+                  <FieldBlock
+                    name="ci"
+                    label="Carnet de Identidad *"
+                    icon={FaIdCard}
+                    error={errors.ci}
+                    touched={touched.ci}
+                    placeholder="Ej: 1234567 LP"
+                  />
+                  <BirthDatePickerField />
                   <div className="md:col-span-2">
-                    <FieldBlock name="address" label="Dirección" icon={FaMapMarker} error={errors.address} touched={touched.address} placeholder="Ingrese la dirección completa" />
+                    <FieldBlock
+                      name="address"
+                      label="Dirección"
+                      icon={FaMapMarker}
+                      error={errors.address}
+                      touched={touched.address}
+                      placeholder="Ingrese la dirección completa"
+                    />
                   </div>
                 </div>
               </div>
@@ -102,10 +132,34 @@ const PatientForm = ({
               <div className={sectionClass}>
                 <SectionTitle icon={FaPhoneAlt}>Información de Contacto</SectionTitle>
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
-                  <FieldBlock name="phone" label="Teléfono Principal *" icon={FaPhone} type="tel" error={errors.phone} touched={touched.phone} placeholder="70123456" />
-                  <FieldBlock name="secondPhone" label="Teléfono Secundario" icon={FaPhone} type="tel" error={errors.secondPhone} touched={touched.secondPhone} placeholder="22334455 (Opcional)" />
+                  <FieldBlock
+                    name="phone"
+                    label="Teléfono Principal *"
+                    icon={FaPhone}
+                    type="tel"
+                    error={errors.phone}
+                    touched={touched.phone}
+                    placeholder="70123456"
+                  />
+                  <FieldBlock
+                    name="secondPhone"
+                    label="Teléfono Secundario"
+                    icon={FaPhone}
+                    type="tel"
+                    error={errors.secondPhone}
+                    touched={touched.secondPhone}
+                    placeholder="22334455 (Opcional)"
+                  />
                   <div className="md:col-span-2">
-                    <FieldBlock name="email" label="Correo Electrónico *" icon={FaEnvelope} type="email" error={errors.email} touched={touched.email} placeholder="ejemplo@correo.com" />
+                    <FieldBlock
+                      name="email"
+                      label="Correo Electrónico *"
+                      icon={FaEnvelope}
+                      type="email"
+                      error={errors.email}
+                      touched={touched.email}
+                      placeholder="ejemplo@correo.com"
+                    />
                   </div>
                 </div>
               </div>
@@ -113,7 +167,14 @@ const PatientForm = ({
               <div className={sectionClass}>
                 <SectionTitle icon={FaInfoCircle}>Información Adicional</SectionTitle>
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
-                  <FieldBlock name="civilStatus" label="Estado Civil *" icon={FaHeart} as="select" error={errors.civilStatus} touched={touched.civilStatus}>
+                  <FieldBlock
+                    name="civilStatus"
+                    label="Estado Civil *"
+                    icon={FaHeart}
+                    as="select"
+                    error={errors.civilStatus}
+                    touched={touched.civilStatus}
+                  >
                     <option value="">Seleccione estado civil</option>
                     {CIVIL_STATUS_OPTIONS.map((status) => (
                       <option key={status.value} value={status.value}>
@@ -121,22 +182,46 @@ const PatientForm = ({
                       </option>
                     ))}
                   </FieldBlock>
-                  <FieldBlock name="occupation" label="Ocupación *" icon={FaBriefcase} error={errors.occupation} touched={touched.occupation} placeholder="Ej: Ingeniero, Estudiante, etc." />
+                  <FieldBlock
+                    name="occupation"
+                    label="Ocupación *"
+                    icon={FaBriefcase}
+                    error={errors.occupation}
+                    touched={touched.occupation}
+                    placeholder="Ej: Ingeniero, Estudiante, etc."
+                  />
                 </div>
               </div>
 
               <div className={sectionClass}>
                 <SectionTitle icon={FaUserFriends}>Persona de Referencia</SectionTitle>
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
-                  <FieldBlock name="referencePerson" label="Nombre Completo *" icon={FaUserFriends} error={errors.referencePerson} touched={touched.referencePerson} placeholder="Nombre de la persona de contacto" />
-                  <FieldBlock name="referencePhone" label="Teléfono de Referencia *" icon={FaPhone} type="tel" error={errors.referencePhone} touched={touched.referencePhone} placeholder="Teléfono de contacto" />
+                  <FieldBlock
+                    name="referencePerson"
+                    label="Nombre Completo *"
+                    icon={FaUserFriends}
+                    error={errors.referencePerson}
+                    touched={touched.referencePerson}
+                    placeholder="Nombre de la persona de contacto"
+                  />
+                  <FieldBlock
+                    name="referencePhone"
+                    label="Teléfono de Referencia *"
+                    icon={FaPhone}
+                    type="tel"
+                    error={errors.referencePhone}
+                    touched={touched.referencePhone}
+                    placeholder="Teléfono de contacto"
+                  />
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => navigate(cancelPath, cancelState ? { state: cancelState } : undefined)}
+                  onClick={() =>
+                    navigate(cancelPath, cancelState ? { state: cancelState } : undefined)
+                  }
                   disabled={isSubmitting}
                   className="inline-flex h-12 min-w-[170px] cursor-pointer items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
                 >
