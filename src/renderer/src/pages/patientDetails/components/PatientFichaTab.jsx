@@ -5,7 +5,7 @@ import { fadeInProps } from '../constants/patientDetails.constants'
 import { buildClinicalItems, buildInfoColumns } from '../utils/patientDetails.utils'
 import QuestionnaireValue from './QuestionnaireValue'
 
-const PatientFichaTab = ({
+const   PatientFichaTab = ({
   patient,
   questionnairePreviewItems,
   onEditPatient,
