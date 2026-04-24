@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import LoadingState from '../../components/loading/LoadingState'
 import PatientHeader from './components/PatientHeader'
@@ -14,10 +14,24 @@ import { buildQuestionnaireItems, calculateAge } from './utils/patientDetails.ut
 
 const PatientDetails = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { patientId } = useParams()
   const { patient, isLoading } = usePatientDetails(patientId)
-  const [activeTab, setActiveTab] = useState(sideMenuItems[0].key)
+  const defaultTab = sideMenuItems[0].key
+  const requestedTab = location.state?.activeTab
+  const [activeTab, setActiveTab] = useState(
+    sideMenuItems.some((item) => item.key === requestedTab) ? requestedTab : defaultTab
+  )
   const [isQuestionnaireModalOpen, setIsQuestionnaireModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (sideMenuItems.some((item) => item.key === requestedTab)) {
+      setActiveTab(requestedTab)
+      return
+    }
+
+    setActiveTab(defaultTab)
+  }, [defaultTab, requestedTab])
 
   const handleEditPatient = () => {
     const resolvedPatientId = patient?.id || patient?.ciPaciente || patientId
@@ -156,7 +170,9 @@ const PatientDetails = () => {
     return (
       <section className="grid gap-y-6 px-2 pb-6 pt-4 lg:gap-y-7">
         <div className="rounded-[28px] border border-dashed border-slate-200 bg-white p-10 text-center shadow-[0_20px_60px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
-          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">No pudimos encontrar al paciente</h3>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+            No pudimos encontrar al paciente
+          </h3>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             La ficha no existe o no pudimos recuperarla desde el backend.
           </p>
@@ -190,7 +206,10 @@ const PatientDetails = () => {
       </div>
 
       {isQuestionnaireModalOpen && !patient?.missingQuestionnaire && (
-        <QuestionnaireModal items={questionnaireItems} onClose={() => setIsQuestionnaireModalOpen(false)} />
+        <QuestionnaireModal
+          items={questionnaireItems}
+          onClose={() => setIsQuestionnaireModalOpen(false)}
+        />
       )}
     </section>
   )

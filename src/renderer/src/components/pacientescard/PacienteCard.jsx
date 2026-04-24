@@ -6,7 +6,8 @@ import ImagesApp from '../../assets/ImagesApp'
 const PacienteCard = ({ patient }) => {
   const navigate = useNavigate()
   const patientId = patient?.id || patient?.ciPaciente
-  const fullName = `${patient?.nombre || ''} ${patient?.apellido || ''}`.trim() || 'Paciente sin nombre'
+  const fullName =
+    `${patient?.nombre || ''} ${patient?.apellido || ''}`.trim() || 'Paciente sin nombre'
   const imageSrc = patient?.imagen?.startsWith('http') ? patient.imagen : ImagesApp.defaultImage
   const phoneNumber = patient?.telefono || patient?.phonesNumbers?.[0]?.numero || 'Sin teléfono'
   const email = patient?.email || 'Sin email registrado'
@@ -33,6 +34,19 @@ const PacienteCard = ({ patient }) => {
     })
   }
 
+  const handleOpenTreatmentHistory = () => {
+    if (!patientId) {
+      return
+    }
+
+    navigate(`/patient/${patientId}`, {
+      state: {
+        patient,
+        activeTab: 'tratamientos-realizados'
+      }
+    })
+  }
+
   return (
     <article className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_14px_34px_rgba(15,23,42,0.06)] transition-transform duration-200 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950">
       <div className="flex flex-col gap-3">
@@ -48,7 +62,9 @@ const PacienteCard = ({ patient }) => {
               className="h-14 w-14 rounded-2xl object-cover ring-2 ring-[#00b09b]/10"
             />
             <div className="min-w-0">
-              <h5 className="truncate text-base font-semibold text-slate-800 dark:text-slate-100">{fullName}</h5>
+              <h5 className="truncate text-base font-semibold text-slate-800 dark:text-slate-100">
+                {fullName}
+              </h5>
               <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
                 {birthDate} · CI: {patient?.ciPaciente || patient?.id || 'N/D'}
               </p>
@@ -104,9 +120,12 @@ const PacienteCard = ({ patient }) => {
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
               Última visita
             </p>
-            <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-100">{patient?.ultimaVisita || 'Sin registros recientes'}</p>
+            <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-100">
+              {patient?.ultimaVisita || 'Sin registros recientes'}
+            </p>
             <button
               type="button"
+              onClick={handleOpenTreatmentHistory}
               className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:border-[#00b09b]/30 hover:bg-[#00b09b]/8 hover:text-[#0f766e] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-[#00b09b]/40 dark:hover:bg-[#00b09b]/15 dark:hover:text-[#4dd0c1]"
             >
               <FileText size={16} />
@@ -118,7 +137,9 @@ const PacienteCard = ({ patient }) => {
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
               Próxima cita
             </p>
-            <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-100">{patient?.proximaCita || 'Sin cita programada'}</p>
+            <p className="mt-2 text-sm font-semibold text-slate-700 dark:text-slate-100">
+              {patient?.proximaCita || 'Sin cita programada'}
+            </p>
             <button
               type="button"
               className="mt-3 inline-flex cursor-pointer items-center rounded-xl bg-[#00b09b] px-3 py-2 text-sm font-semibold text-white shadow-[0_10px_20px_rgba(0,176,155,0.22)] transition-transform hover:-translate-y-0.5 dark:bg-[#0f766e] dark:shadow-[0_10px_20px_rgba(15,118,110,0.25)]"
