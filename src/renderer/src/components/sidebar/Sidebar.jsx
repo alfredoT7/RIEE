@@ -1,111 +1,213 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useMemo, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { FaHome, FaUsers, FaBookMedical, FaCalendarAlt, FaToolbox, FaMoneyCheckAlt, FaUserMd } from 'react-icons/fa'
+import {
+  FaHome,
+  FaUsers,
+  FaBookMedical,
+  FaCalendarAlt,
+  FaToolbox,
+  FaMoneyCheckAlt
+} from 'react-icons/fa'
+import { ChevronsUpDown, LogOut, User2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { useSidebar } from '../../context/SidebarContext'
+import { useAuth } from '../../context/AuthContext'
 import ImagesApp from '../../assets/ImagesApp'
+import {
+  Sidebar as AppSidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton
+} from '../ui/sidebar'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator
+} from '../ui/dropdown-menu'
 
 const Sidebar = () => {
-  const [selected, setSelected] = useState('Inicio')
   const { isCollapsed, updateCurrentPage } = useSidebar()
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const fullName =
+    [user?.nombres, user?.apellidos].filter(Boolean).join(' ').trim() || user?.username || 'Doctora'
 
-  const routeToPageName = useMemo(
+  const menuItems = useMemo(
     () => ({
-      '/': 'Inicio',
-      '/patient': 'Pacientes',
-      '/new-patient': 'Nuevo Paciente',
-      '/treatment': 'Tratamiento',
-      '/new-treatment': 'Nuevo Tratamiento',
-      '/appointments': 'Citas',
-      '/nueva-cita': 'Nueva Cita',
-      '/inventario': 'Inventario',
-      '/inventario/nuevo-producto': 'Nuevo Producto',
-      '/cuentas': 'Cuentas',
-      '/perfil': 'Perfil'
+      Inicio: { icon: FaHome, label: 'Inicio', path: '/', matcher: (pathname) => pathname === '/' },
+      Pacientes: {
+        icon: FaUsers,
+        label: 'Pacientes',
+        path: '/patient',
+        matcher: (pathname) =>
+          pathname.startsWith('/patient') || pathname.startsWith('/new-patient')
+      },
+      Tratamiento: {
+        icon: FaBookMedical,
+        label: 'Tratamiento',
+        path: '/treatment',
+        matcher: (pathname) =>
+          pathname.startsWith('/treatment') || pathname.startsWith('/new-treatment')
+      },
+      Citas: {
+        icon: FaCalendarAlt,
+        label: 'Citas',
+        path: '/appointments',
+        matcher: (pathname) =>
+          pathname.startsWith('/appointments') || pathname.startsWith('/nueva-cita')
+      },
+      Inventario: {
+        icon: FaToolbox,
+        label: 'Inventario',
+        path: '/inventario',
+        matcher: (pathname) => pathname.startsWith('/inventario')
+      },
+      Cuentas: {
+        icon: FaMoneyCheckAlt,
+        label: 'Cuentas',
+        path: '/cuentas',
+        matcher: (pathname) => pathname.startsWith('/cuentas')
+      }
     }),
     []
   )
 
+  const activeKey = useMemo(() => {
+    return (
+      Object.keys(menuItems).find((key) => menuItems[key].matcher(location.pathname)) || 'Inicio'
+    )
+  }, [location.pathname, menuItems])
+
   useEffect(() => {
-    const currentPageName = routeToPageName[location.pathname] || 'Inicio'
-    setSelected(currentPageName)
-    updateCurrentPage(currentPageName)
-  }, [location.pathname, routeToPageName, updateCurrentPage])
+    updateCurrentPage(activeKey)
+  }, [activeKey, updateCurrentPage])
 
-  const handleSelection = (section) => {
-    setSelected(section)
-    updateCurrentPage(section)
-
-    if (section === 'Inicio') navigate('/')
-    if (section === 'Pacientes') navigate('/patient')
-    if (section === 'Tratamiento') navigate('/treatment')
-    if (section === 'Citas') navigate('/appointments')
-    if (section === 'Inventario') navigate('/inventario')
-    if (section === 'Cuentas') navigate('/cuentas')
+  const handleSelection = (sectionKey) => {
+    const section = menuItems[sectionKey]
+    if (!section?.path) return
+    updateCurrentPage(sectionKey)
+    navigate(section.path)
   }
 
-  const menuItems = useMemo(
-    () => [
-      { key: 'Inicio', icon: FaHome, label: 'Inicio' },
-      { key: 'Pacientes', icon: FaUsers, label: 'Pacientes' },
-      { key: 'Tratamiento', icon: FaBookMedical, label: 'Tratamiento' },
-      { key: 'Citas', icon: FaCalendarAlt, label: 'Citas' },
-      { key: 'Inventario', icon: FaToolbox, label: 'Inventario' },
-      { key: 'Cuentas', icon: FaMoneyCheckAlt, label: 'Cuentas' },
-      { key: 'Perfil', icon: FaUserMd, label: 'Perfil' }
-    ],
-    []
-  )
+  const handleLogout = () => {
+    logout()
+    toast.success('Sesión cerrada exitosamente')
+    navigate('/login')
+  }
 
   return (
-    <nav
-      className={`fixed left-0 top-0 z-40 flex h-screen flex-col border-r border-slate-200/80 bg-[linear-gradient(180deg,#f9fffd_0%,#f2f7f7_45%,#eef4f7_100%)] px-4 py-5 shadow-[0_12px_40px_rgba(15,23,42,0.08)] transition-all duration-300 dark:border-slate-800 dark:bg-[linear-gradient(180deg,#020617_0%,#0f172a_45%,#111827_100%)] dark:shadow-none ${
-        isCollapsed ? 'w-[80px]' : 'w-[240px]'
-      }`}
-    >
-      <div
-        className={`mb-12 flex items-center justify-center rounded-[24px] border border-white/70 bg-white/80 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:shadow-none ${
-          isCollapsed ? 'min-h-[84px]' : 'min-h-[92px]'
+    <AppSidebar collapsible="icon">
+      <SidebarHeader
+        className={`mb-4 flex items-center justify-center rounded-xl border border-[#00b09b]/20 bg-white p-3 shadow-sm dark:border-[#00b09b]/25 dark:bg-slate-900 ${
+          isCollapsed ? 'min-h-[76px]' : 'min-h-[84px]'
         }`}
       >
         <img
           src={isCollapsed ? ImagesApp.rieeCompactLogo : ImagesApp.rieeLogo}
           alt="RIEE"
-          className={isCollapsed ? 'h-12 w-12 object-contain' : 'h-14 w-full object-contain'}
+          className={isCollapsed ? 'h-10 w-10 object-contain' : 'h-12 w-full object-contain'}
         />
-      </div>
+      </SidebarHeader>
 
-      <div className="flex flex-1 flex-col gap-1.5 pt-3">
-        {menuItems.map((item) => {
-          const IconComponent = item.icon
-          const isActive = selected === item.key
+      <SidebarContent className="pt-1">
+        <SidebarGroup>
+          {!isCollapsed && (
+            <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#1e776d]/70 dark:text-[#5ce1d4]/70">
+              Navegación
+            </p>
+          )}
+          <SidebarGroupContent>
+            <SidebarMenu className="flex flex-col gap-1.5">
+              {Object.keys(menuItems).map((key) => {
+                const item = menuItems[key]
+                const IconComponent = item.icon
+                const isActive = activeKey === key
+                return (
+                  <SidebarMenuItem key={key}>
+                    <SidebarMenuButton
+                      isActive={isActive}
+                      title={item.label}
+                      onClick={() => handleSelection(key)}
+                    >
+                      <IconComponent
+                        className={`text-[15px] ${isActive ? 'text-white' : 'text-[#1e776d]'}`}
+                      />
+                      {!isCollapsed && (
+                        <span
+                          className={`text-sm font-medium ${isActive ? 'text-white' : 'text-slate-700 dark:text-slate-200'}`}
+                        >
+                          {item.label}
+                        </span>
+                      )}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-          return (
-            <button
-              key={item.key}
-              type="button"
-              className={`flex cursor-pointer items-center rounded-2xl px-3 py-3 text-left transition-all duration-200 ${
-                isCollapsed ? 'justify-center' : 'gap-3'
-              } ${
-                isActive
-                  ? 'bg-[#00b09b] text-white shadow-[0_12px_24px_rgba(0,176,155,0.25)]'
-                  : 'text-slate-600 hover:bg-white/90 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-slate-900'
-              }`}
-              onClick={() => handleSelection(item.key)}
-              title={isCollapsed ? item.label : ''}
-            >
-              <IconComponent className={`text-base ${isActive ? 'text-white' : 'text-[#0f766e]'}`} />
-              {!isCollapsed && (
-                <span className={`text-sm font-medium ${isActive ? 'text-white' : 'text-slate-700 dark:text-slate-200'}`}>
-                  {item.label}
-                </span>
-              )}
-            </button>
-          )
-        })}
-      </div>
-    </nav>
+      <SidebarFooter className="mt-auto pt-2">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton className="h-11 border border-[#00b09b]/20 bg-white dark:border-[#00b09b]/25 dark:bg-slate-900">
+                  {user?.imagenUrl ? (
+                    <img
+                      src={user.imagenUrl}
+                      alt={fullName}
+                      className="h-7 w-7 rounded-md object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[#00b09b]/15 text-[#1e776d] dark:bg-[#00b09b]/20 dark:text-[#5ce1d4]">
+                      <User2 className="h-4 w-4" />
+                    </span>
+                  )}
+                  {!isCollapsed && (
+                    <>
+                      <span className="truncate text-sm font-medium text-slate-700 dark:text-slate-200">
+                        {fullName}
+                      </span>
+                      <ChevronsUpDown className="ml-auto h-4 w-4 text-[#1e776d]/70 dark:text-[#5ce1d4]/80" />
+                    </>
+                  )}
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent
+                side={isCollapsed ? 'right' : 'top'}
+                align={isCollapsed ? 'start' : 'end'}
+              >
+                <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem disabled>
+                  <User2 className="h-4 w-4" />
+                  <span>{fullName}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={handleLogout}
+                  className="text-rose-600 dark:text-rose-400"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Cerrar sesión</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </AppSidebar>
   )
 }
 
