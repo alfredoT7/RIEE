@@ -9,7 +9,8 @@ import {
   buildPatientFormData,
   mapPatientToInitialValues,
   normalizeCivilStatusValue,
-  normalizeTextValue
+  normalizeTextValue,
+  toApiDate
 } from '../newPatient/patientFormUtils'
 import { applyBackendFieldErrors, extractBackendMessage } from '../newPatient/submitHelpers'
 
@@ -43,7 +44,9 @@ const EditPatient = () => {
         try {
           const response = await getAllPatients()
           const patientList = Array.isArray(response.data?.data) ? response.data.data : []
-          const selectedPatient = patientList.find((item) => `${item.id || item.ciPaciente}` === `${patientId}`)
+          const selectedPatient = patientList.find(
+            (item) => `${item.id || item.ciPaciente}` === `${patientId}`
+          )
 
           if (!isMounted) {
             return
@@ -79,7 +82,11 @@ const EditPatient = () => {
   const previewUrl = patient?.imagen || null
   const cancelState = patient ? { patient } : undefined
 
-  const handleSubmit = async (values, { setSubmitting, setTouched, setFieldError, setStatus }, imageControls) => {
+  const handleSubmit = async (
+    values,
+    { setSubmitting, setTouched, setFieldError, setStatus },
+    imageControls
+  ) => {
     setStatus(null)
 
     try {
@@ -101,7 +108,7 @@ const EditPatient = () => {
         nombre: normalizeTextValue(values.name),
         apellido: normalizeTextValue(values.lastname),
         ciPaciente: normalizeTextValue(values.ci),
-        fechaNacimiento: values.birthDate,
+        fechaNacimiento: toApiDate(values.birthDate),
         direccion: normalizeTextValue(values.address),
         email: normalizeTextValue(values.email),
         ocupacion: normalizeTextValue(values.occupation),
@@ -110,7 +117,9 @@ const EditPatient = () => {
         numeroPersonaRef: normalizeTextValue(values.referencePhone),
         phonesNumbers: [
           { numero: normalizeTextValue(values.phone) },
-          ...(normalizeTextValue(values.secondPhone) ? [{ numero: normalizeTextValue(values.secondPhone) }] : [])
+          ...(normalizeTextValue(values.secondPhone)
+            ? [{ numero: normalizeTextValue(values.secondPhone) }]
+            : [])
         ]
       }
 
@@ -134,7 +143,9 @@ const EditPatient = () => {
       })
 
       const backendMessage = extractBackendMessage(error)
-      const fallbackError = backendMessage || 'No se pudo actualizar al paciente. Revisa los campos e intenta nuevamente.'
+      const fallbackError =
+        backendMessage ||
+        'No se pudo actualizar al paciente. Revisa los campos e intenta nuevamente.'
 
       setStatus({
         type: 'error',

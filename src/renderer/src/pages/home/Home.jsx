@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Calendar, Clock, TrendingUp, Users } from 'lucide-react'
+import {
+  Activity,
+  Calendar,
+  CalendarClock,
+  CheckCircle2,
+  Clock,
+  ScanLine,
+  TrendingUp,
+  UserRound,
+  Users
+} from 'lucide-react'
 import TopInfoHome from '../../components/topInfoHome/TopInfoHome'
 import CardPaciente from '../../components/cardPaciente/CardPaciente'
 import ImagesApp from '../../assets/ImagesApp'
@@ -24,20 +34,11 @@ const boliviaTimeFormatter = new Intl.DateTimeFormat('es-BO', {
   hour12: false
 })
 
-const newsItems = [
-  {
-    title: 'Nuevo equipo de radiografía',
-    description: 'Se incorporó un sistema digital de última generación para agilizar diagnósticos.'
-  },
-  {
-    title: 'Agenda optimizada',
-    description: 'Los recordatorios y confirmaciones mejoran la organización diaria del consultorio.'
-  },
-  {
-    title: 'Atención más cercana',
-    description: 'Se actualizaron los flujos de seguimiento para ofrecer una experiencia más clara al paciente.'
-  }
-]
+const newsItem = {
+  title: 'Nuevo equipo de radiografía',
+  description:
+    'Se incorporó un sistema digital de última generación para agilizar diagnósticos, reducir tiempos de espera y mejorar la precisión de cada evaluación.'
+}
 
 const patientHeaderCells = [
   { label: 'CI', className: '' },
@@ -99,7 +100,8 @@ const Home = () => {
         const normalizedPatients = patients.slice(0, 5).map((patient) => ({
           ci: patient.ciPaciente,
           imagen: patient.imagen,
-          nombre: `${patient.nombre || ''} ${patient.apellido || ''}`.trim() || 'Paciente sin nombre',
+          nombre:
+            `${patient.nombre || ''} ${patient.apellido || ''}`.trim() || 'Paciente sin nombre',
           direccion: patient.ultimaVisita || patient.ocupacion || 'Sin seguimiento registrado',
           fechaNacimiento: formatBirthDate(patient.fechaNacimiento),
           numeroTelefonico: patient.phonesNumbers?.[0]?.numero || 'N/A',
@@ -119,7 +121,13 @@ const Home = () => {
   }, [])
 
   const metricCards = [
-    { title: 'Reloj Bolivia', quantity: boliviaTime, porcentaje: 'UTC-4', icon: Clock, note: 'America/La Paz' },
+    {
+      title: 'Reloj Bolivia',
+      quantity: boliviaTime,
+      porcentaje: 'UTC-4',
+      icon: Clock,
+      note: 'America/La Paz'
+    },
     ...baseMetricCards
   ]
 
@@ -191,37 +199,132 @@ const Home = () => {
         ))}
       </div>
 
-      <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none sm:p-6">
-        <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">Novedades</h3>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Resumen rápido de mejoras y movimientos recientes del consultorio.
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+        <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none sm:p-6">
+          <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">
+                Novedades
+              </h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                Resumen rápido de mejoras y movimientos recientes del consultorio.
+              </p>
+            </div>
+            <div className="rounded-full bg-[#00b09b]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#0f766e]">
+              Hoy
+            </div>
+          </div>
+
+          <article className="rounded-2xl border border-[#d9ece8] bg-white p-5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
+            <div className="mb-4 h-1.5 w-14 rounded-full bg-gradient-to-r from-[#00b09b] to-[#5ce1d4]" />
+            <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100">
+              {newsItem.title}
+            </h4>
+            <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+              {newsItem.description}
             </p>
-          </div>
-          <div className="rounded-full bg-[#00b09b]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#0f766e]">
-            Hoy
-          </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-[170px_minmax(0,1fr)]">
+              <div className="rounded-xl border border-[#00b09b]/25 bg-[#00b09b]/8 p-3">
+                <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-white text-[#0f766e]">
+                  <ScanLine className="h-4 w-4" />
+                </div>
+                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                  Radiografía digital
+                </p>
+                <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+                  Sistema activo en consulta general.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/70">
+                <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-200">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#0f766e]" />
+                    <span>Diagnóstico inicial más rápido por paciente.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#0f766e]" />
+                    <span>Menor repetición de toma por mejor calidad de imagen.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </article>
         </div>
 
-        <div className="grid gap-4 lg:gap-5 md:grid-cols-3">
-          {newsItems.map((item) => (
-            <article
-              key={item.title}
-              className="rounded-2xl border border-[#d9ece8] bg-white p-5 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
-            >
-              <div className="mb-4 h-1.5 w-14 rounded-full bg-gradient-to-r from-[#00b09b] to-[#5ce1d4]" />
-              <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100">{item.title}</h4>
-              <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{item.description}</p>
-            </article>
-          ))}
-        </div>
+        <aside className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none sm:p-6">
+          <div className="mb-5">
+            <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">
+              Estado de tratamientos
+            </h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Estado actual por fase clínica.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+            <div className="mb-3 flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#00b09b]/15 text-[#0f766e]">
+                <UserRound className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                  María Fernández
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">CI: 6845123 LP</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                <Activity className="h-4 w-4 text-[#0f766e]" />
+                <span>Tratamiento de conductos</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                <Calendar className="h-4 w-4 text-[#0f766e]" />
+                <span>Sesión 3 de 5</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                <CalendarClock className="h-4 w-4 text-[#0f766e]" />
+                <span>Próxima cita: 30/04/2026 - 09:30</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                <CheckCircle2 className="h-4 w-4 text-[#0f766e]" />
+                <span>Estado clínico: evolución favorable</span>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <div className="mb-1 flex items-center justify-between text-xs">
+                <span className="font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                  Progreso
+                </span>
+                <span className="font-semibold text-[#0f766e] dark:text-[#5ce1d4]">60%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
+                <div className="h-2 w-[60%] rounded-full bg-[#00b09b]" />
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-950/60">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Responsable: Dra. Valeria Rojas
+              </p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                Observación: sin dolor post sesión, continuar protocolo.
+              </p>
+            </div>
+          </div>
+        </aside>
       </div>
 
       <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none sm:p-6">
         <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">Pacientes recientes</h3>
+            <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">
+              Pacientes recientes
+            </h3>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Últimos registros atendidos y seguimiento activo del día.
             </p>
