@@ -98,7 +98,7 @@ const NewPatientClinicalInfo = () => {
 
     try {
       const response = await registerPatientClinicalInfo(patientId, payload)
-
+      console.log("patient id enviado para clinical-info:", patientId)
       console.log('Respuesta del servidor al guardar clinical-info:', response?.data)
 
       toast.success('Información clínica guardada correctamente', {
