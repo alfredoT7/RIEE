@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Formik, Form } from 'formik'
 import {
   FaAddressCard,
@@ -18,9 +18,9 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { CIVIL_STATUS_OPTIONS, validationSchema } from '../formConfig'
 import { usePatientImage } from '../usePatientImage'
-import { sectionClass } from '../formStyles'
 import BirthDatePickerField from './BirthDatePickerField'
-import FieldBlock, { SectionTitle } from './FieldBlock'
+import CollapsibleSection from './CollapsibleSection'
+import FieldBlock from './FieldBlock'
 import PatientPhotoSection from './PatientPhotoSection'
 
 const PatientForm = ({
@@ -36,6 +36,11 @@ const PatientForm = ({
   initialPreviewUrl
 }) => {
   const navigate = useNavigate()
+  const [openSection, setOpenSection] = useState('personal')
+
+  const toggleSection = (id) =>
+    setOpenSection((prev) => (prev === id ? null : id))
+
   const {
     fileInputRef,
     selectedFile,
@@ -86,10 +91,16 @@ const PatientForm = ({
                 onFileButtonClick={handleFileButtonClick}
                 onRemoveImage={clearImageSelection}
                 previewUrl={previewUrl}
+                isOpen={openSection === 'photo'}
+                onToggle={() => toggleSection('photo')}
               />
 
-              <div className={sectionClass}>
-                <SectionTitle icon={FaAddressCard}>Información Personal</SectionTitle>
+              <CollapsibleSection
+                icon={FaAddressCard}
+                title="Información Personal"
+                isOpen={openSection === 'personal'}
+                onToggle={() => toggleSection('personal')}
+              >
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                   <FieldBlock
                     name="name"
@@ -127,10 +138,14 @@ const PatientForm = ({
                     />
                   </div>
                 </div>
-              </div>
+              </CollapsibleSection>
 
-              <div className={sectionClass}>
-                <SectionTitle icon={FaPhoneAlt}>Información de Contacto</SectionTitle>
+              <CollapsibleSection
+                icon={FaPhoneAlt}
+                title="Información de Contacto"
+                isOpen={openSection === 'contact'}
+                onToggle={() => toggleSection('contact')}
+              >
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                   <FieldBlock
                     name="phone"
@@ -162,10 +177,14 @@ const PatientForm = ({
                     />
                   </div>
                 </div>
-              </div>
+              </CollapsibleSection>
 
-              <div className={sectionClass}>
-                <SectionTitle icon={FaInfoCircle}>Información Adicional</SectionTitle>
+              <CollapsibleSection
+                icon={FaInfoCircle}
+                title="Información Adicional"
+                isOpen={openSection === 'additional'}
+                onToggle={() => toggleSection('additional')}
+              >
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                   <FieldBlock
                     name="civilStatus"
@@ -191,10 +210,14 @@ const PatientForm = ({
                     placeholder="Ej: Ingeniero, Estudiante, etc."
                   />
                 </div>
-              </div>
+              </CollapsibleSection>
 
-              <div className={sectionClass}>
-                <SectionTitle icon={FaUserFriends}>Persona de Referencia</SectionTitle>
+              <CollapsibleSection
+                icon={FaUserFriends}
+                title="Persona de Referencia"
+                isOpen={openSection === 'reference'}
+                onToggle={() => toggleSection('reference')}
+              >
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                   <FieldBlock
                     name="referencePerson"
@@ -214,7 +237,7 @@ const PatientForm = ({
                     placeholder="Teléfono de contacto"
                   />
                 </div>
-              </div>
+              </CollapsibleSection>
 
               <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
                 <button
