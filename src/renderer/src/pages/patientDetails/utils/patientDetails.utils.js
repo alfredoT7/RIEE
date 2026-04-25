@@ -4,6 +4,7 @@ export const normalizeCompletePatientData = (payload) => {
   const questionnaire = payload?.questionnaire || {}
 
   return {
+    ...questionnaire,
     ...basePatient,
     clinicalInfo,
     questionnaire,
@@ -12,8 +13,7 @@ export const normalizeCompletePatientData = (payload) => {
     missingSections: Array.isArray(payload?.missingSections) ? payload.missingSections : [],
     motivoConsulta: clinicalInfo.motivoConsulta || basePatient.motivoConsulta || '',
     alergias: clinicalInfo.alergias || basePatient.alergias || '',
-    observaciones: clinicalInfo.observaciones || basePatient.observaciones || basePatient.notas || '',
-    ...questionnaire
+    observaciones: clinicalInfo.observaciones || basePatient.observaciones || basePatient.notas || ''
   }
 }
 
