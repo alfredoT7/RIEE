@@ -1,37 +1,74 @@
 import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CalendarDays, Clock3, Activity, Users } from 'lucide-react'
+import { CalendarDays, Clock3, Activity, Users, TrendingUp, TrendingDown, Plus, ChevronRight } from 'lucide-react'
 
 const summaryCards = [
   {
     title: 'Total citas',
     value: '24',
     change: '+3 vs semana anterior',
+    trend: 'up',
     icon: CalendarDays,
-    accent: 'from-sky-500 to-cyan-400'
+    accent: 'from-sky-500 to-cyan-400',
+    glow: 'rgba(14,165,233,0.18)',
+    bg: 'from-sky-50 to-cyan-50',
+    darkBg: 'dark:from-sky-950/40 dark:to-cyan-950/30'
   },
   {
     title: 'Nuevos pacientes',
     value: '8',
     change: '+2 vs semana anterior',
+    trend: 'up',
     icon: Users,
-    accent: 'from-emerald-500 to-teal-400'
+    accent: 'from-emerald-500 to-teal-400',
+    glow: 'rgba(16,185,129,0.18)',
+    bg: 'from-emerald-50 to-teal-50',
+    darkBg: 'dark:from-emerald-950/40 dark:to-teal-950/30'
   },
   {
     title: 'Horas programadas',
     value: '32h',
     change: '+5h vs semana anterior',
+    trend: 'up',
     icon: Clock3,
-    accent: 'from-amber-500 to-orange-400'
+    accent: 'from-violet-500 to-purple-400',
+    glow: 'rgba(139,92,246,0.18)',
+    bg: 'from-violet-50 to-purple-50',
+    darkBg: 'dark:from-violet-950/40 dark:to-purple-950/30'
   },
   {
     title: 'Tratamientos',
     value: '18',
     change: '-2 vs semana anterior',
+    trend: 'down',
     icon: Activity,
-    accent: 'from-fuchsia-500 to-pink-400'
+    accent: 'from-blue-500 to-indigo-400',
+    glow: 'rgba(99,102,241,0.18)',
+    bg: 'from-blue-50 to-indigo-50',
+    darkBg: 'dark:from-blue-950/40 dark:to-indigo-950/30'
   }
 ]
+
+const treatmentColors = {
+  'Consulta inicial': 'bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300',
+  'Limpieza dental': 'bg-teal-100 text-teal-700 dark:bg-teal-900/50 dark:text-teal-300',
+  Ortodoncia: 'bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300',
+  Consulta: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+  'Extraccion dental': 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300',
+  Extraccion: 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300',
+  'Revision de ortodoncia': 'bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300',
+  Endodoncia: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300',
+  'Implante dental': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300',
+  Blanqueamiento: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-300',
+  'Cirugia oral': 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300',
+  Emergencia: 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300',
+  Odontopediatria: 'bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300',
+  'Corona dental': 'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300',
+  'Puente dental': 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300'
+}
+
+const getTreatmentColor = (treatment) =>
+  treatmentColors[treatment] || 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
 
 const appointmentsData = {
   Dia: {
@@ -110,6 +147,13 @@ const appointmentsData = {
 
 const viewOptions = ['Dia', 'Semana', 'Mes']
 
+const getCountIntensity = (count) => {
+  if (count === 0) return null
+  if (count <= 6) return 'low'
+  if (count <= 10) return 'mid'
+  return 'high'
+}
+
 const Appointments = () => {
   const navigate = useNavigate()
   const [currentView, setCurrentView] = useState('Dia')
@@ -122,10 +166,7 @@ const Appointments = () => {
     [selectedDateKey]
   )
 
-  const currentWeekAppointments = useMemo(
-    () => Object.entries(appointmentsData.Semana),
-    []
-  )
+  const currentWeekAppointments = useMemo(() => Object.entries(appointmentsData.Semana), [])
 
   const formatCurrentDate = () => {
     if (currentView === 'Dia') {
@@ -137,95 +178,112 @@ const Appointments = () => {
         day: 'numeric'
       })
     }
-
-    if (currentView === 'Semana') {
-      return 'Semana del 19 al 25 de agosto de 2025'
-    }
-
+    if (currentView === 'Semana') return 'Semana del 19 al 25 de agosto de 2025'
     return 'Agosto 2025'
   }
 
   return (
-    <section className="px-2 pb-6 pt-3">
-      <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
+    <section className="space-y-6 px-2 pb-8 pt-3">
+      {/* Summary Cards */}
+      <div className="rounded-[24px] border border-white/70 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none">
         <div className="mb-5">
-          <h2 className="text-[1.2rem] font-semibold text-slate-800">Resumen de citas</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Vista general de citas, ocupacion y movimiento semanal.
+          <h2 className="text-[1.2rem] font-semibold text-slate-800 dark:text-slate-100">
+            Resumen de citas
+          </h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Vista general de citas, ocupación y movimiento semanal.
           </p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {summaryCards.map((card) => {
             const Icon = card.icon
+            const TrendIcon = card.trend === 'up' ? TrendingUp : TrendingDown
 
             return (
               <div
                 key={card.title}
-                className="rounded-[22px] border border-slate-200 bg-white p-4 shadow-[0_12px_32px_rgba(15,23,42,0.05)]"
+                className={`group relative overflow-hidden rounded-[22px] border border-slate-200/80 bg-gradient-to-br ${card.bg} ${card.darkBg} p-5 shadow-[0_8px_28px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_36px_rgba(15,23,42,0.1)] dark:border-slate-800`}
               >
+                <div
+                  className="pointer-events-none absolute -right-4 -top-4 h-24 w-24 rounded-full opacity-20 blur-2xl"
+                  style={{ background: `radial-gradient(circle, ${card.glow}, transparent 70%)` }}
+                />
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm text-slate-500">{card.title}</p>
-                    <h3 className="mt-2 text-2xl font-semibold text-slate-800">{card.value}</h3>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                      {card.title}
+                    </p>
+                    <h3 className="mt-2 text-3xl font-bold text-slate-800 dark:text-slate-100">
+                      {card.value}
+                    </h3>
                   </div>
                   <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${card.accent} text-white`}
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${card.accent} text-white shadow-lg`}
                   >
                     <Icon size={20} />
                   </div>
                 </div>
-                <p
-                  className={`mt-4 text-sm font-medium ${
-                    card.change.startsWith('+') ? 'text-emerald-600' : 'text-rose-600'
+                <div
+                  className={`mt-4 flex items-center gap-1.5 text-sm font-semibold ${
+                    card.trend === 'up'
+                      ? 'text-emerald-600 dark:text-emerald-400'
+                      : 'text-rose-600 dark:text-rose-400'
                   }`}
                 >
+                  <TrendIcon size={14} />
                   {card.change}
-                </p>
+                </div>
               </div>
             )
           })}
         </div>
       </div>
 
-      <div className="mt-8 rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)]">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      {/* Agenda */}
+      <div className="rounded-[24px] border border-slate-200/80 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h2 className="text-[1.2rem] font-semibold text-slate-800">Agenda</h2>
-            <p className="mt-1 text-sm text-slate-500">Gestion de agenda y citas programadas.</p>
+            <h2 className="text-[1.2rem] font-semibold text-slate-800 dark:text-slate-100">
+              Agenda
+            </h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              Gestión de agenda y citas programadas.
+            </p>
           </div>
 
           <button
             type="button"
             onClick={() => navigate('/nueva-cita')}
-            className="inline-flex w-fit items-center rounded-2xl bg-[#00b09b] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(0,176,155,0.25)] transition-transform hover:-translate-y-0.5"
+            className="inline-flex w-fit items-center gap-2 rounded-2xl bg-gradient-to-r from-[#00b09b] to-[#00c9a7] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,176,155,0.30)] transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(0,176,155,0.38)]"
           >
-            + Nueva cita
+            <Plus size={16} />
+            Nueva cita
           </button>
         </div>
 
-        <div className="mt-6 flex flex-col gap-4 rounded-[22px] border border-slate-200 bg-slate-50/80 p-4 lg:flex-row lg:items-center lg:justify-between">
+        {/* View Controls */}
+        <div className="mt-5 flex flex-col gap-4 rounded-[20px] border border-slate-200/80 bg-slate-50/80 p-4 lg:flex-row lg:items-center lg:justify-between dark:border-slate-800 dark:bg-slate-900/60">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
               Vista actual
             </p>
-            <h3 className="mt-1 text-lg font-semibold capitalize text-slate-800">
+            <h3 className="mt-1 text-base font-semibold capitalize text-slate-800 dark:text-slate-100">
               {formatCurrentDate()}
             </h3>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-1.5 rounded-2xl border border-slate-200/80 bg-white p-1 dark:border-slate-700 dark:bg-slate-900">
             {viewOptions.map((view) => {
               const isActive = currentView === view
-
               return (
                 <button
                   key={view}
                   type="button"
-                  className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
+                  className={`rounded-xl px-5 py-2 text-sm font-semibold transition-all duration-200 ${
                     isActive
-                      ? 'bg-[#00b09b] text-white shadow-[0_10px_20px_rgba(0,176,155,0.2)]'
-                      : 'border border-slate-200 bg-white text-slate-600 hover:border-[#00b09b]/30 hover:text-[#0f766e]'
+                      ? 'bg-gradient-to-r from-[#00b09b] to-[#00c9a7] text-white shadow-[0_6px_16px_rgba(0,176,155,0.28)]'
+                      : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200'
                   }`}
                   onClick={() => setCurrentView(view)}
                 >
@@ -236,93 +294,182 @@ const Appointments = () => {
           </div>
         </div>
 
+        {/* Day View */}
         {currentView === 'Dia' && (
-          <div className="mt-6 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
-            <div className="rounded-[22px] border border-slate-200 bg-white p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                Dias con mas actividad
+          <div className="mt-5 grid gap-4 lg:grid-cols-[200px_minmax(0,1fr)]">
+            {/* Day picker */}
+            <div className="rounded-[20px] border border-slate-200/80 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+              <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                Agosto 2025
               </p>
-              <div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-7 lg:grid-cols-4">
+              <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-7 lg:grid-cols-4">
                 {appointmentsData.Mes.map((day) => {
                   const isSelected = Number(day.date) === selectedDay
+                  const intensity = getCountIntensity(day.count)
 
                   return (
                     <button
                       key={day.date}
                       type="button"
                       onClick={() => setSelectedDay(Number(day.date))}
-                      className={`rounded-2xl border px-3 py-3 text-center transition-colors ${
+                      className={`relative rounded-xl px-1.5 py-2.5 text-center transition-all duration-150 ${
                         isSelected
-                          ? 'border-[#00b09b] bg-[#00b09b] text-white'
-                          : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-[#00b09b]/30 hover:bg-white'
+                          ? 'bg-gradient-to-br from-[#00b09b] to-[#00c9a7] text-white shadow-[0_6px_16px_rgba(0,176,155,0.32)]'
+                          : 'border border-slate-200/80 bg-slate-50 text-slate-600 hover:border-[#00b09b]/40 hover:bg-white dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:border-[#00b09b]/40 dark:hover:bg-slate-800'
                       }`}
                     >
-                      <span className="block text-sm font-semibold">{day.date}</span>
-                      <span className={`mt-1 block text-[11px] ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
-                        {day.count} citas
-                      </span>
+                      <span className="block text-xs font-bold">{day.date}</span>
+                      {intensity && !isSelected && (
+                        <span
+                          className={`mt-1 block h-1 w-full rounded-full ${
+                            intensity === 'high'
+                              ? 'bg-rose-400'
+                              : intensity === 'mid'
+                                ? 'bg-amber-400'
+                                : 'bg-emerald-400'
+                          }`}
+                        />
+                      )}
+                      {isSelected && (
+                        <span className="mt-1 block text-[9px] font-semibold text-white/80">
+                          {day.count}
+                        </span>
+                      )}
                     </button>
                   )
                 })}
               </div>
-            </div>
 
-            <div className="rounded-[22px] border border-slate-200 bg-white p-4">
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <h4 className="text-lg font-semibold text-slate-800">Agenda del dia</h4>
-                  <p className="text-sm text-slate-500">
-                    {currentDayAppointments.length} cita{currentDayAppointments.length === 1 ? '' : 's'} registradas.
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                {currentDayAppointments.map((appointment) => (
-                  <article
-                    key={`${appointment.time}-${appointment.patient}`}
-                    className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:flex-row md:items-center md:justify-between"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="rounded-2xl bg-[#00b09b]/10 px-3 py-2 text-sm font-semibold text-[#0f766e]">
-                        {appointment.time}
-                      </div>
-                      <div>
-                        <h5 className="text-sm font-semibold text-slate-800">{appointment.patient}</h5>
-                        <p className="mt-1 text-sm text-slate-500">{appointment.treatment}</p>
-                      </div>
-                    </div>
-                    <span className="w-fit rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-                      {appointment.duration} min
+              <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-3 dark:border-slate-800">
+                {[
+                  { color: 'bg-rose-400', label: '+11 citas' },
+                  { color: 'bg-amber-400', label: '7–10 citas' },
+                  { color: 'bg-emerald-400', label: '1–6 citas' }
+                ].map((item) => (
+                  <div key={item.label} className="flex items-center gap-2">
+                    <span className={`h-2 w-2 rounded-full ${item.color}`} />
+                    <span className="text-[11px] text-slate-400 dark:text-slate-500">
+                      {item.label}
                     </span>
-                  </article>
+                  </div>
                 ))}
               </div>
+            </div>
+
+            {/* Appointment list */}
+            <div className="rounded-[20px] border border-slate-200/80 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100">
+                    Agenda del día
+                  </h4>
+                  <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+                    {currentDayAppointments.length} cita
+                    {currentDayAppointments.length === 1 ? '' : 's'} registradas
+                  </p>
+                </div>
+                {currentDayAppointments.length > 0 && (
+                  <span className="rounded-full bg-[#00b09b]/10 px-3 py-1 text-xs font-bold text-[#0f766e] dark:bg-[#00b09b]/20 dark:text-[#34d399]">
+                    {currentDayAppointments.length} / día
+                  </span>
+                )}
+              </div>
+
+              {currentDayAppointments.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
+                    <CalendarDays size={24} className="text-slate-400 dark:text-slate-500" />
+                  </div>
+                  <p className="mt-3 text-sm font-medium text-slate-500 dark:text-slate-400">
+                    Sin citas para este día
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  {currentDayAppointments.map((appointment) => (
+                    <article
+                      key={`${appointment.time}-${appointment.patient}`}
+                      className="group flex flex-col gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 transition-all duration-150 hover:border-[#00b09b]/30 hover:bg-white hover:shadow-[0_4px_16px_rgba(0,176,155,0.08)] md:flex-row md:items-center md:justify-between dark:border-slate-800 dark:bg-slate-800/50 dark:hover:border-[#00b09b]/30 dark:hover:bg-slate-800"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-[#00b09b]/15 to-[#00c9a7]/10 dark:from-[#00b09b]/20 dark:to-[#00c9a7]/10">
+                          <span className="text-base font-bold text-[#0f766e] dark:text-[#34d399]">
+                            {appointment.time.split(':')[0]}
+                          </span>
+                          <span className="text-[10px] font-semibold text-[#0f766e]/70 dark:text-[#34d399]/70">
+                            :{appointment.time.split(':')[1]}
+                          </span>
+                        </div>
+                        <div>
+                          <h5 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                            {appointment.patient}
+                          </h5>
+                          <span
+                            className={`mt-1.5 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${getTreatmentColor(appointment.treatment)}`}
+                          >
+                            {appointment.treatment}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 md:flex-col md:items-end">
+                        <span className="rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-bold text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
+                          {appointment.duration} min
+                        </span>
+                        <ChevronRight
+                          size={16}
+                          className="text-slate-300 transition-colors group-hover:text-[#00b09b] dark:text-slate-700"
+                        />
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
 
+        {/* Week View */}
         {currentView === 'Semana' && (
-          <div className="mt-6 grid gap-4 xl:grid-cols-5">
+          <div className="mt-5 grid gap-3 xl:grid-cols-5">
             {currentWeekAppointments.map(([day, appointments]) => (
               <div
                 key={day}
-                className="rounded-[22px] border border-slate-200 bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.04)]"
+                className="rounded-[20px] border border-slate-200/80 bg-white p-4 shadow-[0_6px_20px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900"
               >
-                <div className="mb-4">
-                  <h4 className="text-base font-semibold text-slate-800">{day}</h4>
-                  <p className="text-sm text-slate-500">{appointments.length} citas programadas</p>
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">{day}</h4>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">
+                      {appointments.length} citas
+                    </p>
+                  </div>
+                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#00b09b]/10 text-xs font-bold text-[#0f766e] dark:bg-[#00b09b]/20 dark:text-[#34d399]">
+                    {appointments.length}
+                  </span>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {appointments.map((appointment) => (
-                    <article key={`${day}-${appointment.time}-${appointment.patient}`} className="rounded-2xl bg-slate-50 p-3">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="text-sm font-semibold text-[#0f766e]">{appointment.time}</span>
-                        <span className="text-xs text-slate-400">{appointment.duration} min</span>
+                    <article
+                      key={`${day}-${appointment.time}-${appointment.patient}`}
+                      className="rounded-xl border border-slate-100 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-800/60"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-bold text-[#0f766e] dark:text-[#34d399]">
+                          {appointment.time}
+                        </span>
+                        <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">
+                          {appointment.duration}m
+                        </span>
                       </div>
-                      <h5 className="mt-2 text-sm font-semibold text-slate-800">{appointment.patient}</h5>
-                      <p className="mt-1 text-sm text-slate-500">{appointment.treatment}</p>
+                      <h5 className="mt-1.5 text-xs font-semibold text-slate-800 dark:text-slate-100">
+                        {appointment.patient}
+                      </h5>
+                      <span
+                        className={`mt-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${getTreatmentColor(appointment.treatment)}`}
+                      >
+                        {appointment.treatment}
+                      </span>
                     </article>
                   ))}
                 </div>
@@ -331,17 +478,19 @@ const Appointments = () => {
           </div>
         )}
 
+        {/* Month View */}
         {currentView === 'Mes' && (
-          <div className="mt-6 rounded-[22px] border border-slate-200 bg-white p-4">
-            <div className="mb-4 grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
-              {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((day) => (
-                <div key={day}>{day}</div>
+          <div className="mt-5 rounded-[20px] border border-slate-200/80 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+            <div className="mb-3 grid grid-cols-7 gap-2 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">
+              {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((d) => (
+                <div key={d}>{d}</div>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
               {appointmentsData.Mes.map((day) => {
                 const isSelected = Number(day.date) === selectedDay
+                const intensity = getCountIntensity(day.count)
 
                 return (
                   <button
@@ -351,18 +500,41 @@ const Appointments = () => {
                       setSelectedDay(Number(day.date))
                       setCurrentView('Dia')
                     }}
-                    className={`rounded-[20px] border p-4 text-left transition-colors ${
+                    className={`group relative overflow-hidden rounded-2xl border p-3 text-left transition-all duration-150 ${
                       isSelected
-                        ? 'border-[#00b09b] bg-[#00b09b] text-white'
-                        : 'border-slate-200 bg-slate-50 hover:border-[#00b09b]/30 hover:bg-white'
+                        ? 'border-[#00b09b] bg-gradient-to-br from-[#00b09b] to-[#00c9a7] text-white shadow-[0_8px_20px_rgba(0,176,155,0.30)]'
+                        : 'border-slate-200/80 bg-slate-50/80 hover:border-[#00b09b]/30 hover:bg-white hover:shadow-[0_4px_12px_rgba(0,176,155,0.08)] dark:border-slate-800 dark:bg-slate-800/50 dark:hover:border-[#00b09b]/30 dark:hover:bg-slate-800'
                     }`}
                   >
-                    <span className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-slate-800'}`}>
+                    <span
+                      className={`text-sm font-bold ${isSelected ? 'text-white' : 'text-slate-800 dark:text-slate-100'}`}
+                    >
                       {day.date}
                     </span>
-                    <p className={`mt-3 text-xs ${isSelected ? 'text-white/80' : 'text-slate-500'}`}>
-                      {day.count > 0 ? `${day.count} citas` : 'Sin citas'}
-                    </p>
+                    {day.count > 0 ? (
+                      <p
+                        className={`mt-2 text-xs font-semibold ${isSelected ? 'text-white/85' : 'text-slate-500 dark:text-slate-400'}`}
+                      >
+                        {day.count} citas
+                      </p>
+                    ) : (
+                      <p
+                        className={`mt-2 text-xs ${isSelected ? 'text-white/60' : 'text-slate-300 dark:text-slate-600'}`}
+                      >
+                        —
+                      </p>
+                    )}
+                    {intensity && !isSelected && (
+                      <span
+                        className={`absolute bottom-1.5 right-1.5 h-1.5 w-1.5 rounded-full ${
+                          intensity === 'high'
+                            ? 'bg-rose-400'
+                            : intensity === 'mid'
+                              ? 'bg-amber-400'
+                              : 'bg-emerald-400'
+                        }`}
+                      />
+                    )}
                   </button>
                 )
               })}

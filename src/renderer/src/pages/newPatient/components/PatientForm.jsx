@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Formik, Form } from 'formik'
+import { toast } from 'sonner'
 import {
   FaAddressCard,
   FaArrowLeft,
@@ -23,6 +24,230 @@ import CollapsibleSection from './CollapsibleSection'
 import FieldBlock from './FieldBlock'
 import PatientPhotoSection from './PatientPhotoSection'
 
+const FormContent = ({
+  isSubmitting,
+  errors,
+  touched,
+  status,
+  submitCount,
+  openSection,
+  toggleSection,
+  fileInputRef,
+  handleFileChange,
+  handleFileButtonClick,
+  clearImageSelection,
+  previewUrl,
+  navigate,
+  cancelPath,
+  cancelState,
+  submitLabel,
+  submitLoadingLabel
+}) => {
+  const prevSubmitCount = useRef(0)
+
+  useEffect(() => {
+    if (submitCount > prevSubmitCount.current && Object.keys(errors).length > 0) {
+      toast.error('Faltan datos por completar', {
+        description: 'Revisa los campos marcados en rojo antes de guardar.',
+        duration: 4000
+      })
+    }
+    prevSubmitCount.current = submitCount
+  }, [submitCount])
+
+  const sectionHasError = (fields) => fields.some((f) => errors[f] && touched[f])
+
+  return (
+    <Form className="flex w-full flex-col gap-7">
+      {status?.type === 'error' && (
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700 shadow-sm dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-200">
+          {status.message}
+        </div>
+      )}
+
+      <PatientPhotoSection
+        fileInputRef={fileInputRef}
+        isSubmitting={isSubmitting}
+        onFileChange={handleFileChange}
+        onFileButtonClick={handleFileButtonClick}
+        onRemoveImage={clearImageSelection}
+        previewUrl={previewUrl}
+        isOpen={openSection === 'photo'}
+        onToggle={() => toggleSection('photo')}
+      />
+
+      <CollapsibleSection
+        icon={FaAddressCard}
+        title="Información Personal"
+        isOpen={openSection === 'personal'}
+        onToggle={() => toggleSection('personal')}
+        hasError={sectionHasError(['name', 'lastname', 'ci', 'birthDate', 'address'])}
+      >
+        <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
+          <FieldBlock
+            name="name"
+            label="Nombres *"
+            icon={FaUser}
+            error={errors.name}
+            touched={touched.name}
+            placeholder="Ingrese los nombres"
+          />
+          <FieldBlock
+            name="lastname"
+            label="Apellidos *"
+            icon={FaUser}
+            error={errors.lastname}
+            touched={touched.lastname}
+            placeholder="Ingrese los apellidos"
+          />
+          <FieldBlock
+            name="ci"
+            label="Carnet de Identidad *"
+            icon={FaIdCard}
+            error={errors.ci}
+            touched={touched.ci}
+            placeholder="Ej: 1234567 LP"
+          />
+          <BirthDatePickerField />
+          <div className="md:col-span-2">
+            <FieldBlock
+              name="address"
+              label="Dirección"
+              icon={FaMapMarker}
+              error={errors.address}
+              touched={touched.address}
+              placeholder="Ingrese la dirección completa"
+            />
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        icon={FaPhoneAlt}
+        title="Información de Contacto"
+        isOpen={openSection === 'contact'}
+        onToggle={() => toggleSection('contact')}
+        hasError={sectionHasError(['phone', 'secondPhone', 'email'])}
+      >
+        <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
+          <FieldBlock
+            name="phone"
+            label="Teléfono Principal *"
+            icon={FaPhone}
+            type="tel"
+            error={errors.phone}
+            touched={touched.phone}
+            placeholder="70123456"
+          />
+          <FieldBlock
+            name="secondPhone"
+            label="Teléfono Secundario"
+            icon={FaPhone}
+            type="tel"
+            error={errors.secondPhone}
+            touched={touched.secondPhone}
+            placeholder="22334455 (Opcional)"
+          />
+          <div className="md:col-span-2">
+            <FieldBlock
+              name="email"
+              label="Correo Electrónico *"
+              icon={FaEnvelope}
+              type="email"
+              error={errors.email}
+              touched={touched.email}
+              placeholder="ejemplo@correo.com"
+            />
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        icon={FaInfoCircle}
+        title="Información Adicional"
+        isOpen={openSection === 'additional'}
+        onToggle={() => toggleSection('additional')}
+        hasError={sectionHasError(['civilStatus', 'occupation'])}
+      >
+        <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
+          <FieldBlock
+            name="civilStatus"
+            label="Estado Civil *"
+            icon={FaHeart}
+            as="select"
+            error={errors.civilStatus}
+            touched={touched.civilStatus}
+          >
+            <option value="">Seleccione estado civil</option>
+            {CIVIL_STATUS_OPTIONS.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </FieldBlock>
+          <FieldBlock
+            name="occupation"
+            label="Ocupación *"
+            icon={FaBriefcase}
+            error={errors.occupation}
+            touched={touched.occupation}
+            placeholder="Ej: Ingeniero, Estudiante, etc."
+          />
+        </div>
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        icon={FaUserFriends}
+        title="Persona de Referencia"
+        isOpen={openSection === 'reference'}
+        onToggle={() => toggleSection('reference')}
+        hasError={sectionHasError(['referencePerson', 'referencePhone'])}
+      >
+        <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
+          <FieldBlock
+            name="referencePerson"
+            label="Nombre Completo *"
+            icon={FaUserFriends}
+            error={errors.referencePerson}
+            touched={touched.referencePerson}
+            placeholder="Nombre de la persona de contacto"
+          />
+          <FieldBlock
+            name="referencePhone"
+            label="Teléfono de Referencia *"
+            icon={FaPhone}
+            type="tel"
+            error={errors.referencePhone}
+            touched={touched.referencePhone}
+            placeholder="Teléfono de contacto"
+          />
+        </div>
+      </CollapsibleSection>
+
+      <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+        <button
+          type="button"
+          onClick={() => navigate(cancelPath, cancelState ? { state: cancelState } : undefined)}
+          disabled={isSubmitting}
+          className="inline-flex h-12 min-w-[170px] cursor-pointer items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+        >
+          <FaArrowLeft />
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="inline-flex h-12 min-w-[220px] cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-6 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <FaSave />
+          {isSubmitting ? submitLoadingLabel : submitLabel}
+        </button>
+      </div>
+    </Form>
+  )
+}
+
 const PatientForm = ({
   initialValues,
   onSubmit,
@@ -38,8 +263,7 @@ const PatientForm = ({
   const navigate = useNavigate()
   const [openSection, setOpenSection] = useState('photo')
 
-  const toggleSection = (id) =>
-    setOpenSection((prev) => (prev === id ? null : id))
+  const toggleSection = (id) => setOpenSection((prev) => (prev === id ? null : id))
 
   const {
     fileInputRef,
@@ -76,202 +300,23 @@ const PatientForm = ({
             onSubmit(values, helpers, { selectedFile, clearImageSelection })
           }
         >
-          {({ isSubmitting, errors, touched, status }) => {
-            const sectionHasError = (fields) =>
-              fields.some((f) => errors[f] && touched[f])
-
-            return (
-            <Form className="flex w-full flex-col gap-7">
-              {status?.type === 'error' && (
-                <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700 shadow-sm dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-200">
-                  {status.message}
-                </div>
-              )}
-
-              <PatientPhotoSection
-                fileInputRef={fileInputRef}
-                isSubmitting={isSubmitting}
-                onFileChange={handleFileChange}
-                onFileButtonClick={handleFileButtonClick}
-                onRemoveImage={clearImageSelection}
-                previewUrl={previewUrl}
-                isOpen={openSection === 'photo'}
-                onToggle={() => toggleSection('photo')}
-              />
-
-              <CollapsibleSection
-                icon={FaAddressCard}
-                title="Información Personal"
-                isOpen={openSection === 'personal'}
-                onToggle={() => toggleSection('personal')}
-                hasError={sectionHasError(['name', 'lastname', 'ci', 'birthDate', 'address'])}
-              >
-                <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
-                  <FieldBlock
-                    name="name"
-                    label="Nombres *"
-                    icon={FaUser}
-                    error={errors.name}
-                    touched={touched.name}
-                    placeholder="Ingrese los nombres"
-                  />
-                  <FieldBlock
-                    name="lastname"
-                    label="Apellidos *"
-                    icon={FaUser}
-                    error={errors.lastname}
-                    touched={touched.lastname}
-                    placeholder="Ingrese los apellidos"
-                  />
-                  <FieldBlock
-                    name="ci"
-                    label="Carnet de Identidad *"
-                    icon={FaIdCard}
-                    error={errors.ci}
-                    touched={touched.ci}
-                    placeholder="Ej: 1234567 LP"
-                  />
-                  <BirthDatePickerField />
-                  <div className="md:col-span-2">
-                    <FieldBlock
-                      name="address"
-                      label="Dirección"
-                      icon={FaMapMarker}
-                      error={errors.address}
-                      touched={touched.address}
-                      placeholder="Ingrese la dirección completa"
-                    />
-                  </div>
-                </div>
-              </CollapsibleSection>
-
-              <CollapsibleSection
-                icon={FaPhoneAlt}
-                title="Información de Contacto"
-                isOpen={openSection === 'contact'}
-                onToggle={() => toggleSection('contact')}
-                hasError={sectionHasError(['phone', 'secondPhone', 'email'])}
-              >
-                <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
-                  <FieldBlock
-                    name="phone"
-                    label="Teléfono Principal *"
-                    icon={FaPhone}
-                    type="tel"
-                    error={errors.phone}
-                    touched={touched.phone}
-                    placeholder="70123456"
-                  />
-                  <FieldBlock
-                    name="secondPhone"
-                    label="Teléfono Secundario"
-                    icon={FaPhone}
-                    type="tel"
-                    error={errors.secondPhone}
-                    touched={touched.secondPhone}
-                    placeholder="22334455 (Opcional)"
-                  />
-                  <div className="md:col-span-2">
-                    <FieldBlock
-                      name="email"
-                      label="Correo Electrónico *"
-                      icon={FaEnvelope}
-                      type="email"
-                      error={errors.email}
-                      touched={touched.email}
-                      placeholder="ejemplo@correo.com"
-                    />
-                  </div>
-                </div>
-              </CollapsibleSection>
-
-              <CollapsibleSection
-                icon={FaInfoCircle}
-                title="Información Adicional"
-                isOpen={openSection === 'additional'}
-                onToggle={() => toggleSection('additional')}
-                hasError={sectionHasError(['civilStatus', 'occupation'])}
-              >
-                <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
-                  <FieldBlock
-                    name="civilStatus"
-                    label="Estado Civil *"
-                    icon={FaHeart}
-                    as="select"
-                    error={errors.civilStatus}
-                    touched={touched.civilStatus}
-                  >
-                    <option value="">Seleccione estado civil</option>
-                    {CIVIL_STATUS_OPTIONS.map((status) => (
-                      <option key={status.value} value={status.value}>
-                        {status.label}
-                      </option>
-                    ))}
-                  </FieldBlock>
-                  <FieldBlock
-                    name="occupation"
-                    label="Ocupación *"
-                    icon={FaBriefcase}
-                    error={errors.occupation}
-                    touched={touched.occupation}
-                    placeholder="Ej: Ingeniero, Estudiante, etc."
-                  />
-                </div>
-              </CollapsibleSection>
-
-              <CollapsibleSection
-                icon={FaUserFriends}
-                title="Persona de Referencia"
-                isOpen={openSection === 'reference'}
-                onToggle={() => toggleSection('reference')}
-                hasError={sectionHasError(['referencePerson', 'referencePhone'])}
-              >
-                <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
-                  <FieldBlock
-                    name="referencePerson"
-                    label="Nombre Completo *"
-                    icon={FaUserFriends}
-                    error={errors.referencePerson}
-                    touched={touched.referencePerson}
-                    placeholder="Nombre de la persona de contacto"
-                  />
-                  <FieldBlock
-                    name="referencePhone"
-                    label="Teléfono de Referencia *"
-                    icon={FaPhone}
-                    type="tel"
-                    error={errors.referencePhone}
-                    touched={touched.referencePhone}
-                    placeholder="Teléfono de contacto"
-                  />
-                </div>
-              </CollapsibleSection>
-
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() =>
-                    navigate(cancelPath, cancelState ? { state: cancelState } : undefined)
-                  }
-                  disabled={isSubmitting}
-                  className="inline-flex h-12 min-w-[170px] cursor-pointer items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
-                >
-                  <FaArrowLeft />
-                  Cancelar
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex h-12 min-w-[220px] cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#00b09b] px-6 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(0,176,155,0.22)] transition-colors hover:bg-[#0f766e] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <FaSave />
-                  {isSubmitting ? submitLoadingLabel : submitLabel}
-                </button>
-              </div>
-            </Form>
-            )
-          }}
+          {(formik) => (
+            <FormContent
+              {...formik}
+              openSection={openSection}
+              toggleSection={toggleSection}
+              fileInputRef={fileInputRef}
+              handleFileChange={handleFileChange}
+              handleFileButtonClick={handleFileButtonClick}
+              clearImageSelection={clearImageSelection}
+              previewUrl={previewUrl}
+              navigate={navigate}
+              cancelPath={cancelPath}
+              cancelState={cancelState}
+              submitLabel={submitLabel}
+              submitLoadingLabel={submitLoadingLabel}
+            />
+          )}
         </Formik>
       </div>
     </section>
