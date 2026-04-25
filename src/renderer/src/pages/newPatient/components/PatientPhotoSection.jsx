@@ -1,8 +1,7 @@
 import React from 'react'
 import ImagesApp from '../../../assets/ImagesApp'
 import { FaCamera, FaTrash } from 'react-icons/fa'
-import { sectionClass } from '../formStyles'
-import { SectionTitle } from './FieldBlock'
+import CollapsibleSection from './CollapsibleSection'
 
 const PatientPhotoSection = ({
   fileInputRef,
@@ -10,11 +9,11 @@ const PatientPhotoSection = ({
   onFileChange,
   onFileButtonClick,
   onRemoveImage,
-  previewUrl
+  previewUrl,
+  isOpen,
+  onToggle
 }) => (
-  <div className={sectionClass}>
-    <SectionTitle icon={FaCamera}>Fotografía del Paciente</SectionTitle>
-
+  <CollapsibleSection icon={FaCamera} title="Fotografía del Paciente" isOpen={isOpen} onToggle={onToggle}>
     <div className="flex flex-col items-center justify-center gap-5">
       <div className="relative h-44 w-44 overflow-hidden rounded-[28px] border-4 border-[#00b09b] bg-slate-100 shadow-[0_16px_35px_rgba(15,23,42,0.10)] dark:bg-slate-900">
         <img
@@ -53,7 +52,7 @@ const PatientPhotoSection = ({
         )}
       </div>
     </div>
-  </div>
+  </CollapsibleSection>
 )
 
 export default PatientPhotoSection
