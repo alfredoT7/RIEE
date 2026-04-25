@@ -6,6 +6,8 @@ import {
   Calendar,
   CalendarClock,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   ScanLine,
   TrendingUp,
@@ -34,11 +36,80 @@ const boliviaTimeFormatter = new Intl.DateTimeFormat('es-BO', {
   hour12: false
 })
 
-const newsItem = {
-  title: 'Nuevo equipo de radiografía',
-  description:
-    'Se incorporó un sistema digital de última generación para agilizar diagnósticos, reducir tiempos de espera y mejorar la precisión de cada evaluación.'
-}
+const newsItems = [
+  {
+    title: 'Nuevo equipo de radiografía',
+    description:
+      'Se incorporó un sistema digital de última generación para agilizar diagnósticos, reducir tiempos de espera y mejorar la precisión de cada evaluación.',
+    icon: ScanLine,
+    iconLabel: 'Radiografía digital',
+    iconSub: 'Sistema activo en consulta general.',
+    checks: [
+      'Diagnóstico inicial más rápido por paciente.',
+      'Menor repetición de toma por mejor calidad de imagen.'
+    ]
+  },
+  {
+    title: 'Ampliación de horario de atención',
+    description:
+      'A partir de mayo, el consultorio extiende su horario de atención para cubrir mayor demanda y reducir las listas de espera de pacientes.',
+    icon: Clock,
+    iconLabel: 'Nuevo horario',
+    iconSub: 'Lunes a viernes hasta las 20:00.',
+    checks: [
+      'Mayor disponibilidad de turnos por la tarde.',
+      'Reducción del tiempo de espera promedio en un 35%.'
+    ]
+  },
+  {
+    title: 'Actualización del sistema de historial',
+    description:
+      'El módulo de historial clínico fue renovado para permitir búsquedas más rápidas y un acceso seguro desde cualquier sesión autorizada.',
+    icon: Activity,
+    iconLabel: 'Historial clínico',
+    iconSub: 'Módulo disponible para todos los médicos.',
+    checks: [
+      'Búsqueda por CI, nombre o fecha en tiempo real.',
+      'Registro de cambios con trazabilidad completa.'
+    ]
+  }
+]
+
+const treatmentItems = [
+  {
+    nombre: 'María Fernández',
+    ci: '6845123 LP',
+    tratamiento: 'Tratamiento de conductos',
+    sesion: 'Sesión 3 de 5',
+    proximaCita: '30/04/2026 - 09:30',
+    estadoClinico: 'Evolución favorable',
+    progreso: 60,
+    responsable: 'Dra. Valeria Rojas',
+    observacion: 'Sin dolor post sesión, continuar protocolo.'
+  },
+  {
+    nombre: 'Carlos Mendoza',
+    ci: '5123874 CB',
+    tratamiento: 'Ortodoncia correctiva',
+    sesion: 'Sesión 7 de 12',
+    proximaCita: '02/05/2026 - 11:00',
+    estadoClinico: 'Progreso estable',
+    progreso: 58,
+    responsable: 'Dr. Andrés Quiroga',
+    observacion: 'Ajuste de brackets realizado sin complicaciones.'
+  },
+  {
+    nombre: 'Luisa Vargas',
+    ci: '7234561 OR',
+    tratamiento: 'Blanqueamiento dental',
+    sesion: 'Sesión 2 de 3',
+    proximaCita: '05/05/2026 - 14:30',
+    estadoClinico: 'Respuesta positiva',
+    progreso: 66,
+    responsable: 'Dra. Valeria Rojas',
+    observacion: 'Sensibilidad leve esperada, aplicar gel protector.'
+  }
+]
 
 const patientHeaderCells = [
   { label: 'CI', className: '' },
@@ -73,6 +144,24 @@ const Home = () => {
   const [boliviaTime, setBoliviaTime] = useState(() => boliviaTimeFormatter.format(new Date()))
   const [recentPatients, setRecentPatients] = useState([])
   const [isLoadingPatients, setIsLoadingPatients] = useState(true)
+  const [newsIndex, setNewsIndex] = useState(0)
+  const [treatmentIndex, setTreatmentIndex] = useState(0)
+
+  const prevNews = () => setNewsIndex((i) => (i - 1 + newsItems.length) % newsItems.length)
+  const nextNews = () => setNewsIndex((i) => (i + 1) % newsItems.length)
+  const prevTreatment = () =>
+    setTreatmentIndex((i) => (i - 1 + treatmentItems.length) % treatmentItems.length)
+  const nextTreatment = () => setTreatmentIndex((i) => (i + 1) % treatmentItems.length)
+
+  useEffect(() => {
+    const t = window.setInterval(nextNews, 4000)
+    return () => window.clearInterval(t)
+  }, [])
+
+  useEffect(() => {
+    const t = window.setInterval(nextTreatment, 4000)
+    return () => window.clearInterval(t)
+  }, [])
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -210,116 +299,183 @@ const Home = () => {
                 Resumen rápido de mejoras y movimientos recientes del consultorio.
               </p>
             </div>
-            <div className="rounded-full bg-[#00b09b]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#0f766e]">
-              Hoy
+            <div className="flex items-center gap-2">
+              <div className="rounded-full bg-[#00b09b]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#0f766e]">
+                Hoy
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={prevNews}
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:border-[#00b09b]/40 hover:bg-[#00b09b]/8 hover:text-[#0f766e] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <span className="min-w-[36px] text-center text-xs text-slate-400 dark:text-slate-500">
+                  {newsIndex + 1}/{newsItems.length}
+                </span>
+                <button
+                  onClick={nextNews}
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:border-[#00b09b]/40 hover:bg-[#00b09b]/8 hover:text-[#0f766e] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </div>
 
-          <article className="rounded-2xl border border-[#d9ece8] bg-white p-5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none">
-            <div className="mb-4 h-1.5 w-14 rounded-full bg-gradient-to-r from-[#00b09b] to-[#5ce1d4]" />
-            <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100">
-              {newsItem.title}
-            </h4>
-            <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-              {newsItem.description}
-            </p>
+          <AnimatePresence mode="wait">
+            {newsItems.map((item, i) =>
+              i === newsIndex ? (
+                <motion.article
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.97, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, scale: 1.02, filter: 'blur(6px)' }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="rounded-2xl border border-[#d9ece8] bg-white p-5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-none"
+                >
+                  <div className="mb-4 h-1.5 w-14 rounded-full bg-gradient-to-r from-[#00b09b] to-[#5ce1d4]" />
+                  <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100">
+                    {item.title}
+                  </h4>
+                  <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                    {item.description}
+                  </p>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-[170px_minmax(0,1fr)]">
-              <div className="rounded-xl border border-[#00b09b]/25 bg-[#00b09b]/8 p-3">
-                <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-white text-[#0f766e]">
-                  <ScanLine className="h-4 w-4" />
-                </div>
-                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  Radiografía digital
-                </p>
-                <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
-                  Sistema activo en consulta general.
-                </p>
-              </div>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-[170px_minmax(0,1fr)]">
+                    <div className="rounded-xl border border-[#00b09b]/25 bg-[#00b09b]/8 p-3">
+                      <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-white text-[#0f766e]">
+                        <item.icon className="h-4 w-4" />
+                      </div>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                        {item.iconLabel}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+                        {item.iconSub}
+                      </p>
+                    </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/70">
-                <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-200">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#0f766e]" />
-                    <span>Diagnóstico inicial más rápido por paciente.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#0f766e]" />
-                    <span>Menor repetición de toma por mejor calidad de imagen.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </article>
+                    <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/70">
+                      <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-200">
+                        {item.checks.map((check, ci) => (
+                          <li key={ci} className="flex items-start gap-2">
+                            <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#0f766e]" />
+                            <span>{check}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </motion.article>
+              ) : null
+            )}
+          </AnimatePresence>
         </div>
 
-        <aside className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none sm:p-6">
-          <div className="mb-5">
-            <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">
-              Estado de tratamientos
-            </h3>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Estado actual por fase clínica.
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-900/70">
-            <div className="mb-3 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#00b09b]/15 text-[#0f766e]">
-                <UserRound className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  María Fernández
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">CI: 6845123 LP</p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <Activity className="h-4 w-4 text-[#0f766e]" />
-                <span>Tratamiento de conductos</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <Calendar className="h-4 w-4 text-[#0f766e]" />
-                <span>Sesión 3 de 5</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <CalendarClock className="h-4 w-4 text-[#0f766e]" />
-                <span>Próxima cita: 30/04/2026 - 09:30</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <CheckCircle2 className="h-4 w-4 text-[#0f766e]" />
-                <span>Estado clínico: evolución favorable</span>
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <div className="mb-1 flex items-center justify-between text-xs">
-                <span className="font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
-                  Progreso
-                </span>
-                <span className="font-semibold text-[#0f766e] dark:text-[#5ce1d4]">60%</span>
-              </div>
-              <div className="h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
-                <div className="h-2 w-[60%] rounded-full bg-[#00b09b]" />
-              </div>
-            </div>
-
-            <div className="mt-4 rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-950/60">
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Responsable: Dra. Valeria Rojas
-              </p>
-              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                Observación: sin dolor post sesión, continuar protocolo.
+        <aside className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none sm:p-6">
+          <div className="mb-5 flex items-start justify-between">
+            <div>
+              <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">
+                Estado de tratamientos
+              </h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                Estado actual por fase clínica.
               </p>
             </div>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={prevTreatment}
+                className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:border-[#00b09b]/40 hover:bg-[#00b09b]/8 hover:text-[#0f766e] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <span className="min-w-[36px] text-center text-xs text-slate-400 dark:text-slate-500">
+                {treatmentIndex + 1}/{treatmentItems.length}
+              </span>
+              <button
+                onClick={nextTreatment}
+                className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:border-[#00b09b]/40 hover:bg-[#00b09b]/8 hover:text-[#0f766e] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
+
+          <AnimatePresence mode="wait">
+            {treatmentItems.map((t, i) =>
+              i === treatmentIndex ? (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.97, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, scale: 1.02, filter: 'blur(6px)' }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-slate-900/70"
+                >
+                  <div className="mb-3 flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#00b09b]/15 text-[#0f766e]">
+                      <UserRound className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                        {t.nombre}
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">CI: {t.ci}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                      <Activity className="h-4 w-4 text-[#0f766e]" />
+                      <span>{t.tratamiento}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                      <Calendar className="h-4 w-4 text-[#0f766e]" />
+                      <span>{t.sesion}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                      <CalendarClock className="h-4 w-4 text-[#0f766e]" />
+                      <span>Próxima cita: {t.proximaCita}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                      <CheckCircle2 className="h-4 w-4 text-[#0f766e]" />
+                      <span>Estado clínico: {t.estadoClinico}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-5">
+                    <div className="mb-1 flex items-center justify-between text-xs">
+                      <span className="font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                        Progreso
+                      </span>
+                      <span className="font-semibold text-[#0f766e] dark:text-[#5ce1d4]">
+                        {t.progreso}%
+                      </span>
+                    </div>
+                    <div className="h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800">
+                      <div
+                        className="h-2 rounded-full bg-[#00b09b]"
+                        style={{ width: `${t.progreso}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4 rounded-lg border border-slate-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-950/60">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      Responsable: {t.responsable}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                      Observación: {t.observacion}
+                    </p>
+                  </div>
+                </motion.div>
+              ) : null
+            )}
+          </AnimatePresence>
         </aside>
       </div>
 
-      <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none sm:p-6">
+      <div className="rounded-[24px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none sm:p-6">
         <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h3 className="text-[1.15rem] font-semibold text-slate-800 dark:text-slate-100">
