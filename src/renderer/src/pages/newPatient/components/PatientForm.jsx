@@ -36,7 +36,7 @@ const PatientForm = ({
   initialPreviewUrl
 }) => {
   const navigate = useNavigate()
-  const [openSection, setOpenSection] = useState('personal')
+  const [openSection, setOpenSection] = useState('photo')
 
   const toggleSection = (id) =>
     setOpenSection((prev) => (prev === id ? null : id))
