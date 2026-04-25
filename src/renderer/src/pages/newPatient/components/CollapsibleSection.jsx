@@ -2,9 +2,14 @@ import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 
-const CollapsibleSection = ({ icon: Icon, title, children, isOpen, onToggle }) => {
+const CollapsibleSection = ({ icon: Icon, title, children, isOpen, onToggle, hasError }) => {
+  const bgClass = hasError
+    ? 'bg-gradient-to-br from-[#fff9f9] via-white to-[#fee2e2] dark:bg-[linear-gradient(135deg,#1a0a0a_0%,#1c1010_55%,#2d0b0b_100%)]'
+    : 'bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)]'
+  const borderClass = hasError ? 'border-rose-200/70 dark:border-rose-900/40' : 'border-white/60 dark:border-slate-800'
+
   return (
-    <div className="overflow-hidden rounded-[28px] border border-white/60 bg-gradient-to-br from-[#f9fffd] via-white to-[#eef8f6] shadow-[0_20px_60px_rgba(0,0,0,0.06)] transition-colors dark:border-slate-800 dark:bg-[linear-gradient(135deg,#0f172a_0%,#111827_55%,#0b2f2d_100%)] dark:shadow-none">
+    <div className={`overflow-hidden rounded-[28px] border shadow-[0_20px_60px_rgba(0,0,0,0.06)] transition-colors dark:shadow-none ${bgClass} ${borderClass}`}>
       <button
         type="button"
         onClick={onToggle}

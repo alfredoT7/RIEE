@@ -76,7 +76,11 @@ const PatientForm = ({
             onSubmit(values, helpers, { selectedFile, clearImageSelection })
           }
         >
-          {({ isSubmitting, errors, touched, status }) => (
+          {({ isSubmitting, errors, touched, status }) => {
+            const sectionHasError = (fields) =>
+              fields.some((f) => errors[f] && touched[f])
+
+            return (
             <Form className="flex w-full flex-col gap-7">
               {status?.type === 'error' && (
                 <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700 shadow-sm dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-200">
@@ -100,6 +104,7 @@ const PatientForm = ({
                 title="Información Personal"
                 isOpen={openSection === 'personal'}
                 onToggle={() => toggleSection('personal')}
+                hasError={sectionHasError(['name', 'lastname', 'ci', 'birthDate', 'address'])}
               >
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                   <FieldBlock
@@ -145,6 +150,7 @@ const PatientForm = ({
                 title="Información de Contacto"
                 isOpen={openSection === 'contact'}
                 onToggle={() => toggleSection('contact')}
+                hasError={sectionHasError(['phone', 'secondPhone', 'email'])}
               >
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                   <FieldBlock
@@ -184,6 +190,7 @@ const PatientForm = ({
                 title="Información Adicional"
                 isOpen={openSection === 'additional'}
                 onToggle={() => toggleSection('additional')}
+                hasError={sectionHasError(['civilStatus', 'occupation'])}
               >
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                   <FieldBlock
@@ -217,6 +224,7 @@ const PatientForm = ({
                 title="Persona de Referencia"
                 isOpen={openSection === 'reference'}
                 onToggle={() => toggleSection('reference')}
+                hasError={sectionHasError(['referencePerson', 'referencePhone'])}
               >
                 <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                   <FieldBlock
@@ -262,7 +270,8 @@ const PatientForm = ({
                 </button>
               </div>
             </Form>
-          )}
+            )
+          }}
         </Formik>
       </div>
     </section>
