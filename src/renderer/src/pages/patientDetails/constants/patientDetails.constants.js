@@ -174,3 +174,24 @@ export const nextStepData = {
   availability: 'Disponible esta semana',
   reminderActive: true
 }
+
+export const mockTreatmentPlans = [
+  {
+    id: 1,
+    name: 'Plan integral de saneamiento y restauración',
+    status: 'En curso',
+    tab: 'tratamientos'
+  },
+  {
+    id: 2,
+    name: 'Rehabilitación periodontal básica',
+    status: 'Terminado',
+    tab: 'tratamientos-realizados'
+  },
+  {
+    id: 3,
+    name: 'Ortodoncia preventiva',
+    status: 'Pendiente',
+    tab: 'tratamientos'
+  }
+]

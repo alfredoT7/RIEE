@@ -65,9 +65,9 @@ const PatientDetails = () => {
     })
   }
 
-  const handleOpenBudgetsTab = () => {
-    setActiveTab('presupuestos')
-  }
+  const handleOpenBudgetsTab = () => setActiveTab('presupuestos')
+  const handleOpenTreatmentsTab = () => setActiveTab('tratamientos')
+  const handleOpenCompletedTreatmentsTab = () => setActiveTab('tratamientos-realizados')
 
   const fullName = useMemo(() => {
     if (!patient) {
@@ -97,6 +97,8 @@ const PatientDetails = () => {
             questionnairePreviewItems={questionnairePreviewItems}
             onEditPatient={handleEditPatient}
             onOpenBudgetsTab={handleOpenBudgetsTab}
+            onOpenTreatmentsTab={handleOpenTreatmentsTab}
+            onOpenCompletedTreatmentsTab={handleOpenCompletedTreatmentsTab}
             onRegisterClinicalInfo={handleRegisterClinicalInfo}
             onRegisterQuestionnaire={handleRegisterQuestionnaire}
             onOpenQuestionnaireModal={() => setIsQuestionnaireModalOpen(true)}
@@ -146,6 +148,8 @@ const PatientDetails = () => {
             questionnairePreviewItems={questionnairePreviewItems}
             onEditPatient={handleEditPatient}
             onOpenBudgetsTab={handleOpenBudgetsTab}
+            onOpenTreatmentsTab={handleOpenTreatmentsTab}
+            onOpenCompletedTreatmentsTab={handleOpenCompletedTreatmentsTab}
             onRegisterClinicalInfo={handleRegisterClinicalInfo}
             onRegisterQuestionnaire={handleRegisterQuestionnaire}
             onOpenQuestionnaireModal={() => setIsQuestionnaireModalOpen(true)}
