@@ -11,7 +11,7 @@ const PatientSidebar = ({ patient, fullName, profileSummary, activeTab, onTabCha
       initial={{ opacity: 0, x: -18 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.35 }}
-      className="overflow-hidden rounded-[28px] border border-[#6dd6c8]/35 bg-[linear-gradient(180deg,#18465b_0%,#176173_45%,#198878_78%,#1aa08d_100%)] text-white shadow-[0_24px_60px_rgba(26,160,141,0.28)]"
+      className="sticky top-[76px] self-start max-h-[calc(100vh-76px)] overflow-y-auto overflow-hidden rounded-[28px] border border-[#6dd6c8]/35 bg-[linear-gradient(180deg,#18465b_0%,#176173_45%,#198878_78%,#1aa08d_100%)] text-white shadow-[0_24px_60px_rgba(26,160,141,0.28)]"
     >
       <div className="border-b border-white/10 bg-[radial-gradient(circle_at_top,rgba(125,233,222,0.34),transparent_58%)] px-6 pb-6 pt-8">
         <div className="flex flex-col items-center text-center">
