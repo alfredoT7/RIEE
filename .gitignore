@@ -1,7 +1,9 @@
 node_modules/
 dist/
+dist-electron/
 out/
 release/
+build/
 .electron-vite/
 
 .DS_Store
@@ -20,11 +22,13 @@ pnpm-debug.log*
 
 .vscode/
 
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/shelf/
-.idea/**/httpRequests/
-.idea/**/dataSources/
-.idea/**/dataSources.local.xml
+# JetBrains IDEs (IntelliJ, WebStorm, etc.)
+.idea/
+.idea/**
+*.iml
+
+# Editor temp files
+*.swp
+*.swo
+*~
+.cache/
