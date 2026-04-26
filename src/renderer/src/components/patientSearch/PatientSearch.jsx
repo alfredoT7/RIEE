@@ -145,11 +145,13 @@ const PatientSearch = ({
       )}
 
       {selectedPatient && (
-        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#00b09b]/10 px-3 py-1.5 text-sm font-medium text-[#0f766e] dark:bg-[#00b09b]/15 dark:text-[#5ce1d4]">
-          <FaUser className="text-xs" />
-          <span>
-            {selectedPatient.nombre} {selectedPatient.apellido}
-          </span>
+        <div className="mt-6 flex items-center gap-2 border-t border-slate-100 pt-4 dark:border-slate-800">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#00b09b]/10 px-3 py-1.5 text-sm font-medium text-[#0f766e] dark:bg-[#00b09b]/15 dark:text-[#5ce1d4]">
+            <FaUser className="text-xs" />
+            <span>
+              {selectedPatient.nombre} {selectedPatient.apellido}
+            </span>
+          </div>
         </div>
       )}
     </div>
