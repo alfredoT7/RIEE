@@ -1,13 +1,16 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Activity,
   AlertTriangle,
+  ArrowLeft,
   Bell,
   CalendarPlus,
   CheckCircle2,
+  ChevronRight,
   Clock3,
   Info,
+  Plus,
   Share2,
   Stethoscope,
   WalletCards
@@ -17,6 +20,7 @@ import {
   clinicalDocs,
   clinicalSummary,
   fadeInProps,
+  mockTreatmentPlans,
   nextStepData,
   overallProgress,
   paymentData,
@@ -37,7 +41,8 @@ const riskColors = {
 
 const priorityColors = {
   Urgente: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
-  Electivo: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300'
+  Electivo: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300',
+  Rutina: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
 }
 
 const alertLevelStyles = {
@@ -60,6 +65,27 @@ const docStatusColors = {
   Pendiente: 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300',
   'Por subir': 'bg-sky-100 text-sky-600 dark:bg-sky-900/40 dark:text-sky-300',
   'No adjuntado': 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+}
+
+const planStatusStyles = {
+  active: {
+    badge: 'bg-[#00b09b]/10 text-[#0f766e] dark:bg-[#00b09b]/20 dark:text-[#34d399]',
+    bar: 'bg-[#00b09b]',
+    dot: 'bg-[#00b09b]',
+    label: 'Activo'
+  },
+  done: {
+    badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+    bar: 'bg-emerald-500',
+    dot: 'bg-emerald-500',
+    label: 'Completado'
+  },
+  pending: {
+    badge: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+    bar: 'bg-slate-300 dark:bg-slate-600',
+    dot: 'bg-slate-400',
+    label: 'Pendiente'
+  }
 }
 
 const ToothBadge = ({ tooth }) => {
@@ -101,26 +127,220 @@ const ToothBadge = ({ tooth }) => {
   )
 }
 
-const PatientTreatmentTab = () => {
+/* ── Plan list card ── */
+const PlanCard = ({ plan, onSelect }) => {
+  const style = planStatusStyles[plan.statusTone] ?? planStatusStyles.pending
+  const budgetPct = plan.budget > 0 ? Math.round((plan.budgetExecuted / plan.budget) * 100) : 0
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="group relative cursor-pointer rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#9ae6dc] hover:shadow-[0_12px_32px_rgba(0,176,155,0.10)] dark:border-slate-800 dark:bg-slate-950 dark:hover:border-[#164e4a]"
+      onClick={() => onSelect(plan)}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          {/* Diagnosis code pill */}
+          <span className="self-start rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-bold text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
+            {plan.diagnosisCode}
+          </span>
+          <h4 className="mt-1 text-base font-semibold text-slate-800 dark:text-slate-100">
+            {plan.name}
+          </h4>
+          <p className="text-sm text-slate-500 dark:text-slate-400">{plan.type}</p>
+        </div>
+
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          {/* Status badge */}
+          <span className={`rounded-full px-3 py-1 text-xs font-bold ${style.badge}`}>
+            <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${style.dot}`} />
+            {plan.status}
+          </span>
+          <ChevronRight
+            size={16}
+            className="text-slate-300 transition-transform group-hover:translate-x-0.5 group-hover:text-[#00b09b] dark:text-slate-700"
+          />
+        </div>
+      </div>
+
+      {/* Progress */}
+      <div className="mt-4">
+        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+          <span>
+            {plan.sessionsCompleted}/{plan.sessionsTotal} sesiones
+          </span>
+          <span className="font-semibold">{plan.progress}%</span>
+        </div>
+        <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+          <div
+            className={`h-full rounded-full transition-all ${style.bar}`}
+            style={{ width: `${plan.progress}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Footer row */}
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        {/* Budget */}
+        <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+          <WalletCards size={12} />
+          <span>
+            Bs. {plan.budgetExecuted}{' '}
+            <span className="text-slate-400 dark:text-slate-600">/ {plan.budget}</span>
+          </span>
+          <span className="font-semibold text-slate-600 dark:text-slate-300">({budgetPct}%)</span>
+        </div>
+
+        {/* Teeth */}
+        {plan.teeth.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {plan.teeth.map((t) => (
+              <span
+                key={t}
+                className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[11px] font-bold text-violet-600 dark:border-violet-800/50 dark:bg-violet-900/20 dark:text-violet-400"
+              >
+                🦷 {t}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Priority */}
+        <span
+          className={`ml-auto rounded-full px-2.5 py-0.5 text-[11px] font-bold ${priorityColors[plan.priority] ?? priorityColors.Electivo}`}
+        >
+          {plan.priority}
+        </span>
+      </div>
+
+      {/* Dates */}
+      <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-600">
+        <span>Creado: {plan.createdAt}</span>
+        <span>Actualizado: {plan.lastUpdate}</span>
+      </div>
+    </motion.article>
+  )
+}
+
+/* ── Plans list view ── */
+const PlansListView = ({ onSelect }) => {
+  const active = mockTreatmentPlans.filter((p) => p.statusTone === 'active')
+  const pending = mockTreatmentPlans.filter((p) => p.statusTone === 'pending')
+  const done = mockTreatmentPlans.filter((p) => p.statusTone === 'done')
+
+  const Section = ({ title, plans }) =>
+    plans.length === 0 ? null : (
+      <div className="flex flex-col gap-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{title}</p>
+        {plans.map((plan) => (
+          <PlanCard key={plan.id} plan={plan} onSelect={onSelect} />
+        ))}
+      </div>
+    )
+
+  return (
+    <motion.div key="plans-list" {...fadeInProps} className="grid gap-5">
+      <section className="rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+        {/* Header */}
+        <div className="border-b border-slate-200 px-6 py-5 dark:border-slate-800">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                Planes de tratamiento
+              </h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                {mockTreatmentPlans.length} plan{mockTreatmentPlans.length !== 1 ? 'es' : ''}{' '}
+                registrado{mockTreatmentPlans.length !== 1 ? 's' : ''} · seleccioná uno para ver el
+                detalle
+              </p>
+            </div>
+            <button
+              type="button"
+              className="inline-flex cursor-pointer items-center gap-2 self-start rounded-2xl bg-gradient-to-r from-[#00b09b] to-[#00c9a7] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(0,176,155,0.22)] transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(0,176,155,0.30)]"
+            >
+              <Plus size={16} />
+              Nuevo plan
+            </button>
+          </div>
+        </div>
+
+        {/* Summary pills */}
+        <div className="flex flex-wrap gap-3 border-b border-slate-100 px-6 py-4 dark:border-slate-800">
+          {[
+            { label: 'Activos', count: active.length, tone: 'active' },
+            { label: 'Pendientes', count: pending.length, tone: 'pending' },
+            { label: 'Completados', count: done.length, tone: 'done' }
+          ].map(({ label, count, tone }) => {
+            const s = planStatusStyles[tone]
+            return (
+              <div
+                key={label}
+                className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold ${s.badge}`}
+              >
+                <span className={`h-2 w-2 rounded-full ${s.dot}`} />
+                {count} {label}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Plans grouped */}
+        <div className="flex flex-col gap-6 p-6">
+          {mockTreatmentPlans.length === 0 ? (
+            <div className="flex flex-col items-center gap-3 py-12 text-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl dark:bg-slate-800">
+                🦷
+              </span>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                Sin planes registrados. Creá el primero.
+              </p>
+            </div>
+          ) : (
+            <>
+              <Section title="Activos" plans={active} />
+              <Section title="Pendientes" plans={pending} />
+              <Section title="Completados" plans={done} />
+            </>
+          )}
+        </div>
+      </section>
+    </motion.div>
+  )
+}
+
+/* ── Plan detail view (original content) ── */
+const PlanDetailView = ({ plan, onBack }) => {
   const PlanBadgeIcon = planBadgeIcon
   const paid = paymentData.ejecutado
   const total = paymentData.total
   const payPct = Math.round((paid / total) * 100)
 
   return (
-    <motion.div key="tratamientos-tab" {...fadeInProps} className="grid gap-5">
+    <motion.div key="plan-detail" {...fadeInProps} className="grid gap-5">
       {/* ── Main card ── */}
       <section className="rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_45px_rgba(15,23,42,0.06)] dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
         {/* Header */}
         <div className="border-b border-slate-200 px-6 py-5 dark:border-slate-800">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-                Planes de tratamiento
-              </h3>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                Vista general del plan activo, procedimientos propuestos y próximos pasos clínicos.
-              </p>
+            <div className="flex items-start gap-3">
+              <button
+                type="button"
+                onClick={onBack}
+                className="mt-0.5 inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition-colors hover:border-[#9ae6dc] hover:bg-[#f0fffe] hover:text-[#0f766e] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-[#164e4a] dark:hover:bg-[#0d2d2a] dark:hover:text-[#34d399]"
+              >
+                <ArrowLeft size={13} />
+                Planes
+              </button>
+              <div>
+                <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                  {plan.name}
+                </h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  Vista general del plan activo, procedimientos propuestos y próximos pasos
+                  clínicos.
+                </p>
+              </div>
             </div>
             <div className="inline-flex items-center gap-2 self-start rounded-full bg-[#00b09b]/10 px-4 py-2 text-sm font-semibold text-[#0f766e] dark:bg-[#00b09b]/20 dark:text-[#34d399]">
               <PlanBadgeIcon size={16} />
@@ -158,7 +378,7 @@ const PatientTreatmentTab = () => {
                 Prioridad:
               </span>
               <span
-                className={`rounded-full px-3 py-0.5 text-xs font-bold ${priorityColors[clinicalSummary.priority]}`}
+                className={`rounded-full px-3 py-0.5 text-xs font-bold ${priorityColors[clinicalSummary.priority] ?? priorityColors.Electivo}`}
               >
                 {clinicalSummary.priority}
               </span>
@@ -330,7 +550,6 @@ const PatientTreatmentTab = () => {
                   </div>
                 </div>
 
-                {/* Overall progress */}
                 <div className="mt-5">
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-semibold text-slate-600 dark:text-slate-300">
@@ -348,7 +567,6 @@ const PatientTreatmentTab = () => {
                   </div>
                 </div>
 
-                {/* Per-stage compliance */}
                 <div className="mt-4 space-y-2.5">
                   {treatmentPlanStages.map((stage) => (
                     <div key={stage.label} className="flex items-center gap-3">
@@ -376,7 +594,6 @@ const PatientTreatmentTab = () => {
                   ))}
                 </div>
 
-                {/* Alerts */}
                 <div className="mt-5 space-y-2">
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
                     Alertas clínicas
@@ -399,7 +616,7 @@ const PatientTreatmentTab = () => {
 
             {/* Right col */}
             <div className="flex flex-col gap-5">
-              {/* Budget (enhanced) */}
+              {/* Budget */}
               <article className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#00b09b]/10 text-[#0f766e] dark:bg-[#00b09b]/20 dark:text-[#34d399]">
@@ -422,7 +639,6 @@ const PatientTreatmentTab = () => {
                   </div>
                 </div>
 
-                {/* Budget vs executed */}
                 <div className="mt-4">
                   <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
                     <span>Ejecutado: Bs. {paid}</span>
@@ -436,7 +652,6 @@ const PatientTreatmentTab = () => {
                   </div>
                 </div>
 
-                {/* Breakdown */}
                 <div className="mt-4 space-y-2.5 text-sm text-slate-500 dark:text-slate-400">
                   <div className="flex items-center justify-between">
                     <span>Saneamiento inicial</span>
@@ -458,7 +673,6 @@ const PatientTreatmentTab = () => {
                   </div>
                 </div>
 
-                {/* Payment method */}
                 <div className="mt-4 flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-900">
                   <span className="text-xs text-slate-500 dark:text-slate-400">
                     Método de pago
@@ -468,7 +682,6 @@ const PatientTreatmentTab = () => {
                   </span>
                 </div>
 
-                {/* Payment history */}
                 <div className="mt-4">
                   <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
                     Historial de pagos
@@ -494,7 +707,7 @@ const PatientTreatmentTab = () => {
                 </div>
               </article>
 
-              {/* Next step (enhanced) */}
+              {/* Next step */}
               <article className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
                   Próximo paso sugerido
@@ -537,7 +750,7 @@ const PatientTreatmentTab = () => {
                 </div>
               </article>
 
-              {/* Clinical documentation (visual only) */}
+              {/* Clinical docs */}
               <article className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
                   Documentación clínica
@@ -582,7 +795,6 @@ const PatientTreatmentTab = () => {
                 const isLast = i === planTimeline.length - 1
                 return (
                   <div key={event.title + event.date} className="flex gap-4">
-                    {/* Spine */}
                     <div className="flex flex-col items-center">
                       <div
                         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${event.dot} text-white shadow-sm`}
@@ -594,7 +806,6 @@ const PatientTreatmentTab = () => {
                       )}
                     </div>
 
-                    {/* Content */}
                     <div className={`pb-5 ${isLast ? '' : ''}`}>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className={`text-sm font-semibold ${event.color}`}>
@@ -616,6 +827,21 @@ const PatientTreatmentTab = () => {
         </div>
       </section>
     </motion.div>
+  )
+}
+
+/* ── Root component ── */
+const PatientTreatmentTab = () => {
+  const [selectedPlan, setSelectedPlan] = useState(null)
+
+  return (
+    <AnimatePresence mode="wait">
+      {selectedPlan === null ? (
+        <PlansListView key="list" onSelect={setSelectedPlan} />
+      ) : (
+        <PlanDetailView key="detail" plan={selectedPlan} onBack={() => setSelectedPlan(null)} />
+      )}
+    </AnimatePresence>
   )
 }
 

@@ -178,20 +178,56 @@ export const nextStepData = {
 export const mockTreatmentPlans = [
   {
     id: 1,
-    name: 'Plan integral de saneamiento y restauración',
-    status: 'En curso',
-    tab: 'tratamientos'
+    name: 'Plan de saneamiento y restauración',
+    type: 'Caries dentinaria',
+    diagnosisCode: 'K02.1',
+    status: 'Activo',
+    statusTone: 'active',
+    createdAt: '02 Abr 2025',
+    lastUpdate: '18 Abr 2025',
+    sessionsTotal: 3,
+    sessionsCompleted: 1,
+    progress: 38,
+    budget: 780,
+    budgetExecuted: 300,
+    teeth: ['2.6'],
+    priority: 'Electivo',
+    riskLevel: 'Medio'
   },
   {
     id: 2,
-    name: 'Rehabilitación periodontal básica',
-    status: 'Terminado',
-    tab: 'tratamientos-realizados'
+    name: 'Tratamiento de ortodoncia',
+    type: 'Maloclusión clase II',
+    diagnosisCode: 'K07.2',
+    status: 'Pendiente',
+    statusTone: 'pending',
+    createdAt: '05 Abr 2025',
+    lastUpdate: '05 Abr 2025',
+    sessionsTotal: 24,
+    sessionsCompleted: 0,
+    progress: 0,
+    budget: 4500,
+    budgetExecuted: 0,
+    teeth: [],
+    priority: 'Electivo',
+    riskLevel: 'Bajo'
   },
   {
     id: 3,
-    name: 'Ortodoncia preventiva',
-    status: 'Pendiente',
-    tab: 'tratamientos'
+    name: 'Control periodontal anual',
+    type: 'Profilaxis preventiva',
+    diagnosisCode: 'Z29.8',
+    status: 'Completado',
+    statusTone: 'done',
+    createdAt: '15 Ene 2025',
+    lastUpdate: '28 Feb 2025',
+    sessionsTotal: 2,
+    sessionsCompleted: 2,
+    progress: 100,
+    budget: 180,
+    budgetExecuted: 180,
+    teeth: [],
+    priority: 'Rutina',
+    riskLevel: 'Bajo'
   }
 ]
